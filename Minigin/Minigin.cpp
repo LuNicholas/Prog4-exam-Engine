@@ -12,6 +12,7 @@
 #include "Scene.h"
 #include "Component.h"
 #include "FpsComponent.h"
+#include "HealthComponent.h"
 
 
 using namespace std;
@@ -85,11 +86,14 @@ void dae::Minigin::LoadGame() const
 
 
 	//plots
-	auto imguiGo = std::make_shared<GameObject>();
-	ImguiComponent* imguiComp = imguiGo->AddComponent<ImguiComponent>();
-	imguiComp->SetWindow(m_Window);
-	scene.Add(imguiGo);
+	//auto imguiGo = std::make_shared<GameObject>();
+	//ImguiComponent* imguiComp = imguiGo->AddComponent<ImguiComponent>();
+	//imguiComp->SetWindow(m_Window);
+	//scene.Add(imguiGo);
 
+	auto peterPepper = std::make_shared<GameObject>();
+	HealthComponent* peterHealthComp = peterPepper->AddComponent<HealthComponent>();
+	peterHealthComp->SetHealth(1);
 
 }
 

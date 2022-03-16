@@ -31,3 +31,18 @@ class FartCommand : public Command
 public:
 	void Execute() override { std::cout << "Fart" << std::endl; }
 };
+
+namespace dae
+{
+	class GameObject;
+}
+
+class HitPepperCommand : public Command
+{
+
+public:
+	explicit HitPepperCommand(dae::GameObject* pepper);
+	void Execute() override;
+private:
+	dae::GameObject* m_pepper;
+};

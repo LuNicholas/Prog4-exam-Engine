@@ -94,6 +94,12 @@ void dae::Minigin::LoadGame() const
 	auto peterPepper = std::make_shared<GameObject>();
 	HealthComponent* peterHealthComp = peterPepper->AddComponent<HealthComponent>();
 	peterHealthComp->SetHealth(1);
+	scene.Add(peterPepper);
+
+	auto& input = InputManager::GetInstance();
+	std::unique_ptr<Command> hitPepperCommand = std::make_unique<HitPepperCommand>(peterPepper.get());
+	input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(hitPepperCommand));
+
 
 }
 
@@ -136,6 +142,7 @@ void dae::Minigin::Run()
 
 
 			doContinue = input.ProcessInput();
+			input.CheckInput();
 
 			
 			while (lag >= fixedTimeStep)

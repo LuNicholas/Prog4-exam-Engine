@@ -2,12 +2,13 @@
 #include "Transform.h"
 #include "SceneObject.h"
 #include "Component.h"
+#include "Subject.h"
 
 namespace dae
 {
 	class Texture2D;
 
-	class GameObject final : public SceneObject
+	class GameObject final : public SceneObject, public Subject
 	{
 
 	public:

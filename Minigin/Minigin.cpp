@@ -13,6 +13,8 @@
 #include "Component.h"
 #include "FpsComponent.h"
 #include "HealthComponent.h"
+#include "PlayerUiObserver.h"
+#include "PlayerUiComponent.h"
 
 
 using namespace std;
@@ -93,12 +95,21 @@ void dae::Minigin::LoadGame() const
 
 	auto peterPepper = std::make_shared<GameObject>();
 	HealthComponent* peterHealthComp = peterPepper->AddComponent<HealthComponent>();
-	peterHealthComp->SetHealth(1);
+	peterHealthComp->SetHealth(3);
 	scene.Add(peterPepper);
 
 	auto& input = InputManager::GetInstance();
 	std::unique_ptr<Command> hitPepperCommand = std::make_unique<HitPepperCommand>(peterPepper.get());
 	input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(hitPepperCommand));
+
+	PlayerUiComponent* playerUiComp = peterPepper->AddComponent<PlayerUiComponent>();
+	playerUiComp->SetFont(font);
+	playerUiComp->SetLives(peterHealthComp->GetHealth());
+	playerUiComp->SetPosition(300, 150);
+
+	PlayerUiObserver* playerUiObserver = new PlayerUiObserver(playerUiComp);
+	peterHealthComp->addObserver(playerUiObserver);
+
 
 
 }

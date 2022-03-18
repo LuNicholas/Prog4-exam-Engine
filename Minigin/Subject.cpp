@@ -4,30 +4,39 @@
 
 
 
-Subject::Subject()
+dae::Subject::Subject()
+	:m_head(nullptr)
 {}
-Subject::~Subject()
+dae::Subject::~Subject()
 {
+	//leak is probably here
+	dae::Observer* temp;
 
+	while (m_head != nullptr) {
+		temp = m_head;
+		m_head = m_head->m_next;
+		delete temp;
+	}
 }
 
-void Subject::addObserver(Observer* observer)
+void dae::Subject::addObserver(dae::Observer* observer)
 {
 	observer->m_next = m_head;
-	m_head->m_previous = observer;
+	if(m_head != nullptr)
+		m_head->m_previous = observer;
 	observer->m_previous = nullptr;
 
 	m_head = observer;
 }
-void Subject::removeObserver(Observer* observer)
+void dae::Subject::removeObserver(dae::Observer* observer)
 {
 	observer->m_previous->m_next = observer->m_next;
 	observer->m_next->m_previous= observer->m_previous;
 }
 
-void Subject::Notify(const dae::GameObject& go, Event event)
+void dae::Subject::Notify(const dae::GameObject& go, Event event)
 {
-	Observer* observer = m_head;
+	dae::Observer* observer = m_head;
 	while (observer != nullptr)
 	{
 		observer->onNotify(go, event);

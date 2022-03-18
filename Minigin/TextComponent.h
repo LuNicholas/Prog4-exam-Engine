@@ -1,17 +1,19 @@
 #pragma once
 #include "GameObject.h"
-#include "Transform.h"
-#include "Component.h"
+
 
 namespace dae
 {
 	class Font;
 	class Texture2D;
+	class Transform;
+
 	class TextComponent final : public Component
 	{
 	public:
 		friend class GameObject;
 		friend class FpsComponent;
+		friend class PlayerUiComponent;
 
 		void Update(float deltaTime);
 		void FixedUpdate(float deltaTime);

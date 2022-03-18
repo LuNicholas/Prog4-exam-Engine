@@ -12,5 +12,5 @@ HitPepperCommand::HitPepperCommand(dae::GameObject* pepper)
 void HitPepperCommand::Execute()
 {
 	dae::HealthComponent* health = m_pepper->GetComponent<dae::HealthComponent>();
-	health->DealDamage(1);
+	health->DealDamage(1, *m_pepper);
 }

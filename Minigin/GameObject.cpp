@@ -55,8 +55,28 @@ void dae::GameObject::Render() const
 
 void dae::GameObject::SetParent(GameObject* parent)
 {
+	if (m_pParent != nullptr)
+	{
+		auto parentChildren = m_pParent->m_pChildren;
+		parentChildren.erase(std::remove(parentChildren.begin(), parentChildren.end(), this), parentChildren.end());
+	}
+
 	m_pParent = parent;
+	parent->AddChild(this);
 }
+
+void dae::GameObject::AddChild(GameObject* go)
+{
+	if (go->m_pParent != nullptr)
+	{
+		auto childParent = go->m_pParent;
+		childParent->m_pChildren.erase(std::remove(childParent->m_pChildren.begin(), childParent->m_pChildren.end(), go), childParent->m_pChildren.end());
+	}
+
+	go->m_pParent = this;
+	m_pChildren.push_back(go);
+}
+
 
 dae::GameObject* dae::GameObject::GetParent() const
 {
@@ -87,13 +107,6 @@ dae::GameObject* dae::GameObject::RemoveChild(int index)
 	return child;
 }
 
-void dae::GameObject::AddChild(GameObject* go)
-{
-	go->m_pParent = this;
-	m_pChildren.push_back(go);
-}
-
-
 void dae::GameObject::SetPosition(float x, float y)
 {
 	glm::vec3 oldPos = m_Transform.GetPosition();
@@ -109,5 +122,32 @@ void dae::GameObject::SetPosition(float x, float y)
 		glm::vec3 oldChildPos = pChild->m_Transform.GetPosition();
 		pChild->SetPosition(oldChildPos.x + diff.x, oldChildPos.y + diff.y);
 	}
+}
 
+glm::vec3 dae::GameObject::GetWorldPosition()
+{
+	if (m_positionIsDirty)
+		UpdateWorldPosition();
+	return m_Transform.GetWorldPosition();
+}
+glm::vec3 dae::GameObject::GetLocalPosition()
+{
+	return m_Transform.GetPosition();
+}
+void dae::GameObject::UpdateWorldPosition()
+{
+	if (m_positionIsDirty)
+	{
+		if (m_pParent == nullptr)
+			m_Transform.SetWorldPosition(m_Transform.GetPosition());
+		else
+			m_Transform.SetWorldPosition(m_pParent->m_Transform.GetWorldPosition() + m_Transform.GetPosition());
+			//m_worldPosition = m_parent->GetWorldPosition() + m_localPosition;
+	}
+	m_positionIsDirty = false;
+}
+void dae::GameObject::SetLocalPosition(const glm::vec3& pos)
+{
+	m_Transform.SetPosition(pos);
+	m_positionIsDirty = true;
 }

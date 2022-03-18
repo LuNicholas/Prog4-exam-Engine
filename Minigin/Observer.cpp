@@ -2,15 +2,18 @@
 #include "Observer.h"
 
 
-Observer::Observer()
+dae::Observer::Observer()
 	:m_next(nullptr)
 	, m_previous(nullptr)
 {
 
 }
 
-Observer::~Observer()
+dae::Observer::~Observer()
 {
-	m_next->m_previous = m_previous;
-	m_previous->m_next = m_next;
+	if (m_next != nullptr)
+		m_next->m_previous = m_previous;
+
+	if (m_previous != nullptr)
+		m_previous->m_next = m_next;
 }

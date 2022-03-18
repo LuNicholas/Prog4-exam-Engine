@@ -38,6 +38,8 @@ namespace dae
 
 
 		void SetPosition(float x, float y);
+		glm::vec3 GetWorldPosition();
+		glm::vec3 GetLocalPosition();
 
 		GameObject();
 		~GameObject();
@@ -47,15 +49,17 @@ namespace dae
 		GameObject& operator=(GameObject&& other) = delete;
 
 	private:
-
-
 		std::vector<GameObject*> m_pChildren;
 		GameObject* m_pParent;
 
 		std::vector<Component*> m_pComponents;
 
 		Transform m_Transform;
+		bool m_positionIsDirty = true;
 
+		
+		void UpdateWorldPosition();
+		void SetLocalPosition(const glm::vec3& pos);
 
 	};
 }

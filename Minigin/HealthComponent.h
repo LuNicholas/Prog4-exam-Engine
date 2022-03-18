@@ -1,9 +1,10 @@
 #pragma once
 #include "Component.h"
+#include "Subject.h"
 
 namespace dae
 {
-	class HealthComponent final : public Component
+	class HealthComponent final : public Component, public Subject
 	{
 	public:
 		friend class GameObject;
@@ -14,7 +15,7 @@ namespace dae
 
 		int GetHealth();
 		void SetHealth(int health);
-		void DealDamage(int damage);
+		void DealDamage(int damage, const GameObject& hitGameObject);
 
 		~HealthComponent();
 		HealthComponent(const HealthComponent& other) = delete;

@@ -57,7 +57,7 @@ void dae::GameObject::SetParent(GameObject* parent)
 {
 	if (m_pParent != nullptr)
 	{
-		auto parentChildren = m_pParent->m_pChildren;
+		std::vector<GameObject*> parentChildren = m_pParent->m_pChildren;
 		parentChildren.erase(std::remove(parentChildren.begin(), parentChildren.end(), this), parentChildren.end());
 	}
 

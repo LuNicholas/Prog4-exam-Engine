@@ -1,5 +1,6 @@
 #include "MiniginPCH.h"
 #include "Minigin.h"
+#include <steam_api.h>
 #include <thread>
 #include "InputManager.h"
 #include "SceneManager.h"
@@ -165,6 +166,8 @@ void dae::Minigin::Run()
 		float fixedTimeStep = 0.02f;
 		while (doContinue)
 		{
+			SteamAPI_RunCallbacks();
+
 			//time
 			const auto currentTime = chrono::high_resolution_clock::now();
 			float deltaTime = chrono::duration<float>(currentTime - lastTime).count();

@@ -1,11 +1,11 @@
 #pragma once
 #include "TextComponent.h"
-
+#include "Observer.h"
 
 namespace dae
 {
 	class Font;
-	class PlayerUiComponent : public Component
+	class PlayerUiComponent : public Component, public Observer
 	{
 	public:
 		friend class GameObject;
@@ -26,7 +26,9 @@ namespace dae
 		PlayerUiComponent& operator=(const PlayerUiComponent& other) = delete;
 		PlayerUiComponent& operator=(PlayerUiComponent&& other) = delete;
 
+
 	private:
+		void onNotify(const dae::GameObject& go, Event event);
 		PlayerUiComponent();
 
 		dae::TextComponent* m_pHpText;

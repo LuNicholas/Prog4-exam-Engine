@@ -1,5 +1,10 @@
 #include "MiniginPCH.h"
 #include "PlayerUiComponent.h"
+#include "SteamAchievement.h"
+#include "HealthComponent.h"
+
+
+extern CSteamAchievements* g_SteamAchievements;
 
 dae::PlayerUiComponent::PlayerUiComponent()
 {
@@ -13,6 +18,8 @@ dae::PlayerUiComponent::~PlayerUiComponent()
 {
 	delete m_pHpText;
 	delete m_pScoreText;
+
+	
 }
 
 void dae::PlayerUiComponent::Update(float deltaTime)
@@ -51,4 +58,27 @@ void dae::PlayerUiComponent::AddScore(int score)
 {
 	m_score += score;
 	m_pScoreText->SetText("score: " + std::to_string(m_score));
+
+	if (g_SteamAchievements && m_score >= 500)
+		g_SteamAchievements->SetAchievement("ACH_WIN_ONE_GAME");
+}
+
+
+void dae::PlayerUiComponent::onNotify(const dae::GameObject& go, Event event)
+{
+	switch (event)
+	{
+	case Event::PlayerDied:
+	{
+		//go.GetComponent<PlayerUiComponent>()->SetLives(go.GetComponent<HealthComponent>()->GetHealth());
+		SetLives(go.GetComponent<HealthComponent>()->GetHealth());
+		break;
+	}
+	case Event::ScoreIncrease:
+	{
+		//go.GetComponent<PlayerUiComponent>()->AddScore(100);
+		AddScore(100);
+		break;
+	}
+	}
 }

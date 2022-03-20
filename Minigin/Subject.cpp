@@ -9,9 +9,10 @@ dae::Subject::Subject()
 {}
 dae::Subject::~Subject()
 {
+
 }
 
-void dae::Subject::addObserver(std::shared_ptr<Observer> observer)
+void dae::Subject::addObserver(Observer* observer)
 {
 	observer->m_next = m_head;
 	if(m_head != nullptr)
@@ -20,7 +21,7 @@ void dae::Subject::addObserver(std::shared_ptr<Observer> observer)
 
 	m_head = observer;
 }
-void dae::Subject::removeObserver(std::shared_ptr<Observer> observer)
+void dae::Subject::removeObserver(Observer* observer)
 {
 	observer->m_previous->m_next = observer->m_next;
 	observer->m_next->m_previous= observer->m_previous;
@@ -28,7 +29,7 @@ void dae::Subject::removeObserver(std::shared_ptr<Observer> observer)
 
 void dae::Subject::Notify(const dae::GameObject& go, Event event)
 {
-	std::shared_ptr<Observer> observer = m_head;
+	Observer* observer = m_head;
 	while (observer != nullptr)
 	{
 		observer->onNotify(go, event);

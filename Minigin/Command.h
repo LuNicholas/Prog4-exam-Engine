@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "Subject.h"
 
 class Command
 {
@@ -47,7 +48,7 @@ private:
 	dae::GameObject* m_actor;
 };
 
-class AddScoreCommand : public Command
+class AddScoreCommand : public Command, public dae::Subject
 {
 
 public:

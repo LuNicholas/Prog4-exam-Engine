@@ -23,6 +23,6 @@ AddScoreCommand::AddScoreCommand(dae::GameObject* actor)
 }
 void AddScoreCommand::Execute()
 {
-	auto ui = m_actor->GetComponent<dae::PlayerUiComponent>();
-	ui->AddScore(10);
+	//auto ui = m_actor->GetComponent<dae::PlayerUiComponent>();
+	Notify(*m_actor, Event::ScoreIncrease);
 }

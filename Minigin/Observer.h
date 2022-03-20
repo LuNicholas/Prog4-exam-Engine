@@ -20,8 +20,8 @@ namespace dae
 		virtual ~Observer();
 		virtual void onNotify(const dae::GameObject& entity, Event event) = 0;
 	private:
-		std::shared_ptr<Observer> m_next;
-		std::shared_ptr<Observer> m_previous;
+		Observer* m_next;
+		Observer* m_previous;
 	};
 
 }

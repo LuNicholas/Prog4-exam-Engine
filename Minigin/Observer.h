@@ -2,7 +2,8 @@
 
 enum class Event
 {
-	PlayerHit
+	PlayerDied,
+	ScoreIncrease
 };
 
 
@@ -19,8 +20,8 @@ namespace dae
 		virtual ~Observer();
 		virtual void onNotify(const dae::GameObject& entity, Event event) = 0;
 	private:
-		Observer* m_next;
-		Observer* m_previous;
+		std::shared_ptr<Observer> m_next;
+		std::shared_ptr<Observer> m_previous;
 	};
 
 }

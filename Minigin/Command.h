@@ -37,12 +37,22 @@ namespace dae
 	class GameObject;
 }
 
-class HitPepperCommand : public Command
+class HitCommand : public Command
 {
 
 public:
-	explicit HitPepperCommand(dae::GameObject* pepper);
+	explicit HitCommand(dae::GameObject* actor);
 	void Execute() override;
 private:
-	dae::GameObject* m_pepper;
+	dae::GameObject* m_actor;
+};
+
+class AddScoreCommand : public Command
+{
+
+public:
+	explicit AddScoreCommand(dae::GameObject* actor);
+	void Execute() override;
+private:
+	dae::GameObject* m_actor;
 };

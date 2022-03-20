@@ -9,17 +9,9 @@ dae::Subject::Subject()
 {}
 dae::Subject::~Subject()
 {
-	//leak is probably here
-	dae::Observer* temp;
-
-	while (m_head != nullptr) {
-		temp = m_head;
-		m_head = m_head->m_next;
-		delete temp;
-	}
 }
 
-void dae::Subject::addObserver(dae::Observer* observer)
+void dae::Subject::addObserver(std::shared_ptr<Observer> observer)
 {
 	observer->m_next = m_head;
 	if(m_head != nullptr)
@@ -28,7 +20,7 @@ void dae::Subject::addObserver(dae::Observer* observer)
 
 	m_head = observer;
 }
-void dae::Subject::removeObserver(dae::Observer* observer)
+void dae::Subject::removeObserver(std::shared_ptr<Observer> observer)
 {
 	observer->m_previous->m_next = observer->m_next;
 	observer->m_next->m_previous= observer->m_previous;
@@ -36,7 +28,7 @@ void dae::Subject::removeObserver(dae::Observer* observer)
 
 void dae::Subject::Notify(const dae::GameObject& go, Event event)
 {
-	dae::Observer* observer = m_head;
+	std::shared_ptr<Observer> observer = m_head;
 	while (observer != nullptr)
 	{
 		observer->onNotify(go, event);

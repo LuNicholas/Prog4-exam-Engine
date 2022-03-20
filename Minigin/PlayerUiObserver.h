@@ -10,10 +10,10 @@ namespace dae
     class PlayerUiObserver final : public Observer
     {
     public:
-        PlayerUiObserver(PlayerUiComponent* playerUi);
+        PlayerUiObserver();
         ~PlayerUiObserver();
 
-        void onNotify(const dae::GameObject&, Event event);
+        void onNotify(const dae::GameObject& go, Event event);
 
     private:
         PlayerUiComponent* m_pPlayerUi = nullptr;

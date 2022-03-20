@@ -4,8 +4,7 @@
 #include "HealthComponent.h"
 
 
-dae::PlayerUiObserver::PlayerUiObserver(PlayerUiComponent* playerUi)
-	:m_pPlayerUi(playerUi)
+dae::PlayerUiObserver::PlayerUiObserver()
 {
 }
 dae::PlayerUiObserver::~PlayerUiObserver()
@@ -17,9 +16,14 @@ void dae::PlayerUiObserver::onNotify(const dae::GameObject& go, Event event)
 {
 	switch (event)
 	{
-	case Event::PlayerHit:
+	case Event::PlayerDied:
 	{
-		m_pPlayerUi->SetLives(go.GetComponent<HealthComponent>()->GetHealth());
+		go.GetComponent<PlayerUiComponent>()->SetLives(go.GetComponent<HealthComponent>()->GetHealth());
+		break;
+	}
+	case Event::ScoreIncrease:
+	{
+		go.GetComponent<PlayerUiComponent>()->AddScore(10);
 		break;
 	}
 	}

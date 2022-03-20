@@ -16,7 +16,9 @@ namespace dae
 
 		void SetPosition(float x, float y);
 		void SetFont(std::shared_ptr<Font> font);
-		void SetLives(int lives) { m_pTextComp->SetText("lives: " + std::to_string(lives)); }
+		void SetLives(int lives);
+
+		void AddScore(int score);
 
 		~PlayerUiComponent();
 		PlayerUiComponent(const PlayerUiComponent& other) = delete;
@@ -27,7 +29,9 @@ namespace dae
 	private:
 		PlayerUiComponent();
 
-		dae::TextComponent* m_pTextComp;
+		dae::TextComponent* m_pHpText;
+		dae::TextComponent* m_pScoreText;
+		int m_score = 0;
 	};
 
 }

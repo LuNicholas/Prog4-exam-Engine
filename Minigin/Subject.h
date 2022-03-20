@@ -14,13 +14,13 @@ namespace dae
 		Subject();
 		~Subject();
 
-		void addObserver(dae::Observer* observer);
-		void removeObserver(dae::Observer* observer);
+		void addObserver(std::shared_ptr<Observer> observer);
+		void removeObserver(std::shared_ptr<Observer> observer);
 
 	protected:
-		void Notify(const dae::GameObject& go, Event event);
+		void Notify(const GameObject& go, Event event);
 
 	private:
-		dae::Observer* m_head;
+		std::shared_ptr<Observer> m_head;
 	};
 }

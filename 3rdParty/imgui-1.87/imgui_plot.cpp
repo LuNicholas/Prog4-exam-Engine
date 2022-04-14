@@ -8,6 +8,8 @@
 # pragma warning(push)
 #pragma warning( disable: 4244 )
 #pragma warning( disable: 4018 )
+#pragma warning (disable: 26812)
+#pragma warning (disable: 26451)
 
 namespace ImGui {
 // [0..1] -> [0..1]

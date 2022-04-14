@@ -57,3 +57,13 @@ public:
 private:
 	dae::GameObject* m_actor;
 };
+
+class MoveLeft : public Command, public dae::Subject
+{
+
+public:
+	explicit MoveLeft(dae::GameObject* actor);
+	void Execute() override;
+private:
+	dae::GameObject* m_actor;
+};

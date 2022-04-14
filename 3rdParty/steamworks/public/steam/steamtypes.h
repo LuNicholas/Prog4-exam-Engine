@@ -38,6 +38,9 @@ typedef unsigned char uint8;
 #endif
 #endif
 
+# pragma warning(push)
+#pragma warning( disable: 26812 )
+
 typedef unsigned char uint8;
 typedef signed char int8;
 
@@ -184,5 +187,5 @@ struct SteamIPAddress_t
 };
 
 #pragma pack( pop )
-
+#pragma warning(push)
 #endif // STEAMTYPES_H

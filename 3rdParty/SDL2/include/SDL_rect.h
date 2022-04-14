@@ -39,6 +39,9 @@
 extern "C" {
 #endif
 
+#pragma warning(push)
+#pragma warning( disable: 26812 )
+
 /**
  * The structure that defines a point (integer)
  *

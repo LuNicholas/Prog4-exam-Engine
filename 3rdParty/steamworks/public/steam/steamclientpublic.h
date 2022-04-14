@@ -10,6 +10,9 @@
 #include "steamtypes.h"
 #include "steamuniverse.h"
 
+#pragma warning (push)
+#pragma warning (disable: 26812)
+
 // General result codes
 enum EResult
 {

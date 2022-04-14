@@ -82,7 +82,6 @@ template <class T>
 T* dae::GameObject::AddComponent()
 {
 	if (std::is_base_of<Component, T>::value)
-	//if (Component* comp= dynamic_cast<Component>(T))
 	{
 		T* pComponent = new T();
 		m_pComponents.push_back(pComponent);

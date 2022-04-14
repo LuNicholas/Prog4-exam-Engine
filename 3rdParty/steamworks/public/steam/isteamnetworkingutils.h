@@ -14,6 +14,9 @@
 struct SteamDatagramRelayAuthTicket;
 struct SteamRelayNetworkStatus_t;
 
+#pragma warning (push)
+#pragma warning (disable: 26812)
+
 //-----------------------------------------------------------------------------
 /// Misc networking utilities for checking the local networking environment
 /// and estimating pings.
@@ -498,3 +501,5 @@ inline bool ISteamNetworkingUtils::SetConfigValueStruct( const SteamNetworkingCo
 #endif
 
 #endif // ISTEAMNETWORKINGUTILS
+
+#pragma warning (pop)

@@ -16,6 +16,7 @@
 #include "HealthComponent.h"
 //#include "PlayerUiObserver.h"
 #include "PlayerUiComponent.h"
+#include "AnimationComponent.h"
 
 
 
@@ -89,6 +90,15 @@ void dae::Minigin::LoadGame() const
 	scene.Add(fpsGo);
 
 
+	//test
+	auto testAnim = std::make_shared<GameObject>();
+	AnimationComponent* spriteAnim = testAnim->AddComponent<AnimationComponent>();
+	spriteAnim->SetPosition(150, 100);
+	spriteAnim->SetTexture("Peter_Forward.png");
+	spriteAnim->SetRowCol(1, 3);
+	spriteAnim->SetTextureSize(48, 16);
+	spriteAnim->SetFrameTime(0.5f);
+	scene.Add(testAnim);
 
 
 	//PETER PEPPER CREATE
@@ -96,6 +106,9 @@ void dae::Minigin::LoadGame() const
 	HealthComponent* peterHealthComp = peterPepper->AddComponent<HealthComponent>();
 	peterHealthComp->SetHealth(3);
 	scene.Add(peterPepper);
+
+
+
 
 	PlayerUiComponent* peterUiComp = peterPepper->AddComponent<PlayerUiComponent>();
 	peterUiComp->SetFont(font);
@@ -125,8 +138,8 @@ void dae::Minigin::LoadGame() const
 	sallyUiComp->SetLives(sallyHealthComp->GetHealth());
 	sallyUiComp->SetPosition(10, 300);
 
-	std::unique_ptr<HitCommand> hitSallyCommand = std::make_unique<HitCommand>(sallySalt.get());
-	input.AddCommand(dae::ControllerButton::ButtonB, dae::ButtonActivateState::OnButtonRelease, std::move(hitSallyCommand));
+	std::unique_ptr<MoveLeft> move = std::make_unique<MoveLeft>(testAnim.get());
+	input.AddCommand(dae::ControllerButton::ButtonB, dae::ButtonActivateState::IsPressed, std::move(move));
 
 	std::unique_ptr<AddScoreCommand> ScoreSallyCommand = std::make_unique<AddScoreCommand>(sallySalt.get());
 	ScoreSallyCommand->addObserver(sallyUiComp);

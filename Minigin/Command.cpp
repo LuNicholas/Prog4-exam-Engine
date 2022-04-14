@@ -26,3 +26,18 @@ void AddScoreCommand::Execute()
 	//auto ui = m_actor->GetComponent<dae::PlayerUiComponent>();
 	Notify(*m_actor, Event::ScoreIncrease);
 }
+
+//MoveLeft Command
+MoveLeft::MoveLeft(dae::GameObject* actor)
+	:m_actor(actor)
+{
+
+}
+void MoveLeft::Execute()
+{
+	glm::vec3 currentPos = m_actor->GetWorldPosition();
+
+	currentPos.x += 10;
+
+	m_actor->SetPosition(currentPos.x, currentPos.y);
+}

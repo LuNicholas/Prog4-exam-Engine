@@ -49,6 +49,9 @@
 #error "Must define VALVE_CALLBACK_PACK_SMALL or VALVE_CALLBACK_PACK_LARGE"
 #endif
 
+#pragma warning (push)
+#pragma warning (disable: 26812)
+
 struct SteamDatagramRelayAuthTicket;
 struct SteamDatagramHostedAddress;
 struct SteamDatagramGameCoordinatorServerLogin;
@@ -1761,3 +1764,5 @@ inline void SteamNetworkingMessage_t::Release() { (*m_pfnRelease)( this ); }
 #endif // #ifndef API_GEN
 
 #endif // #ifndef STEAMNETWORKINGTYPES
+
+#pragma warning (pop)

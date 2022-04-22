@@ -34,7 +34,9 @@ void dae::HealthComponent::DealDamage(int damage, const GameObject& hitGameObjec
 {
 	m_currentHealth -= damage;
 	if (m_currentHealth < 0)
+	{
 		m_currentHealth = 0;
+	}
 
-	Notify(hitGameObject, Event::PlayerDied);
+	Notify(hitGameObject, Event::PlayerHit);
 }

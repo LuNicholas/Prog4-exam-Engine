@@ -66,7 +66,7 @@ void dae::Minigin::Initialize()
 void dae::Minigin::LoadGame() const
 {
 	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
-
+	auto& input = InputManager::GetInstance();
 
 	auto go = std::make_shared<GameObject>();
 	scene.Add(go);
@@ -92,13 +92,19 @@ void dae::Minigin::LoadGame() const
 
 	//test
 	auto testAnim = std::make_shared<GameObject>();
-	AnimationComponent* spriteAnim = testAnim->AddComponent<AnimationComponent>();
-	spriteAnim->SetPosition(150, 100);
+	testAnim->SetPosition(150, 100);
+	SpriteAnimationComponent* spriteAnim = testAnim->AddComponent<SpriteAnimationComponent>();
 	spriteAnim->SetTexture("Peter_Forward.png");
 	spriteAnim->SetRowCol(1, 3);
 	spriteAnim->SetTextureSize(48, 16);
 	spriteAnim->SetFrameTime(0.5f);
 	scene.Add(testAnim);
+
+	std::unique_ptr<MoveLeft> moveLeft = std::make_unique<MoveLeft>(testAnim);
+	input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::IsPressed, std::move(moveLeft));
+	std::unique_ptr<MoveRight> moveRight = std::make_unique<MoveRight>(testAnim);
+	input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::IsPressed, std::move(moveRight));
+
 
 
 	//PETER PEPPER CREATE
@@ -115,7 +121,7 @@ void dae::Minigin::LoadGame() const
 	peterUiComp->SetLives(peterHealthComp->GetHealth());
 	peterUiComp->SetPosition(10, 400);
 
-	auto& input = InputManager::GetInstance();
+	
 	std::unique_ptr<HitCommand> hitPepperCommand = std::make_unique<HitCommand>(peterPepper.get());
 	input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(hitPepperCommand));
 
@@ -137,9 +143,6 @@ void dae::Minigin::LoadGame() const
 	sallyUiComp->SetFont(font);
 	sallyUiComp->SetLives(sallyHealthComp->GetHealth());
 	sallyUiComp->SetPosition(10, 300);
-
-	std::unique_ptr<MoveLeft> move = std::make_unique<MoveLeft>(testAnim.get());
-	input.AddCommand(dae::ControllerButton::ButtonB, dae::ButtonActivateState::IsPressed, std::move(move));
 
 	std::unique_ptr<AddScoreCommand> ScoreSallyCommand = std::make_unique<AddScoreCommand>(sallySalt.get());
 	ScoreSallyCommand->addObserver(sallyUiComp);

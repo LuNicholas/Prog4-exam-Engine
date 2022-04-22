@@ -84,6 +84,7 @@ T* dae::GameObject::AddComponent()
 	if (std::is_base_of<Component, T>::value)
 	{
 		T* pComponent = new T();
+		pComponent->SetPosition(m_Transform.GetPosition().x, m_Transform.GetPosition().y);
 		m_pComponents.push_back(pComponent);
 		return pComponent;
 	}

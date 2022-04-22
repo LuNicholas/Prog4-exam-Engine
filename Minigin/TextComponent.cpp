@@ -52,9 +52,3 @@ void dae::TextComponent::SetText(const std::string& text)
 	m_NeedsUpdate = true;
 }
 
-void dae::TextComponent::SetPosition(const float x, const float y)
-{
-	m_Transform.SetPosition(x, y, 0.0f);
-}
-
-

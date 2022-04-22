@@ -62,8 +62,18 @@ class MoveLeft : public Command, public dae::Subject
 {
 
 public:
-	explicit MoveLeft(dae::GameObject* actor);
+	explicit MoveLeft(std::shared_ptr<dae::GameObject> actor);
 	void Execute() override;
 private:
-	dae::GameObject* m_actor;
+	std::shared_ptr<dae::GameObject> m_actor;
+};
+
+class MoveRight : public Command, public dae::Subject
+{
+
+public:
+	explicit MoveRight(std::shared_ptr<dae::GameObject> actor);
+	void Execute() override;
+private:
+	std::shared_ptr<dae::GameObject> m_actor;
 };

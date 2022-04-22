@@ -70,13 +70,11 @@ void dae::PlayerUiComponent::onNotify(const dae::GameObject& go, Event event)
 	{
 	case Event::PlayerDied:
 	{
-		//go.GetComponent<PlayerUiComponent>()->SetLives(go.GetComponent<HealthComponent>()->GetHealth());
 		SetLives(go.GetComponent<HealthComponent>()->GetHealth());
 		break;
 	}
 	case Event::ScoreIncrease:
 	{
-		//go.GetComponent<PlayerUiComponent>()->AddScore(100);
 		AddScore(100);
 		break;
 	}

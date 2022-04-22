@@ -28,7 +28,7 @@ void AddScoreCommand::Execute()
 }
 
 //MoveLeft Command
-MoveLeft::MoveLeft(dae::GameObject* actor)
+MoveLeft::MoveLeft(std::shared_ptr<dae::GameObject> actor)
 	:m_actor(actor)
 {
 
@@ -37,7 +37,22 @@ void MoveLeft::Execute()
 {
 	glm::vec3 currentPos = m_actor->GetWorldPosition();
 
-	currentPos.x += 10;
+	currentPos.x += 1;
+
+	m_actor->SetPosition(currentPos.x, currentPos.y);
+}
+
+//MoveRight Command
+MoveRight::MoveRight(std::shared_ptr<dae::GameObject> actor)
+	:m_actor(actor)
+{
+
+}
+void MoveRight::Execute()
+{
+	glm::vec3 currentPos = m_actor->GetWorldPosition();
+
+	currentPos.x -= 1;
 
 	m_actor->SetPosition(currentPos.x, currentPos.y);
 }

@@ -109,6 +109,8 @@ dae::GameObject* dae::GameObject::RemoveChild(int index)
 
 void dae::GameObject::SetPosition(float x, float y)
 {
+	m_positionIsDirty = true;
+
 	glm::vec3 oldPos = m_Transform.GetPosition();
 	glm::vec3 diff;
 	diff.x = oldPos.x - x;
@@ -122,6 +124,14 @@ void dae::GameObject::SetPosition(float x, float y)
 		glm::vec3 oldChildPos = pChild->m_Transform.GetPosition();
 		pChild->SetPosition(oldChildPos.x + diff.x, oldChildPos.y + diff.y);
 	}
+
+	//move all components
+	for (Component* pComp : m_pComponents)
+	{
+		glm::vec3 oldCompPos = pComp->GetPosition();
+		pComp->SetPosition(oldCompPos.x + diff.x, oldCompPos.y + diff.y);
+	}
+
 }
 
 glm::vec3 dae::GameObject::GetWorldPosition()

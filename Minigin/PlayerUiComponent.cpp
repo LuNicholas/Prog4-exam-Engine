@@ -1,7 +1,7 @@
 #include "MiniginPCH.h"
 #include "PlayerUiComponent.h"
 #include "SteamAchievement.h"
-#include "HealthComponent.h"
+#include "PeterPepper.h"
 
 
 extern CSteamAchievements* g_SteamAchievements;
@@ -70,7 +70,9 @@ void dae::PlayerUiComponent::onNotify(const dae::GameObject& go, Event event)
 	{
 	case Event::PlayerHit:
 	{
-		SetLives(go.GetComponent<HealthComponent>()->GetHealth());
+		dae::PeterPepper* peterPepper = go.GetComponent<dae::PeterPepper>();
+		if (peterPepper != nullptr)
+			SetLives(peterPepper->GetHealth()->GetHealth());
 		break;
 	}
 	case Event::BunDropped:

@@ -102,7 +102,7 @@
     <ClInclude Include="Command.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HealthComponent.h">
+    <ClInclude Include="Health.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Observer.h">
@@ -206,7 +206,7 @@
     <ClCompile Include="Command.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HealthComponent.cpp">
+    <ClCompile Include="Health.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Observer.cpp">

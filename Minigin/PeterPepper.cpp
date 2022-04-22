@@ -1,21 +1,26 @@
 #include "MiniginPCH.h"
 #include "PeterPepper.h"
 
-PeterPepper::PeterPepper()
+dae::PeterPepper::PeterPepper()
 {
+	m_pHealth = new dae::Health(3);
+}
+dae::PeterPepper::~PeterPepper()
+{
+	delete m_pHealth;
+}
 
-}
-PeterPepper::~PeterPepper()
+void dae::PeterPepper::Update(float deltaTime)
 {
+}
+void dae::PeterPepper::FixedUpdate(float deltaTime)
+{
+}
+void dae::PeterPepper::Render() const
+{
+}
 
-}
-
-void PeterPepper::Update(float deltaTime)
+dae::Health* dae::PeterPepper::GetHealth() const
 {
-}
-void PeterPepper::FixedUpdate(float deltaTime)
-{
-}
-void PeterPepper::Render() const
-{
+	return m_pHealth;
 }

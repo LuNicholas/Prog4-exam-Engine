@@ -1,7 +1,7 @@
 #include "MiniginPCH.h"
 #include "Command.h"
 #include "GameObject.h"
-#include "HealthComponent.h"
+#include "PeterPepper.h"
 #include "PlayerUiComponent.h"
 
 
@@ -12,8 +12,9 @@ HitCommand::HitCommand(dae::GameObject* actor)
 }
 void HitCommand::Execute()
 {
-	dae::HealthComponent* health = m_actor->GetComponent<dae::HealthComponent>();
-	health->DealDamage(1, *m_actor);
+	dae::PeterPepper* peterPepper = m_actor->GetComponent<dae::PeterPepper>();
+	if(peterPepper != nullptr)
+		peterPepper->GetHealth()->DealDamage(1, *m_actor);
 }
 
 //BunDropped
@@ -23,7 +24,7 @@ BunDropped::BunDropped(dae::GameObject* actor)
 }
 void BunDropped::Execute()
 {
-	//auto ui = m_actor->GetComponent<dae::PlayerUiComponent>();
+	auto ui = m_actor->GetComponent<dae::PlayerUiComponent>();
 	Notify(*m_actor, Event::BunDropped);
 }
 

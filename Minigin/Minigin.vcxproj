@@ -226,7 +226,7 @@ xcopy $(SolutionDir)3rdParty\steam_appid.txt $(OutputPath) /Y</Command>
     <ClInclude Include="Font.h" />
     <ClInclude Include="FpsComponent.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="HealthComponent.h" />
+    <ClInclude Include="Health.h" />
     <ClInclude Include="ImguiExerciseComponent.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Minigin.h" />
@@ -331,7 +331,7 @@ xcopy $(SolutionDir)3rdParty\steam_appid.txt $(OutputPath) /Y</Command>
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FpsComponent.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="HealthComponent.cpp" />
+    <ClCompile Include="Health.cpp" />
     <ClCompile Include="ImguiExerciseComponent.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Main.cpp" />

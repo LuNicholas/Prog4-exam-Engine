@@ -1,23 +1,30 @@
 #pragma once
 #include "Component.h"
+#include "Health.h"
 
-class PeterPepper : public Component
+namespace dae
 {
-public:
-	friend class GameObject;
+	class PeterPepper : public Component
+	{
+	public:
+		friend class GameObject;
 
-	void Update(float deltaTime);
-	void FixedUpdate(float deltaTime);
-	void Render() const;
+		void Update(float deltaTime);
+		void FixedUpdate(float deltaTime);
+		void Render() const;
 
-	~PeterPepper();
-	PeterPepper(const PeterPepper& other) = delete;
-	PeterPepper(PeterPepper&& other) = delete;
-	PeterPepper& operator=(const PeterPepper& other) = delete;
-	PeterPepper& operator=(PeterPepper&& other) = delete;
+		dae::Health* GetHealth() const;
 
-private:
-	PeterPepper();
+		~PeterPepper();
+		PeterPepper(const PeterPepper& other) = delete;
+		PeterPepper(PeterPepper&& other) = delete;
+		PeterPepper& operator=(const PeterPepper& other) = delete;
+		PeterPepper& operator=(PeterPepper&& other) = delete;
 
-};
+	private:
+		PeterPepper();
 
+		dae::Health* m_pHealth;
+
+	};
+}

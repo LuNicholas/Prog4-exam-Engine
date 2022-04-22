@@ -13,10 +13,11 @@
 #include "Scene.h"
 #include "Component.h"
 #include "FpsComponent.h"
-#include "HealthComponent.h"
+//#include "HealthComponent.h"
 //#include "PlayerUiObserver.h"
 #include "PlayerUiComponent.h"
 #include "AnimationComponent.h"
+#include "PeterPepper.h"
 
 
 
@@ -108,47 +109,81 @@ void dae::Minigin::LoadGame() const
 
 
 	//PETER PEPPER CREATE
-	auto peterPepper = std::make_shared<GameObject>();
-	HealthComponent* peterHealthComp = peterPepper->AddComponent<HealthComponent>();
-	peterHealthComp->SetHealth(3);
-	scene.Add(peterPepper);
+	//auto peterPepperOld = std::make_shared<GameObject>();
+	//HealthComponent* peterHealthComp = peterPepper->AddComponent<HealthComponent>();
+	//peterHealthComp->SetHealth(3);
+	//scene.Add(peterPepperOld);
 
-
-
-
-	PlayerUiComponent* peterUiComp = peterPepper->AddComponent<PlayerUiComponent>();
-	peterUiComp->SetFont(font);
-	peterUiComp->SetLives(peterHealthComp->GetHealth());
-	peterUiComp->SetPosition(10, 400);
+	//PlayerUiComponent* peterUiComp = peterPepperOld->AddComponent<PlayerUiComponent>();
+	//peterUiComp->SetFont(font);
+	//peterUiComp->SetLives(peterHealthComp->GetHealth());
+	//peterUiComp->SetLives(3);
+	//peterUiComp->SetPosition(10, 400);
 
 	
-	std::unique_ptr<HitCommand> hitPepperCommand = std::make_unique<HitCommand>(peterPepper.get());
-	input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(hitPepperCommand));
+	//std::unique_ptr<HitCommand> hitPepperCommand = std::make_unique<HitCommand>(peterPepperOld.get());
+	//input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(hitPepperCommand));
 
-	std::unique_ptr<BunDropped> scorePeterCommand = std::make_unique<BunDropped>(peterPepper.get());
+	//std::unique_ptr<BunDropped> scorePeterCommand = std::make_unique<BunDropped>(peterPepperOld.get());
+	//scorePeterCommand->addObserver(peterUiComp);
+	//input.AddCommand(dae::ControllerButton::ButtonY, dae::ButtonActivateState::OnButtonRelease, std::move(scorePeterCommand));
+	//peterHealthComp->addObserver(peterUiComp);
+
+
+	//new peter pepper
+	auto peterPepperGo = std::make_shared<GameObject>();
+	PeterPepper* peterComp = peterPepperGo->AddComponent<PeterPepper>();
+	scene.Add(peterPepperGo);
+
+
+	//UI
+	auto UiPeter = std::make_shared<GameObject>();
+	PlayerUiComponent* peterUiComp = UiPeter->AddComponent<PlayerUiComponent>();
+	peterUiComp->SetFont(font);
+	peterUiComp->SetLives(peterComp->GetHealth()->GetHealth());
+	peterUiComp->SetLives(3);
+	peterUiComp->SetPosition(10, 400);
+	scene.Add(UiPeter);
+
+	peterComp->GetHealth()->addObserver(peterUiComp);
+
+	//peterCommand
+	std::unique_ptr<HitCommand> hitPeterCommand = std::make_unique<HitCommand>(peterPepperGo.get());
+	input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(hitPeterCommand));
+
+	std::unique_ptr<BunDropped> scorePeterCommand = std::make_unique<BunDropped>(peterPepperGo.get());
 	scorePeterCommand->addObserver(peterUiComp);
 	input.AddCommand(dae::ControllerButton::ButtonY, dae::ButtonActivateState::OnButtonRelease, std::move(scorePeterCommand));
 
-	peterHealthComp->addObserver(peterUiComp);
 
 
 
-	//SALLYSALT CREATE
-	auto sallySalt = std::make_shared<GameObject>();
-	HealthComponent* sallyHealthComp = sallySalt->AddComponent<HealthComponent>();
-	sallyHealthComp->SetHealth(3);
-	scene.Add(sallySalt);
 
-	PlayerUiComponent* sallyUiComp = sallySalt->AddComponent<PlayerUiComponent>();
+
+	//sally salt
+	auto sallySaltGo = std::make_shared<GameObject>();
+	PeterPepper* sallyComp = sallySaltGo->AddComponent<PeterPepper>();
+	scene.Add(sallySaltGo);
+
+
+	//UI
+	auto UiSally = std::make_shared<GameObject>();
+	PlayerUiComponent* sallyUiComp = UiSally->AddComponent<PlayerUiComponent>();
 	sallyUiComp->SetFont(font);
-	sallyUiComp->SetLives(sallyHealthComp->GetHealth());
-	sallyUiComp->SetPosition(10, 300);
+	sallyUiComp->SetLives(sallyComp->GetHealth()->GetHealth());
+	sallyUiComp->SetLives(3);
+	sallyUiComp->SetPosition(10, 325);
+	scene.Add(UiSally);
 
-	std::unique_ptr<BunDropped> ScoreSallyCommand = std::make_unique<BunDropped>(sallySalt.get());
-	ScoreSallyCommand->addObserver(sallyUiComp);
-	input.AddCommand(dae::ControllerButton::ButtonX, dae::ButtonActivateState::OnButtonRelease, std::move(ScoreSallyCommand));
+	sallyComp->GetHealth()->addObserver(sallyUiComp);
 
-	sallyHealthComp->addObserver(sallyUiComp);
+	//sallyCommand
+	std::unique_ptr<HitCommand> hitSallyCommand = std::make_unique<HitCommand>(sallySaltGo.get());
+	input.AddCommand(dae::ControllerButton::ButtonB, dae::ButtonActivateState::OnButtonRelease, std::move(hitSallyCommand));
+
+	std::unique_ptr<BunDropped> scoreSallyCommand = std::make_unique<BunDropped>(sallySaltGo.get());
+	scoreSallyCommand->addObserver(sallyUiComp);
+	input.AddCommand(dae::ControllerButton::ButtonX, dae::ButtonActivateState::OnButtonRelease, std::move(scoreSallyCommand));
 
 	std::cout<< "\n player 1 \n Button A :Lose live\n Button Y: add score \n";
 	std::cout << "\n player 2 \n Button B :Lose live\n Button X: add score \n\n";

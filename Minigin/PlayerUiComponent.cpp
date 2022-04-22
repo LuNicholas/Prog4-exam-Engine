@@ -68,12 +68,12 @@ void dae::PlayerUiComponent::onNotify(const dae::GameObject& go, Event event)
 {
 	switch (event)
 	{
-	case Event::PlayerDied:
+	case Event::PlayerHit:
 	{
 		SetLives(go.GetComponent<HealthComponent>()->GetHealth());
 		break;
 	}
-	case Event::ScoreIncrease:
+	case Event::BunDropped:
 	{
 		AddScore(100);
 		break;

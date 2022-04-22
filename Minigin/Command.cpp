@@ -16,15 +16,15 @@ void HitCommand::Execute()
 	health->DealDamage(1, *m_actor);
 }
 
-//AddSoreCOmmand
-AddScoreCommand::AddScoreCommand(dae::GameObject* actor)
+//BunDropped
+BunDropped::BunDropped(dae::GameObject* actor)
 	:m_actor(actor)
 {
 }
-void AddScoreCommand::Execute()
+void BunDropped::Execute()
 {
 	//auto ui = m_actor->GetComponent<dae::PlayerUiComponent>();
-	Notify(*m_actor, Event::ScoreIncrease);
+	Notify(*m_actor, Event::BunDropped);
 }
 
 //MoveLeft Command

@@ -48,11 +48,11 @@ private:
 	dae::GameObject* m_actor;
 };
 
-class AddScoreCommand : public Command, public dae::Subject
+class BunDropped : public Command, public dae::Subject
 {
 
 public:
-	explicit AddScoreCommand(dae::GameObject* actor);
+	explicit BunDropped(dae::GameObject* actor);
 	void Execute() override;
 private:
 	dae::GameObject* m_actor;

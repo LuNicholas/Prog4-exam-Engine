@@ -125,7 +125,7 @@ void dae::Minigin::LoadGame() const
 	std::unique_ptr<HitCommand> hitPepperCommand = std::make_unique<HitCommand>(peterPepper.get());
 	input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(hitPepperCommand));
 
-	std::unique_ptr<AddScoreCommand> scorePeterCommand = std::make_unique<AddScoreCommand>(peterPepper.get());
+	std::unique_ptr<BunDropped> scorePeterCommand = std::make_unique<BunDropped>(peterPepper.get());
 	scorePeterCommand->addObserver(peterUiComp);
 	input.AddCommand(dae::ControllerButton::ButtonY, dae::ButtonActivateState::OnButtonRelease, std::move(scorePeterCommand));
 
@@ -144,7 +144,7 @@ void dae::Minigin::LoadGame() const
 	sallyUiComp->SetLives(sallyHealthComp->GetHealth());
 	sallyUiComp->SetPosition(10, 300);
 
-	std::unique_ptr<AddScoreCommand> ScoreSallyCommand = std::make_unique<AddScoreCommand>(sallySalt.get());
+	std::unique_ptr<BunDropped> ScoreSallyCommand = std::make_unique<BunDropped>(sallySalt.get());
 	ScoreSallyCommand->addObserver(sallyUiComp);
 	input.AddCommand(dae::ControllerButton::ButtonX, dae::ButtonActivateState::OnButtonRelease, std::move(ScoreSallyCommand));
 

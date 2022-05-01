@@ -235,6 +235,7 @@ xcopy $(SolutionDir)3rdParty\steam_appid.txt $(OutputPath) /Y</Command>
     <ClInclude Include="Minigin.h" />
     <ClInclude Include="MiniginPCH.h" />
     <ClInclude Include="Observer.h" />
+    <ClInclude Include="PcController.h" />
     <ClInclude Include="PeterPepper.h" />
     <ClInclude Include="PlayerUiComponent.h" />
     <ClInclude Include="PlayerUiObserver.h" />
@@ -348,6 +349,7 @@ xcopy $(SolutionDir)3rdParty\steam_appid.txt $(OutputPath) /Y</Command>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MiniginPCH.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="Observer.cpp" />
+    <ClCompile Include="PcController.cpp" />
     <ClCompile Include="PeterPepper.cpp" />
     <ClCompile Include="PlayerUiComponent.cpp" />
     <ClCompile Include="PlayerUiObserver.cpp" />

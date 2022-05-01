@@ -107,6 +107,7 @@ void SDLSoundSystem::Update()
 
 
 
+
 //logging
 LoggingSoundSystem::LoggingSoundSystem(SoundSystem* ss)
 	: m_SoundSystem(ss)

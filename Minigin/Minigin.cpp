@@ -101,33 +101,9 @@ void dae::Minigin::LoadGame() const
 	scene.Add(testAnim);
 
 	std::unique_ptr<MoveLeft> moveLeft = std::make_unique<MoveLeft>(testAnim);
-	input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::IsPressed, std::move(moveLeft));
+	input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::IsPressed, std::move(moveLeft), 0);
 	std::unique_ptr<MoveRight> moveRight = std::make_unique<MoveRight>(testAnim);
-	input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::IsPressed, std::move(moveRight));
-
-
-
-	//PETER PEPPER CREATE
-	//auto peterPepperOld = std::make_shared<GameObject>();
-	//HealthComponent* peterHealthComp = peterPepper->AddComponent<HealthComponent>();
-	//peterHealthComp->SetHealth(3);
-	//scene.Add(peterPepperOld);
-
-	//PlayerUiComponent* peterUiComp = peterPepperOld->AddComponent<PlayerUiComponent>();
-	//peterUiComp->SetFont(font);
-	//peterUiComp->SetLives(peterHealthComp->GetHealth());
-	//peterUiComp->SetLives(3);
-	//peterUiComp->SetPosition(10, 400);
-
-	
-	//std::unique_ptr<HitCommand> hitPepperCommand = std::make_unique<HitCommand>(peterPepperOld.get());
-	//input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(hitPepperCommand));
-
-	//std::unique_ptr<BunDropped> scorePeterCommand = std::make_unique<BunDropped>(peterPepperOld.get());
-	//scorePeterCommand->addObserver(peterUiComp);
-	//input.AddCommand(dae::ControllerButton::ButtonY, dae::ButtonActivateState::OnButtonRelease, std::move(scorePeterCommand));
-	//peterHealthComp->addObserver(peterUiComp);
-
+	input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::IsPressed, std::move(moveRight), 0);
 
 	//new peter pepper
 	auto peterPepperGo = std::make_shared<GameObject>();
@@ -148,11 +124,11 @@ void dae::Minigin::LoadGame() const
 
 	//peterCommand
 	std::unique_ptr<HitCommand> hitPeterCommand = std::make_unique<HitCommand>(peterPepperGo.get());
-	input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(hitPeterCommand));
+	input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(hitPeterCommand), 0);
 
 	std::unique_ptr<BunDropped> scorePeterCommand = std::make_unique<BunDropped>(peterPepperGo.get());
 	scorePeterCommand->addObserver(peterUiComp);
-	input.AddCommand(dae::ControllerButton::ButtonY, dae::ButtonActivateState::OnButtonRelease, std::move(scorePeterCommand));
+	input.AddCommand(dae::ControllerButton::ButtonY, dae::ButtonActivateState::OnButtonRelease, std::move(scorePeterCommand), 0);
 
 
 
@@ -178,13 +154,13 @@ void dae::Minigin::LoadGame() const
 
 	//sallyCommand
 	std::unique_ptr<HitCommand> hitSallyCommand = std::make_unique<HitCommand>(sallySaltGo.get());
-	input.AddCommand(dae::ControllerButton::ButtonB, dae::ButtonActivateState::OnButtonRelease, std::move(hitSallyCommand));
+	input.AddCommand(dae::ControllerButton::ButtonB, dae::ButtonActivateState::OnButtonRelease, std::move(hitSallyCommand), 1);
 
 	std::unique_ptr<BunDropped> scoreSallyCommand = std::make_unique<BunDropped>(sallySaltGo.get());
 	scoreSallyCommand->addObserver(sallyUiComp);
-	input.AddCommand(dae::ControllerButton::ButtonX, dae::ButtonActivateState::OnButtonRelease, std::move(scoreSallyCommand));
+	input.AddCommand(dae::ControllerButton::ButtonX, dae::ButtonActivateState::OnButtonRelease, std::move(scoreSallyCommand), 1);
 
-	std::cout<< "\n player 1 \n Button A :Lose live\n Button Y: add score \n";
+	std::cout << "\n player 1 \n Button A :Lose live\n Button Y: add score \n";
 	std::cout << "\n player 2 \n Button B :Lose live\n Button X: add score \n\n";
 
 
@@ -205,7 +181,7 @@ void dae::Minigin::LoadGame() const
 	SoundServiceLocator::GetSoundSystem().Play(2, 10);
 
 	SoundServiceLocator::GetSoundSystem().RegisterSound(3, "../Data/meow4.wav");
-	SoundServiceLocator::GetSoundSystem().Play(3,10);
+	SoundServiceLocator::GetSoundSystem().Play(3, 10);
 }
 
 void dae::Minigin::Cleanup()
@@ -251,7 +227,7 @@ void dae::Minigin::Run()
 			doContinue = input.ProcessInput();
 			input.CheckInput();
 
-			
+
 			while (lag >= fixedTimeStep)
 			{
 				sceneManager.FixedUpdate(deltaTime);

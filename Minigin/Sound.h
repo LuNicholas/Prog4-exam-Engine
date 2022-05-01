@@ -35,11 +35,6 @@ public:
 
 
 private:
-
-	//std::jthread m_UpdateThread;
-	//std::mutex m_MutexUpdate;
-	//std::condition_variable m_CvUpdate;
-	//bool m_IsActiveThread;
 };
 
 class NullSound final : public SoundSystem
@@ -57,11 +52,15 @@ class SoundServiceLocator final
 	static NullSound m_NullSound;
 
 public:
+	~SoundServiceLocator();
+
 	static SoundSystem& GetSoundSystem() { return *m_SoundSystemInstance; }
 
 	static void RegisterSoundSystem(SoundSystem* ss)
 	{
-		m_SoundSystemInstance = ss;
+		if (m_SoundSystemInstance != &m_NullSound)
+			delete m_SoundSystemInstance;
+
 
 		if (ss == nullptr)
 		{
@@ -72,8 +71,6 @@ public:
 			m_SoundSystemInstance = ss;
 		}
 	}
-private:
-	~SoundServiceLocator();
 };
 
 class LoggingSoundSystem final : public SoundSystem
@@ -95,5 +92,24 @@ public:
 	void Update()
 	{
 		m_SoundSystem->Update();
+	}
+};
+
+
+class testss final : public SoundSystem
+{
+	SoundSystem* m_SoundSystem;
+public:
+	testss() {}
+	~testss() {}
+
+	void Play(const soundId soundId, const float volume)
+	{
+	}
+	void RegisterSound(const soundId id, const std::string& path)
+	{
+	}
+	void Update()
+	{
 	}
 };

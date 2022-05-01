@@ -133,8 +133,6 @@ void dae::Minigin::LoadGame() const
 
 
 
-
-
 	//sally salt
 	auto sallySaltGo = std::make_shared<GameObject>();
 	PeterPepper* sallyComp = sallySaltGo->AddComponent<PeterPepper>();
@@ -154,19 +152,19 @@ void dae::Minigin::LoadGame() const
 
 	//sallyCommand
 	std::unique_ptr<HitCommand> hitSallyCommand = std::make_unique<HitCommand>(sallySaltGo.get());
-	input.AddCommand(dae::ControllerButton::ButtonB, dae::ButtonActivateState::OnButtonRelease, std::move(hitSallyCommand), 1);
+	input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(hitSallyCommand), 1);
 
 	std::unique_ptr<BunDropped> scoreSallyCommand = std::make_unique<BunDropped>(sallySaltGo.get());
 	scoreSallyCommand->addObserver(sallyUiComp);
-	input.AddCommand(dae::ControllerButton::ButtonX, dae::ButtonActivateState::OnButtonRelease, std::move(scoreSallyCommand), 1);
+	input.AddCommand(dae::ControllerButton::ButtonY, dae::ButtonActivateState::OnButtonRelease, std::move(scoreSallyCommand), 1);
 
-	std::cout << "\n player 1 \n Button A :Lose live\n Button Y: add score \n";
-	std::cout << "\n player 2 \n Button B :Lose live\n Button X: add score \n\n";
+	std::cout << "\n Button A :Lose live\n Button Y: add score \n";
+
+
 
 
 #if _DEBUG
 	SoundServiceLocator::RegisterSoundSystem(new LoggingSoundSystem(new SDLSoundSystem()));
-	//SoundServiceLocator::RegisterSoundSystem(new SDLSoundSystem());
 #else
 	SoundServiceLocator::RegisterSoundSystem(new SDLSoundSystem());
 #endif // _DEBUG
@@ -175,19 +173,12 @@ void dae::Minigin::LoadGame() const
 	SoundServiceLocator::GetSoundSystem().RegisterSound(0, "../Data/meow1.wav");
 	SoundServiceLocator::GetSoundSystem().Play(0, 10);
 
-	SoundServiceLocator::GetSoundSystem().RegisterSound(1, "../Data/meow2.wav");
-	SoundServiceLocator::GetSoundSystem().Play(1, 10);
-
-	//SoundServiceLocator::GetSoundSystem().RegisterSound(2, "../Data/meow3.wav");
-	//SoundServiceLocator::GetSoundSystem().Play(2, 10);
-
-	//SoundServiceLocator::GetSoundSystem().RegisterSound(3, "../Data/meow4.wav");
-	//SoundServiceLocator::GetSoundSystem().Play(3, 10);
-
 }
 
 void dae::Minigin::Cleanup()
 {
+
+	SoundServiceLocator::RegisterSoundSystem(nullptr);
 	Renderer::GetInstance().Destroy();
 	SDL_DestroyWindow(m_Window);
 	m_Window = nullptr;
@@ -239,7 +230,6 @@ void dae::Minigin::Run()
 			sceneManager.Update(deltaTime);
 			renderer.Render();
 
-			//SoundServiceLocator::GetSoundSystem().Update();
 		}
 	}
 

@@ -9,12 +9,6 @@
 SoundSystem* SoundServiceLocator::m_SoundSystemInstance{};
 NullSound SoundServiceLocator::m_NullSound{};
 
-SoundServiceLocator::~SoundServiceLocator()
-{
-}
-
-
-
 //Pimpl
 class SDLSoundSystem::SoundSystemImpl
 {
@@ -64,7 +58,7 @@ SDLSoundSystem::SoundSystemImpl::SoundSystemImpl()
 				std::unique_lock<std::mutex> lk(m_MutexUpdate);
 				m_CvUpdate.wait(lk, [this]
 					{
-						return (m_Head != m_Tail);
+						return (m_Head != m_Tail) || !m_IsActiveThread;
 					});
 				Update();
 			}
@@ -73,6 +67,7 @@ SDLSoundSystem::SoundSystemImpl::SoundSystemImpl()
 SDLSoundSystem::SoundSystemImpl::~SoundSystemImpl()
 {
 	m_IsActiveThread = false;
+	m_CvUpdate.notify_all();
 	m_UpdateThread.join();
 
 	Mix_CloseAudio();
@@ -115,6 +110,7 @@ SDLSoundSystem::SDLSoundSystem()
 }
 SDLSoundSystem::~SDLSoundSystem()
 {
+	delete m_pImpl;
 }
 
 void SDLSoundSystem::Play(const soundId soundId, const float volume)
@@ -142,4 +138,9 @@ LoggingSoundSystem::LoggingSoundSystem(SoundSystem* ss)
 LoggingSoundSystem::~LoggingSoundSystem()
 {
 	delete m_SoundSystem;
+}
+
+SoundServiceLocator::~SoundServiceLocator()
+{
+	delete m_SoundSystemInstance;
 }

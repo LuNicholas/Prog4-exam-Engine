@@ -21,6 +21,9 @@ private:
 
 class SDLSoundSystem : public SoundSystem
 {
+	class SoundSystemImpl;
+	SoundSystemImpl* m_pImpl;
+
 public:
 	SDLSoundSystem();
 	~SDLSoundSystem();
@@ -32,20 +35,6 @@ public:
 
 
 private:
-	int m_Frequequency = 22050;
-	Uint16 m_Format = AUDIO_S16SYS;
-	int m_Channels = 2;
-	int m_ChunkSize = 4096;
-
-	std::vector<Mix_Chunk*> m_SoundBank;
-
-
-	const int m_MaxQueue = 10;
-	SoundInfo m_SoundQueue[10];
-	int m_CurrentQueueSize = 0;
-
-	static int m_Head;
-	static int m_Tail;
 };
 
 class NullSound final : public SoundSystem

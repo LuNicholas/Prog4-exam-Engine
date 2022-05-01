@@ -87,4 +87,8 @@ public:
 	{
 		m_SoundSystem->RegisterSound(id, path);
 	}
+	void Update()
+	{
+		m_SoundSystem->Update();
+	}
 };

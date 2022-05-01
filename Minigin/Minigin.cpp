@@ -194,13 +194,18 @@ void dae::Minigin::LoadGame() const
 	SoundServiceLocator::RegisterSoundSystem(new SDLSoundSystem());
 #endif // _DEBUG
 
-	SoundServiceLocator::GetSoundSystem().RegisterSound(0, "../Data/meow4.wav");
-	SoundServiceLocator::GetSoundSystem().Play(0,10);
 
-	SoundServiceLocator::GetSoundSystem().RegisterSound(1, "../Data/meow3.wav");
+	SoundServiceLocator::GetSoundSystem().RegisterSound(0, "../Data/meow1.wav");
+	SoundServiceLocator::GetSoundSystem().Play(0, 10);
+
+	SoundServiceLocator::GetSoundSystem().RegisterSound(1, "../Data/meow2.wav");
 	SoundServiceLocator::GetSoundSystem().Play(1, 10);
 
+	SoundServiceLocator::GetSoundSystem().RegisterSound(2, "../Data/meow3.wav");
+	SoundServiceLocator::GetSoundSystem().Play(2, 10);
 
+	SoundServiceLocator::GetSoundSystem().RegisterSound(3, "../Data/meow4.wav");
+	SoundServiceLocator::GetSoundSystem().Play(3,10);
 }
 
 void dae::Minigin::Cleanup()

@@ -1,12 +1,10 @@
 #include "MiniginPCH.h"
 #include "Sound.h"
+#include <map>
 
 
 SoundSystem* SoundServiceLocator::m_SoundSystemInstance{};
 NullSound SoundServiceLocator::m_NullSound{};
-
-//int SDLSoundSystem::m_Head{ 0 };
-//int SDLSoundSystem::m_Tail{ 0 };
 
 SoundServiceLocator::~SoundServiceLocator()
 {
@@ -31,15 +29,19 @@ private:
 	int m_Channels = 2;
 	int m_ChunkSize = 4096;
 
-
-	std::vector<Mix_Chunk*> m_SoundBank;
-	const int m_MaxQueue = 10;
-	SoundInfo m_SoundQueue[10];
+	int m_Head;
+	int m_Tail;
+	std::map<soundId, Mix_Chunk*> m_SoundBank;
+	static const int m_MaxQueueSize = 10;
+	SoundInfo m_SoundQueue[m_MaxQueueSize];
 	int m_CurrentQueueSize = 0;
 };
 
 SDLSoundSystem::SoundSystemImpl::SoundSystemImpl()
 	:m_SoundQueue{}
+	, m_Head{ 0 }
+	, m_Tail{ 0 }
+
 {
 	SDL_Init(SDL_INIT_AUDIO);
 	if (Mix_OpenAudio(m_Frequequency, m_Format, m_Channels, m_ChunkSize) != 0)
@@ -53,31 +55,30 @@ SDLSoundSystem::SoundSystemImpl::~SoundSystemImpl()
 
 void SDLSoundSystem::SoundSystemImpl::Play(const soundId soundId, const float volume)
 {
-	if (m_CurrentQueueSize > m_MaxQueue)
+	if ((m_Tail + 1) % m_MaxQueueSize == m_Head)
 		return;
 
-	m_SoundQueue[m_CurrentQueueSize].id = soundId;
-	m_SoundQueue[m_CurrentQueueSize].volume = volume;
-	m_CurrentQueueSize++;
-
+	m_SoundQueue[m_Tail].id = soundId;
+	m_SoundQueue[m_Tail].volume = volume;
+	m_Tail = (m_Tail + 1) % m_MaxQueueSize;
 }
 void SDLSoundSystem::SoundSystemImpl::RegisterSound(const soundId soundId, const std::string& path)
 {
 	Mix_Chunk* chunk = Mix_LoadWAV(path.c_str());
 	if (chunk != nullptr)
 	{
-		m_SoundBank.insert(m_SoundBank.begin() + soundId, chunk);
+		m_SoundBank[soundId] = chunk;
 	}
 }
 void SDLSoundSystem::SoundSystemImpl::Update()
 {
-	for (int i = 0; i < m_CurrentQueueSize; i++)
-	{
-		Mix_Volume(-1, m_SoundQueue[i].volume);
-		Mix_PlayChannel(-1, m_SoundBank.at(m_SoundQueue[i].id), 0);
-	}
+	if (m_Head == m_Tail)
+		return;
 
-	m_CurrentQueueSize = 0;
+	Mix_Chunk* pCurrentChunk = m_SoundBank[m_SoundQueue[m_Head].id];
+	Mix_VolumeChunk(pCurrentChunk, m_SoundQueue[m_Head].volume);
+	Mix_PlayChannel(-1, pCurrentChunk, 0);
+	m_Head = (m_Head + 1) % m_MaxQueueSize;
 }
 
 //SDL soundsystem
@@ -91,40 +92,18 @@ SDLSoundSystem::~SDLSoundSystem()
 
 void SDLSoundSystem::Play(const soundId soundId, const float volume)
 {
-	//if (m_CurrentQueueSize > m_MaxQueue)
-	//	return;
-
-	//m_SoundQueue[m_CurrentQueueSize].id = soundId;
-	//m_SoundQueue[m_CurrentQueueSize].volume = volume;
-	//m_CurrentQueueSize++;
-
 	m_pImpl->Play(soundId, volume);
 }
 void SDLSoundSystem::RegisterSound(const soundId soundId, const std::string& path)
 {
-	//const char* test = path.c_str();
-
-	//Mix_Chunk* chunk = Mix_LoadWAV(test);
-	//if (chunk != nullptr)
-	//{
-	//	m_SoundBank.insert(m_SoundBank.begin() + soundId, chunk);
-	//}
 
 	m_pImpl->RegisterSound(soundId, path);
 }
 
 void SDLSoundSystem::Update()
 {
-	//for (int i = 0; i < m_CurrentQueueSize; i++)
-	//{
-	//	Mix_Volume(-1, m_SoundQueue[i].volume);
-	//	Mix_PlayChannel(-1, m_SoundBank.at(m_SoundQueue[i].id), 0);
-	//}
-
-	//m_CurrentQueueSize = 0;
 	m_pImpl->Update();
 }
-
 
 
 

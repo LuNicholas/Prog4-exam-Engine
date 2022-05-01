@@ -94,22 +94,3 @@ public:
 		m_SoundSystem->Update();
 	}
 };
-
-
-class testss final : public SoundSystem
-{
-	SoundSystem* m_SoundSystem;
-public:
-	testss() {}
-	~testss() {}
-
-	void Play(const soundId soundId, const float volume)
-	{
-	}
-	void RegisterSound(const soundId id, const std::string& path)
-	{
-	}
-	void Update()
-	{
-	}
-};

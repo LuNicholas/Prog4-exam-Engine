@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "PeterPepper.h"
 #include "PlayerUiComponent.h"
+#include "Sound.h"
 
 
 //HitpepperCOmmand
@@ -13,7 +14,7 @@ HitCommand::HitCommand(dae::GameObject* actor)
 void HitCommand::Execute()
 {
 	dae::PeterPepper* peterPepper = m_actor->GetComponent<dae::PeterPepper>();
-	if(peterPepper != nullptr)
+	if (peterPepper != nullptr)
 		peterPepper->GetHealth()->DealDamage(1, *m_actor);
 }
 
@@ -56,4 +57,16 @@ void MoveRight::Execute()
 	currentPos.x -= 1;
 
 	m_actor->SetPosition(currentPos.x, currentPos.y);
+}
+
+//play sound
+
+PlaySound::PlaySound(int id)
+	:m_SoundId(id)
+{
+
+}
+void PlaySound::Execute()
+{
+	SoundServiceLocator::GetSoundSystem().Play(m_SoundId, 10);
 }

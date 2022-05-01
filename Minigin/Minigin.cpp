@@ -158,10 +158,13 @@ void dae::Minigin::LoadGame() const
 	scoreSallyCommand->addObserver(sallyUiComp);
 	input.AddCommand(dae::ControllerButton::ButtonY, dae::ButtonActivateState::OnButtonRelease, std::move(scoreSallyCommand), 1);
 
+
+
 	std::cout << "\n Button A :Lose live\n Button Y: add score \n";
 
 
 
+	//SOUND
 
 #if _DEBUG
 	SoundServiceLocator::RegisterSoundSystem(new LoggingSoundSystem(new SDLSoundSystem()));
@@ -170,8 +173,13 @@ void dae::Minigin::LoadGame() const
 #endif // _DEBUG
 
 
+	
 	SoundServiceLocator::GetSoundSystem().RegisterSound(0, "../Data/meow1.wav");
-	SoundServiceLocator::GetSoundSystem().Play(0, 10);
+	std::unique_ptr<PlaySound> playMeow = std::make_unique<PlaySound>(0);
+	input.AddCommand(dae::ControllerButton::ButtonB, dae::ButtonActivateState::OnButtonRelease, std::move(playMeow), 0);
+
+	std::cout << "\n\n Button B :PLAY SOUND\n";
+
 
 }
 

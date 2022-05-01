@@ -77,3 +77,13 @@ public:
 private:
 	std::shared_ptr<dae::GameObject> m_actor;
 };
+
+class PlaySound : public Command
+{
+
+public:
+	explicit PlaySound(int soundId);
+	void Execute() override;
+private:
+	int m_SoundId;
+};

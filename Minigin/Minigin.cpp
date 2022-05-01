@@ -166,6 +166,7 @@ void dae::Minigin::LoadGame() const
 
 #if _DEBUG
 	SoundServiceLocator::RegisterSoundSystem(new LoggingSoundSystem(new SDLSoundSystem()));
+	//SoundServiceLocator::RegisterSoundSystem(new SDLSoundSystem());
 #else
 	SoundServiceLocator::RegisterSoundSystem(new SDLSoundSystem());
 #endif // _DEBUG
@@ -177,11 +178,12 @@ void dae::Minigin::LoadGame() const
 	SoundServiceLocator::GetSoundSystem().RegisterSound(1, "../Data/meow2.wav");
 	SoundServiceLocator::GetSoundSystem().Play(1, 10);
 
-	SoundServiceLocator::GetSoundSystem().RegisterSound(2, "../Data/meow3.wav");
-	SoundServiceLocator::GetSoundSystem().Play(2, 10);
+	//SoundServiceLocator::GetSoundSystem().RegisterSound(2, "../Data/meow3.wav");
+	//SoundServiceLocator::GetSoundSystem().Play(2, 10);
 
-	SoundServiceLocator::GetSoundSystem().RegisterSound(3, "../Data/meow4.wav");
-	SoundServiceLocator::GetSoundSystem().Play(3, 10);
+	//SoundServiceLocator::GetSoundSystem().RegisterSound(3, "../Data/meow4.wav");
+	//SoundServiceLocator::GetSoundSystem().Play(3, 10);
+
 }
 
 void dae::Minigin::Cleanup()
@@ -237,7 +239,7 @@ void dae::Minigin::Run()
 			sceneManager.Update(deltaTime);
 			renderer.Render();
 
-			SoundServiceLocator::GetSoundSystem().Update();
+			//SoundServiceLocator::GetSoundSystem().Update();
 		}
 	}
 

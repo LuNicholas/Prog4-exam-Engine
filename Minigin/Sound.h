@@ -35,6 +35,11 @@ public:
 
 
 private:
+
+	//std::jthread m_UpdateThread;
+	//std::mutex m_MutexUpdate;
+	//std::condition_variable m_CvUpdate;
+	//bool m_IsActiveThread;
 };
 
 class NullSound final : public SoundSystem

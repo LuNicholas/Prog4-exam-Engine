@@ -48,11 +48,10 @@ public:
 
 class SoundServiceLocator final
 {
-	static SoundSystem* m_SoundSystemInstance;
 	static NullSound m_NullSound;
+	static SoundSystem* m_SoundSystemInstance;//todo
 
 public:
-	~SoundServiceLocator();
 
 	static SoundSystem& GetSoundSystem() { return *m_SoundSystemInstance; }
 

@@ -1,22 +1,30 @@
 #pragma once
 #include "Transform.h"
 
-class Component abstract
+
+namespace dae
 {
-public:
+	class GameObject;
 
-	virtual ~Component() = default;
+	class Component abstract
+	{
+	public:
 
-	virtual void Update(float deltaTime) = 0;
-	virtual void FixedUpdate(float deltaTime) = 0;
-	virtual void Render() const = 0;
+		virtual ~Component() = default;
 
-	virtual void SetPosition(float x, float y) { m_Transform.SetPosition(x, y, 0.0f); };
-	virtual glm::vec3 GetPosition() { return m_Transform.GetPosition(); };
+		virtual void Update(float deltaTime) = 0;
+		virtual void FixedUpdate(float deltaTime) = 0;
+		virtual void Render() const = 0;
 
-protected:
-	dae::Transform m_Transform;
+		void SetPosition(float x, float y) { m_Transform.SetPosition(x, y, 0.0f); };
+		glm::vec3 GetPosition() { return m_Transform.GetPosition(); };
+		GameObject* GetGameObject() { return m_pGameObject; };
 
-	Component() = default;
-};
 
+	protected:
+		GameObject* m_pGameObject = nullptr;
+		dae::Transform m_Transform;
+
+		Component() = default;
+	};
+}

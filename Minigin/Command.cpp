@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "PeterPepper.h"
 #include "PlayerUiComponent.h"
+#include "CollisionBox.h"
 #include "Sound.h"
 
 
@@ -39,7 +40,7 @@ void MoveLeft::Execute()
 {
 	glm::vec3 currentPos = m_actor->GetWorldPosition();
 
-	currentPos.x += 1;
+	currentPos.x -= 1;
 
 	m_actor->SetPosition(currentPos.x, currentPos.y);
 }
@@ -52,12 +53,73 @@ MoveRight::MoveRight(std::shared_ptr<dae::GameObject> actor)
 }
 void MoveRight::Execute()
 {
+
+	dae::PeterPepper* character = m_actor->GetComponent<dae::PeterPepper>();
+
+
 	glm::vec3 currentPos = m_actor->GetWorldPosition();
-
-	currentPos.x -= 1;
-
+	currentPos.x += 1;
 	m_actor->SetPosition(currentPos.x, currentPos.y);
 }
+
+MoveUp::MoveUp(std::shared_ptr<dae::GameObject> actor)
+	:m_actor(actor)
+{
+
+}
+void MoveUp::Execute()
+{
+	dae::CollisionBox* pCollider = m_actor->GetComponent<dae::CollisionBox>();
+	auto collidingWith = pCollider->GetCollidingWith();
+
+	for (dae::CollisionBox* pColliding : collidingWith)
+	{
+		if (pColliding->GetTag() == "Ladder")
+		{
+			glm::vec3 currentPos = m_actor->GetWorldPosition();
+			currentPos.y -= 1;
+			m_actor->SetPosition(currentPos.x, currentPos.y);
+			break;
+		}
+
+	}
+}
+MoveDown::MoveDown(std::shared_ptr<dae::GameObject> actor)
+	:m_actor(actor)
+{
+
+}
+void MoveDown::Execute()
+{
+	dae::CollisionBox* pCollider = m_actor->GetComponent<dae::CollisionBox>();
+	auto collidingWith = pCollider->GetCollidingWith();
+
+	for (dae::CollisionBox* pColliding : collidingWith)
+	{
+		if (pColliding->GetTag() == "Ladder")
+		{
+			//todo
+			//use peterpepper to move i guess
+
+
+			//glm::vec3 currentPos = m_actor->GetWorldPosition();
+			//currentPos.y += 1;
+			//m_actor->SetPosition(currentPos.x, currentPos.y);
+			//break;
+
+
+			if (pColliding->IsPointInCollider(glm::vec2(pCollider->GetPosition().x + pCollider->GetSize().x / 2, pCollider->GetPosition().y + pCollider->GetSize().y)))
+			{
+				glm::vec3 currentPos = m_actor->GetWorldPosition();
+				currentPos.y += 1;
+				m_actor->SetPosition(currentPos.x, currentPos.y);
+				break;
+			}
+		}
+
+	}
+}
+
 
 //play sound
 

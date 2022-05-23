@@ -1,5 +1,7 @@
 #include "MiniginPCH.h"
 #include "PeterPepper.h"
+#include "GameObject.h"
+#include "CollisionBox.h"
 
 dae::PeterPepper::PeterPepper()
 {
@@ -12,6 +14,15 @@ dae::PeterPepper::~PeterPepper()
 
 void dae::PeterPepper::Update(float deltaTime)
 {
+	CollisionBox* collision = m_pGameObject->GetComponent<CollisionBox>();
+	if (collision != nullptr)
+	{
+		auto test = collision->GetCollidingWith();
+		if (test.size() > 0)
+		{
+			std::cout << "im collidng \n";
+		}
+	}
 }
 void dae::PeterPepper::FixedUpdate(float deltaTime)
 {

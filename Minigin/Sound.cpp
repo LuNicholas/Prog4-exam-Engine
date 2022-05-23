@@ -139,8 +139,3 @@ LoggingSoundSystem::~LoggingSoundSystem()
 {
 	delete m_SoundSystem;
 }
-
-SoundServiceLocator::~SoundServiceLocator()
-{
-	delete m_SoundSystemInstance;
-}

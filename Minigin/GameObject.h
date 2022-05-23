@@ -65,18 +65,21 @@ namespace dae
 }
 
 
-template <class T>
-T* dae::GameObject::AddComponent(T* component)
-{
-
-	if (typeid(Component*) == typeid(dynamic_cast<Component*>(component)))
-	{
-		m_pComponents.push_back((Component*)(component));
-		return component;
-	}
-
-	return nullptr;
-}
+//template <class T>
+//T* dae::GameObject::AddComponent(T* component)
+//{
+//
+//	if (typeid(Component*) == typeid(dynamic_cast<Component*>(component)))
+//	{
+//		Component comp = dynamic_cast<Component*>(component);
+//		comp.m_pGameObject = this;
+//
+//		m_pComponents.push_back(comp);
+//		return component;
+//	}
+//
+//	return nullptr;
+//}
 
 template <class T>
 T* dae::GameObject::AddComponent()
@@ -85,6 +88,8 @@ T* dae::GameObject::AddComponent()
 	{
 		T* pComponent = new T();
 		pComponent->SetPosition(m_Transform.GetPosition().x, m_Transform.GetPosition().y);
+		pComponent->m_pGameObject = this;
+
 		m_pComponents.push_back(pComponent);
 		return pComponent;
 	}

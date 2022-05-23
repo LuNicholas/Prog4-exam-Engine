@@ -113,8 +113,8 @@ void dae::GameObject::SetPosition(float x, float y)
 
 	glm::vec3 oldPos = m_Transform.GetPosition();
 	glm::vec3 diff;
-	diff.x = oldPos.x - x;
-	diff.y = oldPos.y - y;
+	diff.x = x - oldPos.x;//////////// old - new or new - old??????
+	diff.y = y - oldPos.y;////////////
 	
 	m_Transform.SetPosition(x, y, 0.0f);
 

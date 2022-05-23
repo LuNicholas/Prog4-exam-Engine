@@ -78,6 +78,26 @@ private:
 	std::shared_ptr<dae::GameObject> m_actor;
 };
 
+class MoveUp : public Command, public dae::Subject
+{
+
+public:
+	explicit MoveUp(std::shared_ptr<dae::GameObject> actor);
+	void Execute() override;
+private:
+	std::shared_ptr<dae::GameObject> m_actor;
+};
+
+class MoveDown : public Command, public dae::Subject
+{
+
+public:
+	explicit MoveDown(std::shared_ptr<dae::GameObject> actor);
+	void Execute() override;
+private:
+	std::shared_ptr<dae::GameObject> m_actor;
+};
+
 class PlaySound : public Command
 {
 

@@ -117,9 +117,6 @@
     <ClInclude Include="PlayerUiComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SteamAchievement.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PeterPepper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -130,6 +127,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PcController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ladder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -227,9 +230,6 @@
     <ClCompile Include="PlayerUiComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SteamAchievement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PeterPepper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -240,6 +240,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PcController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ladder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,10 +1,7 @@
 #include "MiniginPCH.h"
 #include "PlayerUiComponent.h"
-#include "SteamAchievement.h"
 #include "PeterPepper.h"
 
-
-extern CSteamAchievements* g_SteamAchievements;
 
 dae::PlayerUiComponent::PlayerUiComponent()
 {
@@ -58,9 +55,6 @@ void dae::PlayerUiComponent::AddScore(int score)
 {
 	m_score += score;
 	m_pScoreText->SetText("score: " + std::to_string(m_score));
-
-	if (g_SteamAchievements && m_score >= 500)
-		g_SteamAchievements->SetAchievement("ACH_WIN_ONE_GAME");
 }
 
 

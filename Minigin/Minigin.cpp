@@ -1,6 +1,5 @@
 #include "MiniginPCH.h"
 #include "Minigin.h"
-#include <steam_api.h>
 #include <thread>
 #include "InputManager.h"
 #include "SceneManager.h"
@@ -17,6 +16,7 @@
 #include "AnimationComponent.h"
 #include "PeterPepper.h"
 #include "Sound.h"
+#include "CollisionBox.h"
 
 
 
@@ -48,8 +48,8 @@ void dae::Minigin::Initialize()
 		"Programming 4 assignment",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
-		640,
-		480,
+		624,
+		700,
 		SDL_WINDOW_OPENGL
 	);
 	if (m_Window == nullptr)
@@ -73,14 +73,13 @@ void dae::Minigin::LoadGame() const
 
 	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 
-	TextComponent* titleText = go->AddComponent<TextComponent>();
-	titleText->SetText("Programming 4 Assignment");
-	titleText->SetFont(font);
-	titleText->SetPosition(100, 30);
+	//levelsprite
+	auto levelGO = std::make_shared<GameObject>();
+	Texture2DComponent* levelTexture = levelGO->AddComponent<Texture2DComponent>();
+	levelTexture->SetTexture("testLevel.png");
+	levelTexture->SetPosition(0, 700 - 600);
+	scene.Add(levelGO);
 
-	Texture2DComponent* texture = go->AddComponent<Texture2DComponent>();
-	texture->SetTexture("logo.png");
-	texture->SetPosition(216, 180);
 
 	//fps game object
 	auto fpsGo = std::make_shared<GameObject>();
@@ -90,25 +89,38 @@ void dae::Minigin::LoadGame() const
 	scene.Add(fpsGo);
 
 
-	//test
-	auto testAnim = std::make_shared<GameObject>();
-	testAnim->SetPosition(150, 100);
-	SpriteAnimationComponent* spriteAnim = testAnim->AddComponent<SpriteAnimationComponent>();
-	spriteAnim->SetTexture("Peter_Forward.png");
-	spriteAnim->SetRowCol(1, 3);
-	spriteAnim->SetTextureSize(48, 16);
-	spriteAnim->SetFrameTime(0.5f);
-	scene.Add(testAnim);
-
-	std::unique_ptr<MoveLeft> moveLeft = std::make_unique<MoveLeft>(testAnim);
-	input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::IsPressed, std::move(moveLeft), 0);
-	std::unique_ptr<MoveRight> moveRight = std::make_unique<MoveRight>(testAnim);
-	input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::IsPressed, std::move(moveRight), 0);
-
 	//new peter pepper
 	auto peterPepperGo = std::make_shared<GameObject>();
 	PeterPepper* peterComp = peterPepperGo->AddComponent<PeterPepper>();
+
+	//adding animation
+	peterPepperGo->SetPosition(150, 300);
+	SpriteAnimationComponent* spriteAnim = peterPepperGo->AddComponent<SpriteAnimationComponent>();
+	spriteAnim->SetTexture("Peter_Forward.png");
+	spriteAnim->SetRowCol(1, 3);
+	spriteAnim->SetTextureSize(144, 48);
+	spriteAnim->SetFrameTime(0.5f);
+
+	//adding collision box
+	CollisionBox* ppBox = peterPepperGo->AddComponent<CollisionBox>();
+	ppBox->SetBox(48 + 2, 48 + 2);
+
 	scene.Add(peterPepperGo);
+
+
+	std::unique_ptr<MoveLeft> moveLeft = std::make_unique<MoveLeft>(peterPepperGo);
+	input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::IsPressed, std::move(moveLeft), 0);
+	std::unique_ptr<MoveRight> moveRight = std::make_unique<MoveRight>(peterPepperGo);
+	input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::IsPressed, std::move(moveRight), 0);
+
+
+	//test collision box
+	auto tesgo = std::make_shared<GameObject>();
+	CollisionBox* idk = tesgo->AddComponent<CollisionBox>();
+	tesgo->SetPosition(250, 300);
+	idk->SetBox(48, 48);
+	scene.Add(tesgo);
+
 
 
 	//UI
@@ -160,9 +172,21 @@ void dae::Minigin::LoadGame() const
 
 
 
+	//testLadder
+	auto ladderGO = std::make_shared<GameObject>();
+	CollisionBox* coll = ladderGO->AddComponent<CollisionBox>();
+	coll->SetTag("Ladder");
+	coll->SetBox(12, 200);
+	coll->SetPosition(300, 300);
+	scene.Add(ladderGO);
+
+	std::unique_ptr<MoveUp> moveUp= std::make_unique<MoveUp>(peterPepperGo);
+	input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::IsPressed, std::move(moveUp), 0);
+	std::unique_ptr<MoveDown> moveDown = std::make_unique<MoveDown>(peterPepperGo);
+	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::IsPressed, std::move(moveDown), 0);
+
+
 	std::cout << "\n Button A :Lose live\n Button Y: add score \n";
-
-
 
 	//SOUND
 
@@ -216,7 +240,6 @@ void dae::Minigin::Run()
 		float fixedTimeStep = 0.02f;
 		while (doContinue)
 		{
-			SteamAPI_RunCallbacks();
 
 			//time
 			const auto currentTime = chrono::high_resolution_clock::now();

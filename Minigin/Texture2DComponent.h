@@ -25,7 +25,6 @@ namespace dae
 	private:
 		Texture2DComponent();
 
-		Transform m_Transform;
 		std::shared_ptr<Texture2D> m_Texture{};	
 	};
 }

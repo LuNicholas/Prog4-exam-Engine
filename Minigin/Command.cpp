@@ -5,6 +5,7 @@
 #include "PlayerUiComponent.h"
 #include "CollisionBox.h"
 #include "Sound.h"
+#include "AnimationManager.h"
 
 
 //HitpepperCOmmand
@@ -38,11 +39,8 @@ MoveLeft::MoveLeft(std::shared_ptr<dae::GameObject> actor)
 }
 void MoveLeft::Execute()
 {
-	glm::vec3 currentPos = m_actor->GetWorldPosition();
-
-	currentPos.x -= 1;
-
-	m_actor->SetPosition(currentPos.x, currentPos.y);
+	//get peter pepper component and move like that 
+	m_actor->GetComponent<dae::PeterPepper>()->MoveLeft();
 }
 
 //MoveRight Command
@@ -54,12 +52,39 @@ MoveRight::MoveRight(std::shared_ptr<dae::GameObject> actor)
 void MoveRight::Execute()
 {
 
-	dae::PeterPepper* character = m_actor->GetComponent<dae::PeterPepper>();
+	m_actor->GetComponent<dae::PeterPepper>()->MoveRight();
 
 
-	glm::vec3 currentPos = m_actor->GetWorldPosition();
-	currentPos.x += 1;
-	m_actor->SetPosition(currentPos.x, currentPos.y);
+	//dae::CollisionBox* pCollider = m_actor->GetComponent<dae::CollisionBox>();
+	//auto collidingWith = pCollider->GetCollidingWith();
+
+	//for (dae::CollisionBox* pColliding : collidingWith)
+	//{
+	//	if (pColliding->GetTag() == "floor")
+	//	{
+	//		//todo
+	//		//use peterpepper to move i guess
+
+	//		if (pColliding->IsPointInCollider(glm::vec2(pCollider->GetPosition().x + pCollider->GetSize().x, pCollider->GetPosition().y + pCollider->GetSize().y)))
+	//		{
+	//			glm::vec3 currentPos = m_actor->GetWorldPosition();
+	//			currentPos.x += 1;
+	//			m_actor->SetPosition(currentPos.x, currentPos.y);
+	//			m_actor->GetComponent<dae::AnimationManager>()->SetActiveAnimation("right");
+	//			break;
+	//		}
+	//	}
+
+	//}
+
+
+
+	//dae::PeterPepper* character = m_actor->GetComponent<dae::PeterPepper>();
+
+
+	//glm::vec3 currentPos = m_actor->GetWorldPosition();
+	//currentPos.x += 1;
+	//m_actor->SetPosition(currentPos.x, currentPos.y);
 }
 
 MoveUp::MoveUp(std::shared_ptr<dae::GameObject> actor)
@@ -76,12 +101,21 @@ void MoveUp::Execute()
 	{
 		if (pColliding->GetTag() == "Ladder")
 		{
-			glm::vec3 currentPos = m_actor->GetWorldPosition();
-			currentPos.y -= 1;
-			m_actor->SetPosition(currentPos.x, currentPos.y);
-			break;
-		}
+			//glm::vec3 currentPos = m_actor->GetWorldPosition();
+			//currentPos.y -= 1;
+			//m_actor->SetPosition(currentPos.x, currentPos.y);
+			//break;
 
+
+			if (pColliding->IsPointInCollider(glm::vec2(pCollider->GetPosition().x + pCollider->GetSize().x / 2, pCollider->GetPosition().y)))
+			{
+				glm::vec3 currentPos = m_actor->GetWorldPosition();
+				currentPos.y -= 1;
+				m_actor->SetPosition(currentPos.x, currentPos.y);
+				m_actor->GetComponent<dae::AnimationManager>()->SetActiveAnimation("up");
+				break;
+			}
+		}
 	}
 }
 MoveDown::MoveDown(std::shared_ptr<dae::GameObject> actor)
@@ -113,6 +147,7 @@ void MoveDown::Execute()
 				glm::vec3 currentPos = m_actor->GetWorldPosition();
 				currentPos.y += 1;
 				m_actor->SetPosition(currentPos.x, currentPos.y);
+				m_actor->GetComponent<dae::AnimationManager>()->SetActiveAnimation("forward");
 				break;
 			}
 		}

@@ -13,6 +13,10 @@ namespace dae
 		void FixedUpdate(float deltaTime);
 		void Render() const;
 
+		void MoveLeft();
+		void MoveRight();
+
+
 		dae::Health* GetHealth() const;
 
 		~PeterPepper();
@@ -25,6 +29,8 @@ namespace dae
 		PeterPepper();
 
 		dae::Health* m_pHealth;
+
+		float m_MoveSpeed;
 
 	};
 }

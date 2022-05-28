@@ -13,10 +13,12 @@
 #include "Component.h"
 #include "FpsComponent.h"
 #include "PlayerUiComponent.h"
-#include "AnimationComponent.h"
+//#include "SpriteAnimation.h"
+#include "AnimationManager.h"
 #include "PeterPepper.h"
 #include "Sound.h"
 #include "CollisionBox.h"
+#include "Bun.h"
 
 
 
@@ -75,6 +77,7 @@ void dae::Minigin::LoadGame() const
 
 	//levelsprite
 	auto levelGO = std::make_shared<GameObject>();
+	levelGO->AddComponent<Texture2DComponent>()->SetTexture("testLevel.png");
 	Texture2DComponent* levelTexture = levelGO->AddComponent<Texture2DComponent>();
 	levelTexture->SetTexture("testLevel.png");
 	levelTexture->SetPosition(0, 700 - 600);
@@ -92,17 +95,21 @@ void dae::Minigin::LoadGame() const
 	//new peter pepper
 	auto peterPepperGo = std::make_shared<GameObject>();
 	PeterPepper* peterComp = peterPepperGo->AddComponent<PeterPepper>();
+	peterPepperGo->SetPosition(175, 295);
 
 	//adding animation
-	peterPepperGo->SetPosition(150, 300);
-	SpriteAnimationComponent* spriteAnim = peterPepperGo->AddComponent<SpriteAnimationComponent>();
-	spriteAnim->SetTexture("Peter_Forward.png");
-	spriteAnim->SetRowCol(1, 3);
-	spriteAnim->SetTextureSize(144, 48);
-	spriteAnim->SetFrameTime(0.5f);
+	AnimationManager* peterAnimManager = peterPepperGo->AddComponent<AnimationManager>();
+	peterAnimManager->AddAnimation("Peter_Up.png", "up", 144, 48, 3, 1, 0.5f);
+	peterAnimManager->AddAnimation("Peter_Forward.png", "forward", 144, 48, 3, 1, 0.5f);
+	peterAnimManager->AddAnimation("Peter_Left.png", "left", 144, 48, 3, 1, 0.5f);
+	peterAnimManager->AddAnimation("Peter_Right.png", "right", 144, 48, 3, 1, 0.5f);
+	peterAnimManager->SetActiveAnimation("forward");
+
+
 
 	//adding collision box
 	CollisionBox* ppBox = peterPepperGo->AddComponent<CollisionBox>();
+	ppBox->SetTag("Player");
 	ppBox->SetBox(48 + 2, 48 + 2);
 
 	scene.Add(peterPepperGo);
@@ -117,8 +124,14 @@ void dae::Minigin::LoadGame() const
 	//test collision box
 	auto tesgo = std::make_shared<GameObject>();
 	CollisionBox* idk = tesgo->AddComponent<CollisionBox>();
-	tesgo->SetPosition(250, 300);
-	idk->SetBox(48, 48);
+	idk->SetTag("floor");
+	idk->SetPosition(0, 340);
+	idk->SetBox(500, 10);
+
+	CollisionBox* idk2 = tesgo->AddComponent<CollisionBox>();
+	idk2->SetTag("floor");
+	idk2->SetPosition(0, 450);
+	idk2->SetBox(500, 10);
 	scene.Add(tesgo);
 
 
@@ -141,8 +154,6 @@ void dae::Minigin::LoadGame() const
 	std::unique_ptr<BunDropped> scorePeterCommand = std::make_unique<BunDropped>(peterPepperGo.get());
 	scorePeterCommand->addObserver(peterUiComp);
 	input.AddCommand(dae::ControllerButton::ButtonY, dae::ButtonActivateState::OnButtonRelease, std::move(scorePeterCommand), 0);
-
-
 
 
 	//sally salt
@@ -177,7 +188,7 @@ void dae::Minigin::LoadGame() const
 	CollisionBox* coll = ladderGO->AddComponent<CollisionBox>();
 	coll->SetTag("Ladder");
 	coll->SetBox(12, 200);
-	coll->SetPosition(300, 300);
+	coll->SetPosition(300, 280);
 	scene.Add(ladderGO);
 
 	std::unique_ptr<MoveUp> moveUp= std::make_unique<MoveUp>(peterPepperGo);
@@ -186,7 +197,32 @@ void dae::Minigin::LoadGame() const
 	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::IsPressed, std::move(moveDown), 0);
 
 
+
+
+
 	std::cout << "\n Button A :Lose live\n Button Y: add score \n";
+
+
+	///BUN TEST
+	auto bunGO = std::make_shared<GameObject>();
+	bunGO->SetPosition(50, 300);
+	Bun* bun = bunGO->AddComponent<Bun>();
+	bun->Init();
+	Texture2DComponent* bunTexture = bunGO->AddComponent<Texture2DComponent>();
+	bunTexture->SetTexture("bun.png");
+
+	scene.Add(bunGO);
+
+	///BUN TEST2
+	auto bunGO2 = std::make_shared<GameObject>();
+	bunGO2->SetPosition(50, 400);
+	Bun* bunWHO = bunGO2->AddComponent<Bun>();
+	bunWHO->Init();
+	Texture2DComponent* bunTexture = bunGO->AddComponent<Texture2DComponent>();
+	bunTexture->SetTexture("bun.png");
+	scene.Add(bunGO2);
+
+
 
 	//SOUND
 
@@ -203,8 +239,6 @@ void dae::Minigin::LoadGame() const
 	input.AddCommand(dae::ControllerButton::ButtonB, dae::ButtonActivateState::OnButtonRelease, std::move(playMeow), 0);
 
 	std::cout << "\n\n Button B :PLAY SOUND\n";
-
-
 }
 
 void dae::Minigin::Cleanup()

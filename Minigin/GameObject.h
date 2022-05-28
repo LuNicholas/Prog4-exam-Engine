@@ -17,9 +17,6 @@ namespace dae
 		void Render() const;
 
 		template <typename T>
-		T* AddComponent(T* component);
-
-		template <typename T>
 		T* AddComponent();
 
 		template <typename T>
@@ -57,29 +54,11 @@ namespace dae
 		Transform m_Transform;
 		bool m_positionIsDirty = true;
 
-
 		void UpdateWorldPosition();
 		void SetLocalPosition(const glm::vec3& pos);
 
 	};
 }
-
-
-//template <class T>
-//T* dae::GameObject::AddComponent(T* component)
-//{
-//
-//	if (typeid(Component*) == typeid(dynamic_cast<Component*>(component)))
-//	{
-//		Component comp = dynamic_cast<Component*>(component);
-//		comp.m_pGameObject = this;
-//
-//		m_pComponents.push_back(comp);
-//		return component;
-//	}
-//
-//	return nullptr;
-//}
 
 template <class T>
 T* dae::GameObject::AddComponent()

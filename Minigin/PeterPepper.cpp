@@ -53,7 +53,7 @@ void dae::PeterPepper::MoveLeft()
 			{
 				glm::vec3 currentPos = m_pGameObject->GetWorldPosition();
 				currentPos.x -= 1;
-				currentPos.y = pColliding->GetPosition().y - pCollider->GetSize().y + 1;
+				currentPos.y = pColliding->GetPosition().y - pCollider->GetSize().y + 5;
 				m_pGameObject->SetPosition(currentPos.x, currentPos.y);
 				m_pGameObject->GetComponent<dae::AnimationManager>()->SetActiveAnimation("left");
 				break;
@@ -77,7 +77,7 @@ void dae::PeterPepper::MoveRight()
 			{
 				glm::vec3 currentPos = m_pGameObject->GetWorldPosition();
 				currentPos.x += 1;
-				currentPos.y = pColliding->GetPosition().y - pCollider->GetSize().y + 1;
+				currentPos.y = pColliding->GetPosition().y - pCollider->GetSize().y + 5;
 				m_pGameObject->SetPosition(currentPos.x, currentPos.y);
 				m_pGameObject->GetComponent<dae::AnimationManager>()->SetActiveAnimation("right");
 				break;

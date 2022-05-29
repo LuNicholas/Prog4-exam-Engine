@@ -43,10 +43,18 @@ void dae::CollisionBox::DrawBox() const
 {
 	glm::vec3 transform = m_Transform.GetPosition();
 
-	Renderer::GetInstance().RenderLine(transform.x, transform.y, transform.x, transform.y + m_Height);
-	Renderer::GetInstance().RenderLine(transform.x, transform.y + m_Height, transform.x + m_Width, transform.y + m_Height);
-	Renderer::GetInstance().RenderLine(transform.x + m_Width, transform.y + m_Height, transform.x + m_Width, transform.y);
-	Renderer::GetInstance().RenderLine(transform.x + m_Width, transform.y, transform.x, transform.y);
+	SDL_Renderer* renderer = Renderer::GetInstance().GetSDLRenderer();
+
+	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+	SDL_RenderDrawLineF(renderer, transform.x, transform.y, transform.x, transform.y + m_Height);
+	SDL_RenderDrawLineF(renderer, transform.x, transform.y + m_Height, transform.x + m_Width, transform.y + m_Height);
+	SDL_RenderDrawLineF(renderer, transform.x + m_Width, transform.y + m_Height, transform.x + m_Width, transform.y);
+	SDL_RenderDrawLineF(renderer, transform.x + m_Width, transform.y, transform.x, transform.y);
+
+	//Renderer::GetInstance().RenderLine(transform.x, transform.y, transform.x, transform.y + m_Height);
+	//Renderer::GetInstance().RenderLine(transform.x, transform.y + m_Height, transform.x + m_Width, transform.y + m_Height);
+	//Renderer::GetInstance().RenderLine(transform.x + m_Width, transform.y + m_Height, transform.x + m_Width, transform.y);
+	//Renderer::GetInstance().RenderLine(transform.x + m_Width, transform.y, transform.x, transform.y);
 }
 
 std::vector<dae::CollisionBox*> dae::CollisionBox::GetCollidingWith()

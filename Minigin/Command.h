@@ -58,7 +58,7 @@ private:
 	dae::GameObject* m_actor;
 };
 
-class MoveLeft : public Command, public dae::Subject
+class MoveLeft : public Command
 {
 
 public:
@@ -68,7 +68,7 @@ private:
 	std::shared_ptr<dae::GameObject> m_actor;
 };
 
-class MoveRight : public Command, public dae::Subject
+class MoveRight : public Command
 {
 
 public:
@@ -78,7 +78,7 @@ private:
 	std::shared_ptr<dae::GameObject> m_actor;
 };
 
-class MoveUp : public Command, public dae::Subject
+class MoveUp : public Command
 {
 
 public:
@@ -88,7 +88,7 @@ private:
 	std::shared_ptr<dae::GameObject> m_actor;
 };
 
-class MoveDown : public Command, public dae::Subject
+class MoveDown : public Command
 {
 
 public:

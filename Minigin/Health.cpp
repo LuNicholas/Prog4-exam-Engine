@@ -2,6 +2,7 @@
 #include "Health.h"
 #include "GameObject.h"
 #include "Observer.h"
+#include "Events.h"
 
 dae::Health::Health(int startHealth)
 	:m_currentHealth{ startHealth }

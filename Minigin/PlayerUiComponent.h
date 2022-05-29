@@ -5,7 +5,7 @@
 namespace dae
 {
 	class Font;
-	class PlayerUiComponent : public Component, public Observer
+	class PlayerUiComponent final : public Component, public Observer
 	{
 	public:
 		friend class GameObject;
@@ -28,7 +28,7 @@ namespace dae
 
 
 	private:
-		void onNotify(const dae::GameObject& go, Event event);
+		void onNotify(const dae::GameObject& go, const Event& event) override;
 		PlayerUiComponent();
 
 		dae::TextComponent* m_pHpText;

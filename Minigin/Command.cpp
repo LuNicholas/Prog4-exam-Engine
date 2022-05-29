@@ -6,6 +6,7 @@
 #include "CollisionBox.h"
 #include "Sound.h"
 #include "AnimationManager.h"
+#include "Events.h"
 
 
 //HitpepperCOmmand
@@ -53,7 +54,6 @@ void MoveRight::Execute()
 {
 
 	m_actor->GetComponent<dae::PeterPepper>()->MoveRight();
-
 
 	//dae::CollisionBox* pCollider = m_actor->GetComponent<dae::CollisionBox>();
 	//auto collidingWith = pCollider->GetCollidingWith();

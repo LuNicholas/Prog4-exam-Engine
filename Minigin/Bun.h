@@ -1,11 +1,12 @@
 #pragma once
 #include "Component.h"
+#include "Subject.h"
 
 namespace dae
 {
 	class CollisionBox;
 
-	class Bun : public Component
+	class Bun final : public Component, public Subject
 	{
 		friend class GameObject;
 	public:
@@ -29,6 +30,8 @@ namespace dae
 		float m_BoxWidth;
 		float m_BoxHeight;
 		int m_NrOfBoxes;
+		int m_FloorOffset = 7;
+		bool m_OnPlate;
 
 		CollisionBox* m_CurrentFloor;
 		float m_DroppingSpeed;

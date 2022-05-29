@@ -1,11 +1,6 @@
 #pragma once
 
-enum class Event
-{
-	PlayerHit,
-	BunDropped
-};
-
+enum Event;
 
 namespace dae
 {
@@ -18,7 +13,7 @@ namespace dae
 	public:
 		Observer();
 		virtual ~Observer();
-		virtual void onNotify(const dae::GameObject& entity, Event event) = 0;
+		virtual void onNotify(const dae::GameObject& entity, const Event& event) = 0;
 	private:
 		Observer* m_next;
 		Observer* m_previous;

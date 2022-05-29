@@ -6,7 +6,7 @@ namespace dae
 {
 	class SpriteAnimation;
 
-	class AnimationManager : public Component
+	class AnimationManager final: public Component
 	{
 	public:
 		friend class GameObject;

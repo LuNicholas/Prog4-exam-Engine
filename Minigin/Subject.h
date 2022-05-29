@@ -1,7 +1,7 @@
 #pragma once
 
 
-enum class Event;
+enum Event;
 
 namespace dae
 {
@@ -18,7 +18,7 @@ namespace dae
 		void removeObserver(Observer* observer);
 
 	protected:
-		void Notify(const GameObject& go, Event event);
+		void Notify(const GameObject& go, const Event& event);
 
 	private:
 		Observer* m_head;

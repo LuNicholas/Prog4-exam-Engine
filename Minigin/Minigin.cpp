@@ -77,9 +77,8 @@ void dae::Minigin::LoadGame() const
 
 	//levelsprite
 	auto levelGO = std::make_shared<GameObject>();
-	levelGO->AddComponent<Texture2DComponent>()->SetTexture("testLevel.png");
 	Texture2DComponent* levelTexture = levelGO->AddComponent<Texture2DComponent>();
-	levelTexture->SetTexture("testLevel.png");
+	levelTexture->SetTexture("level1.png");
 	levelTexture->SetPosition(0, 700 - 600);
 	scene.Add(levelGO);
 
@@ -87,7 +86,7 @@ void dae::Minigin::LoadGame() const
 	//fps game object
 	auto fpsGo = std::make_shared<GameObject>();
 	FpsComponent* fpsComponent = fpsGo->AddComponent<FpsComponent>();
-	fpsComponent->SetPosition(300, 100);
+	fpsComponent->SetPosition(10, 10);
 	fpsComponent->SetFont(font);
 	scene.Add(fpsGo);
 
@@ -95,22 +94,22 @@ void dae::Minigin::LoadGame() const
 	//new peter pepper
 	auto peterPepperGo = std::make_shared<GameObject>();
 	PeterPepper* peterComp = peterPepperGo->AddComponent<PeterPepper>();
-	peterPepperGo->SetPosition(175, 295);
+	peterPepperGo->SetPosition(300, 540);
 
 	//adding animation
 	AnimationManager* peterAnimManager = peterPepperGo->AddComponent<AnimationManager>();
-	peterAnimManager->AddAnimation("Peter_Up.png", "up", 144, 48, 3, 1, 0.5f);
-	peterAnimManager->AddAnimation("Peter_Forward.png", "forward", 144, 48, 3, 1, 0.5f);
-	peterAnimManager->AddAnimation("Peter_Left.png", "left", 144, 48, 3, 1, 0.5f);
-	peterAnimManager->AddAnimation("Peter_Right.png", "right", 144, 48, 3, 1, 0.5f);
+	peterAnimManager->AddAnimation("Peter_Up.png", "up", 96, 32, 3, 1, 0.5f);
+	peterAnimManager->AddAnimation("Peter_Forward.png", "forward", 96, 32, 3, 1, 0.5f);
+	peterAnimManager->AddAnimation("Peter_Left.png", "left", 96, 32, 3, 1, 0.5f);
+	peterAnimManager->AddAnimation("Peter_Right.png", "right", 96, 32, 3, 1, 0.5f);
 	peterAnimManager->SetActiveAnimation("forward");
 
 
 
-	//adding collision box
+	//adding peter collision box
 	CollisionBox* ppBox = peterPepperGo->AddComponent<CollisionBox>();
 	ppBox->SetTag("Player");
-	ppBox->SetBox(48 + 2, 48 + 2);
+	ppBox->SetBox(32, 32);
 
 	scene.Add(peterPepperGo);
 
@@ -121,20 +120,6 @@ void dae::Minigin::LoadGame() const
 	input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::IsPressed, std::move(moveRight), 0);
 
 
-	//test collision box
-	auto tesgo = std::make_shared<GameObject>();
-	CollisionBox* idk = tesgo->AddComponent<CollisionBox>();
-	idk->SetTag("floor");
-	idk->SetPosition(0, 340);
-	idk->SetBox(500, 10);
-
-	CollisionBox* idk2 = tesgo->AddComponent<CollisionBox>();
-	idk2->SetTag("floor");
-	idk2->SetPosition(0, 450);
-	idk2->SetBox(500, 10);
-	scene.Add(tesgo);
-
-
 
 	//UI
 	auto UiPeter = std::make_shared<GameObject>();
@@ -142,9 +127,8 @@ void dae::Minigin::LoadGame() const
 	peterUiComp->SetFont(font);
 	peterUiComp->SetLives(peterComp->GetHealth()->GetHealth());
 	peterUiComp->SetLives(3);
-	peterUiComp->SetPosition(10, 400);
+	peterUiComp->SetPosition(450, 10);
 	scene.Add(UiPeter);
-
 	peterComp->GetHealth()->addObserver(peterUiComp);
 
 	//peterCommand
@@ -155,6 +139,12 @@ void dae::Minigin::LoadGame() const
 	scorePeterCommand->addObserver(peterUiComp);
 	input.AddCommand(dae::ControllerButton::ButtonY, dae::ButtonActivateState::OnButtonRelease, std::move(scorePeterCommand), 0);
 
+	std::unique_ptr<MoveUp> moveUp = std::make_unique<MoveUp>(peterPepperGo);
+	input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::IsPressed, std::move(moveUp), 0);
+	std::unique_ptr<MoveDown> moveDown = std::make_unique<MoveDown>(peterPepperGo);
+	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::IsPressed, std::move(moveDown), 0);
+
+	/*
 
 	//sally salt
 	auto sallySaltGo = std::make_shared<GameObject>();
@@ -181,46 +171,12 @@ void dae::Minigin::LoadGame() const
 	scoreSallyCommand->addObserver(sallyUiComp);
 	input.AddCommand(dae::ControllerButton::ButtonY, dae::ButtonActivateState::OnButtonRelease, std::move(scoreSallyCommand), 1);
 
-
-
-	//testLadder
-	auto ladderGO = std::make_shared<GameObject>();
-	CollisionBox* coll = ladderGO->AddComponent<CollisionBox>();
-	coll->SetTag("Ladder");
-	coll->SetBox(12, 200);
-	coll->SetPosition(300, 280);
-	scene.Add(ladderGO);
-
-	std::unique_ptr<MoveUp> moveUp= std::make_unique<MoveUp>(peterPepperGo);
-	input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::IsPressed, std::move(moveUp), 0);
-	std::unique_ptr<MoveDown> moveDown = std::make_unique<MoveDown>(peterPepperGo);
-	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::IsPressed, std::move(moveDown), 0);
-
-
-
+	*/
 
 
 	std::cout << "\n Button A :Lose live\n Button Y: add score \n";
 
 
-	///BUN TEST
-	auto bunGO = std::make_shared<GameObject>();
-	bunGO->SetPosition(50, 300);
-	Bun* bun = bunGO->AddComponent<Bun>();
-	bun->Init();
-	Texture2DComponent* bunTexture = bunGO->AddComponent<Texture2DComponent>();
-	bunTexture->SetTexture("bun.png");
-
-	scene.Add(bunGO);
-
-	///BUN TEST2
-	auto bunGO2 = std::make_shared<GameObject>();
-	bunGO2->SetPosition(50, 400);
-	Bun* bunWHO = bunGO2->AddComponent<Bun>();
-	bunWHO->Init();
-	Texture2DComponent* bunTexture = bunGO->AddComponent<Texture2DComponent>();
-	bunTexture->SetTexture("bun.png");
-	scene.Add(bunGO2);
 
 
 
@@ -233,12 +189,188 @@ void dae::Minigin::LoadGame() const
 #endif // _DEBUG
 
 
-	
+
 	SoundServiceLocator::GetSoundSystem().RegisterSound(0, "../Data/meow1.wav");
 	std::unique_ptr<PlaySound> playMeow = std::make_unique<PlaySound>(0);
 	input.AddCommand(dae::ControllerButton::ButtonB, dae::ButtonActivateState::OnButtonRelease, std::move(playMeow), 0);
 
 	std::cout << "\n\n Button B :PLAY SOUND\n";
+
+
+
+	//LEVEL COLLISION 
+	//LEVEL FLOORS
+	{
+		int floorWidth = 13;
+		auto levelFloor = std::make_shared<GameObject>();
+		CollisionBox* floor1 = levelFloor->AddComponent<CollisionBox>();
+		floor1->SetTag("floor");
+		floor1->SetPosition(5, 565);
+		floor1->SetBox(613, floorWidth);
+
+		CollisionBox* floor2 = levelFloor->AddComponent<CollisionBox>();
+		floor2->SetTag("floor");
+		floor2->SetPosition(5, 469);
+		floor2->SetBox(470, floorWidth);
+
+		CollisionBox* floor3 = levelFloor->AddComponent<CollisionBox>();
+		floor3->SetTag("floor");
+		floor3->SetPosition(438, 420);
+		floor3->SetBox(180, floorWidth);
+
+		CollisionBox* floor4 = levelFloor->AddComponent<CollisionBox>();
+		floor4->SetTag("floor");
+		floor4->SetPosition(150, 373);
+		floor4->SetBox(325, floorWidth);
+
+		CollisionBox* floor5 = levelFloor->AddComponent<CollisionBox>();
+		floor5->SetTag("floor");
+		floor5->SetPosition(5, 325);
+		floor5->SetBox(180, floorWidth);
+
+
+		CollisionBox* floor6 = levelFloor->AddComponent<CollisionBox>();
+		floor6->SetTag("floor");
+		floor6->SetPosition(438, 325);
+		floor6->SetBox(180, floorWidth);
+
+		CollisionBox* floor7 = levelFloor->AddComponent<CollisionBox>();
+		floor7->SetTag("floor");
+		floor7->SetPosition(150, 277);
+		floor7->SetBox(180, floorWidth);
+
+		CollisionBox* floor8 = levelFloor->AddComponent<CollisionBox>();
+		floor8->SetTag("floor");
+		floor8->SetPosition(5, 230);
+		floor8->SetBox(180, floorWidth);
+
+		CollisionBox* floor9 = levelFloor->AddComponent<CollisionBox>();
+		floor9->SetTag("floor");
+		floor9->SetPosition(292, 230);
+		floor9->SetBox(325, floorWidth);
+
+		CollisionBox* floor10 = levelFloor->AddComponent<CollisionBox>();
+		floor10->SetTag("floor");
+		floor10->SetPosition(5, 133);
+		floor10->SetBox(613, floorWidth);
+
+		scene.Add(levelFloor);
+
+	}
+
+	//LEVEL LADDERS
+	{
+		//testLadder
+		int ladderWidth = 10;
+		auto ladderGO = std::make_shared<GameObject>();
+		CollisionBox* ladder1 = ladderGO->AddComponent<CollisionBox>();
+		ladder1->SetTag("Ladder");
+		ladder1->SetPosition(18, 300);
+		ladder1->SetBox(ladderWidth, 271);
+
+		CollisionBox* ladder2 = ladderGO->AddComponent<CollisionBox>();
+		ladder2->SetTag("Ladder");
+		ladder2->SetPosition(18, 108);
+		ladder2->SetBox(ladderWidth, 130);
+
+		CollisionBox* ladder3 = ladderGO->AddComponent<CollisionBox>();
+		ladder3->SetTag("Ladder");
+		ladder3->SetPosition(90, 205);
+		ladder3->SetBox(ladderWidth, 271);
+
+		CollisionBox* ladder4 = ladderGO->AddComponent<CollisionBox>();
+		ladder4->SetTag("Ladder");
+		ladder4->SetPosition(164, 109);
+		ladder4->SetBox(ladderWidth, 462);
+
+		CollisionBox* ladder5 = ladderGO->AddComponent<CollisionBox>();
+		ladder5->SetTag("Ladder");
+		ladder5->SetPosition(235, 109);
+		ladder5->SetBox(ladderWidth, 176);
+
+		CollisionBox* ladder6 = ladderGO->AddComponent<CollisionBox>();
+		ladder6->SetTag("Ladder");
+		ladder6->SetPosition(307, 109);
+		ladder6->SetBox(ladderWidth, 462);
+
+		CollisionBox* ladder7 = ladderGO->AddComponent<CollisionBox>();
+		ladder7->SetTag("Ladder");
+		ladder7->SetPosition(380, 205);
+		ladder7->SetBox(ladderWidth, 176);
+
+		CollisionBox* ladder8 = ladderGO->AddComponent<CollisionBox>();
+		ladder8->SetTag("Ladder");
+		ladder8->SetPosition(450, 109);
+		ladder8->SetBox(ladderWidth, 462);
+
+		CollisionBox* ladder9 = ladderGO->AddComponent<CollisionBox>();
+		ladder9->SetTag("Ladder");
+		ladder9->SetPosition(523, 300);
+		ladder9->SetBox(ladderWidth, 271);
+
+		CollisionBox* ladder10 = ladderGO->AddComponent<CollisionBox>();
+		ladder10->SetTag("Ladder");
+		ladder10->SetPosition(595, 396);
+		ladder10->SetBox(ladderWidth, 175);
+
+		CollisionBox* ladder11 = ladderGO->AddComponent<CollisionBox>();
+		ladder11->SetTag("Ladder");
+		ladder11->SetPosition(595, 109);
+		ladder11->SetBox(ladderWidth, 222);
+
+		scene.Add(ladderGO);
+	}
+
+	//first burger
+	{
+		//add burgers
+		auto topBunGo = std::make_shared<GameObject>();
+		topBunGo->SetPosition(50, 210);
+		Bun* topBun = topBunGo->AddComponent<Bun>();
+		topBun->Init();
+		Texture2DComponent* topBunTexture = topBunGo->AddComponent<Texture2DComponent>();
+		topBunTexture->SetTexture("bun.png");
+		scene.Add(topBunGo);
+
+		auto midBunGo = std::make_shared<GameObject>();
+		midBunGo->SetPosition(50, 300);
+		Bun* midBun = midBunGo->AddComponent<Bun>();
+		midBun->Init();
+		Texture2DComponent* midBunTexture = midBunGo->AddComponent<Texture2DComponent>();
+		midBunTexture->SetTexture("bun.png");
+		scene.Add(midBunGo);
+
+		auto mid2BunGo = std::make_shared<GameObject>();
+		mid2BunGo->SetPosition(50, 440);
+		Bun* mid2Bun = mid2BunGo->AddComponent<Bun>();
+		mid2Bun->Init();
+		Texture2DComponent* midBun2Texture = mid2BunGo->AddComponent<Texture2DComponent>();
+		midBun2Texture->SetTexture("bun.png");
+		scene.Add(mid2BunGo);
+
+		auto botBunGo = std::make_shared<GameObject>();
+		botBunGo->SetPosition(50, 530);
+		Bun* botBun = botBunGo->AddComponent<Bun>();
+		botBun->Init();
+		Texture2DComponent* botBunTexture = botBunGo->AddComponent<Texture2DComponent>();
+		botBunTexture->SetTexture("bun.png");
+		scene.Add(botBunGo);
+
+		//ADDING TESTPLATE
+		auto plate1 = std::make_shared<GameObject>();
+		CollisionBox* floor6 = plate1->AddComponent<CollisionBox>();
+		floor6->SetTag("plate");
+		floor6->SetPosition(38, 695);
+		floor6->SetBox(20, 10);
+		scene.Add(plate1);
+
+		topBun->addObserver(peterUiComp);
+		midBun->addObserver(peterUiComp);
+		mid2Bun->addObserver(peterUiComp);
+		botBun->addObserver(peterUiComp);
+	}
+
+
 }
 
 void dae::Minigin::Cleanup()

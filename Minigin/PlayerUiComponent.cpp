@@ -1,7 +1,7 @@
 #include "MiniginPCH.h"
 #include "PlayerUiComponent.h"
 #include "PeterPepper.h"
-
+#include "Events.h"
 
 dae::PlayerUiComponent::PlayerUiComponent()
 {
@@ -58,7 +58,7 @@ void dae::PlayerUiComponent::AddScore(int score)
 }
 
 
-void dae::PlayerUiComponent::onNotify(const dae::GameObject& go, Event event)
+void dae::PlayerUiComponent::onNotify(const dae::GameObject& go, const Event& event)
 {
 	switch (event)
 	{

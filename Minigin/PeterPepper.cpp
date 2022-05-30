@@ -85,3 +85,12 @@ void dae::PeterPepper::MoveRight()
 		}
 	}
 }
+
+void dae::PeterPepper::IdleForward()
+{
+	m_pGameObject->GetComponent<dae::AnimationManager>()->SetActiveAnimation("idleForward");
+}
+void dae::PeterPepper::IdleUp()
+{
+	m_pGameObject->GetComponent<dae::AnimationManager>()->SetActiveAnimation("idleUp");
+}

@@ -15,7 +15,8 @@ namespace dae
 
 		void MoveLeft();
 		void MoveRight();
-
+		void IdleForward();
+		void IdleUp();
 
 		dae::Health* GetHealth() const;
 

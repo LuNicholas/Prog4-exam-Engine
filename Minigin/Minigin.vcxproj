@@ -224,6 +224,7 @@ xcopy $(SolutionDir)3rdParty\steam_appid.txt $(OutputPath) /Y</Command>
     <ClInclude Include="..\3rdParty\imgui-1.87\imstb_textedit.h" />
     <ClInclude Include="..\3rdParty\imgui-1.87\imstb_truetype.h" />
     <ClInclude Include="Bun.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Events.h" />
     <ClInclude Include="SpriteAnimation.h" />
     <ClInclude Include="AnimationManager.h" />
@@ -335,6 +336,7 @@ xcopy $(SolutionDir)3rdParty\steam_appid.txt $(OutputPath) /Y</Command>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)3rdParty\imgui-1.87;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="Bun.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="SpriteAnimation.cpp" />
     <ClCompile Include="AnimationManager.cpp" />
     <ClCompile Include="CollisionBox.cpp" />

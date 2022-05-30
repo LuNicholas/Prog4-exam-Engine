@@ -20,7 +20,7 @@ void dae::AnimationManager::Update(float deltaTime)
 	m_Animations[m_ActiveAnim]->Update(deltaTime);
 	m_Animations[m_ActiveAnim]->SetTransform(m_Transform);
 
-	//m_ActiveAnim = "forward";
+
 }
 void dae::AnimationManager::FixedUpdate(float deltaTime)
 {

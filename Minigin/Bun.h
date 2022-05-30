@@ -5,7 +5,7 @@
 namespace dae
 {
 	class CollisionBox;
-
+	class Texture2D;
 	class Bun final : public Component, public Subject
 	{
 		friend class GameObject;
@@ -16,7 +16,7 @@ namespace dae
 		void FixedUpdate(float deltaTime);
 		void Render() const;
 
-		void Init();
+		void Init(const std::string& textureFileName);
 
 		Bun(const Bun& other) = delete;
 		Bun(Bun&& other) = delete;
@@ -30,12 +30,17 @@ namespace dae
 		float m_BoxWidth;
 		float m_BoxHeight;
 		int m_NrOfBoxes;
-		int m_FloorOffset = 7;
+		int m_FloorOffset;
 		bool m_OnPlate;
+		int m_WalkedOnOffset;
 
 		CollisionBox* m_CurrentFloor;
 		float m_DroppingSpeed;
 		bool m_IsDropping;
+
+		std::shared_ptr<Texture2D> m_Texture{};
+
+		void resetIngredient();
 	};
 
 }

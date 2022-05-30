@@ -22,7 +22,7 @@ void dae::CollisionBox::FixedUpdate(float deltaTime)
 }
 void dae::CollisionBox::Render() const
 {
-	DrawBox();
+	//DrawBox();
 }
 
 void dae::CollisionBox::SetBox(int width, int height)
@@ -30,6 +30,13 @@ void dae::CollisionBox::SetBox(int width, int height)
 	m_Width = width;
 	m_Height = height;
 }
+glm::vec4 dae::CollisionBox::GetBox()
+{
+	glm::vec3 currentPos = m_Transform.GetPosition();
+
+	return glm::vec4(currentPos.x, currentPos.y, m_Width, m_Height);
+}
+
 void dae::CollisionBox::SetTag(const std::string& tag)
 {
 	m_Tag = tag;

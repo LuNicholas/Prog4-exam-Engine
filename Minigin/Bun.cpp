@@ -4,15 +4,19 @@
 #include "CollisionBox.h"
 #include "Subject.h"
 #include "Events.h"
+#include "ResourceManager.h"
+#include "Renderer.h"
 
 dae::Bun::Bun()
 	:m_IsDropping(true)
 	, m_CurrentFloor(nullptr)
-	, m_DroppingSpeed(40)
-	, m_BoxWidth(18)
+	, m_DroppingSpeed(80)
+	, m_BoxWidth(19)
 	, m_BoxHeight(20)
 	, m_NrOfBoxes(5)
 	, m_OnPlate(false)
+	, m_FloorOffset(7)
+	, m_WalkedOnOffset(5)
 {
 	std::shared_ptr<GameObject> m_ColliderGo = std::make_shared<GameObject>();
 }
@@ -20,7 +24,7 @@ dae::Bun::~Bun()
 {
 }
 
-void dae::Bun::Init()
+void dae::Bun::Init(const std::string& textureFileName)
 {
 	glm::vec2 thisPos = m_Transform.GetPosition();
 
@@ -52,7 +56,9 @@ void dae::Bun::Init()
 	//	box->SetPosition(i * 15, 50);
 	//	m_CollionBoxes.push_back(box);
 	//}
+	m_Texture = ResourceManager::GetInstance().LoadTexture(textureFileName);
 }
+
 
 void dae::Bun::Update(float deltaTime)
 {
@@ -74,10 +80,8 @@ void dae::Bun::Update(float deltaTime)
 				{
 					m_IsDropping = false;
 					m_CurrentFloor = box;
-					for (std::pair<bool, CollisionBox*>& bunBox : m_CollionBoxes)
-					{
-						bunBox.first = false;
-					}
+
+					resetIngredient();
 				}
 			}
 			else if (box->GetTag() == "bun")
@@ -90,6 +94,7 @@ void dae::Bun::Update(float deltaTime)
 				else if (box->GetGameObject()->GetComponent<Bun>()->m_IsDropping == false)
 				{
 					box->GetGameObject()->GetComponent<Bun>()->m_IsDropping = true;
+					box->GetGameObject()->GetComponent<Bun>()->resetIngredient();
 					Notify(*m_pGameObject, Event::BunDropped);
 				}
 
@@ -119,8 +124,8 @@ void dae::Bun::Update(float deltaTime)
 					if (bunBox.second->IsPointInCollider(box->GetPosition() + glm::vec3(box->GetSize().x / 2, box->GetSize().y /2, 0)))//check if middle point of player collides
 					{
 						bunBox.first = true;
+						bunBox.second->SetPosition(bunBox.second->GetPosition().x, bunBox.second->GetPosition().y + m_WalkedOnOffset);
 						nrCollidedBoxes++;
-
 					}
 				}
 			}
@@ -144,6 +149,24 @@ void dae::Bun::FixedUpdate(float deltaTime)
 }
 void dae::Bun::Render() const
 {
+	for (size_t i = 0; i < m_CollionBoxes.size(); i++)
+	{
+		Renderer::GetInstance().RenderTexture(*m_Texture, m_CollionBoxes.at(i).second->GetBox(), glm::vec4(m_BoxWidth * i, 0, m_BoxWidth, m_BoxHeight));
+	}
+	
 }
 
-
+void dae::Bun::resetIngredient()
+{
+	for (std::pair<bool, CollisionBox*>& bunBox : m_CollionBoxes)
+	{
+		if (bunBox.first == true)
+		{
+			bunBox.first = false;
+		}
+		else
+		{
+			bunBox.second->SetPosition(bunBox.second->GetPosition().x, bunBox.second->GetPosition().y + m_WalkedOnOffset);
+		}
+	}
+}

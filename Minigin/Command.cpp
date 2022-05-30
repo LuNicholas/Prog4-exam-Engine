@@ -155,6 +155,25 @@ void MoveDown::Execute()
 	}
 }
 
+IdleForward::IdleForward(std::shared_ptr<dae::GameObject> actor)
+	:m_actor(actor)
+{
+
+}
+void IdleForward::Execute()
+{
+	m_actor->GetComponent<dae::PeterPepper>()->IdleForward();
+}
+IdleUp::IdleUp(std::shared_ptr<dae::GameObject> actor)
+	:m_actor(actor)
+{
+
+}
+void IdleUp::Execute()
+{
+	m_actor->GetComponent<dae::PeterPepper>()->IdleUp();
+}
+
 
 //play sound
 

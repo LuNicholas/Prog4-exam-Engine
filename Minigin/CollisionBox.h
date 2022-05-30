@@ -20,6 +20,7 @@ namespace dae
 		bool IsOverlappingWith(CollisionBox* collider);
 		bool IsPointInCollider(const glm::vec2& point);
 		glm::vec2 GetSize();
+		glm::vec4 GetBox();
 
 		~CollisionBox();
 		CollisionBox(const CollisionBox& other) = delete;

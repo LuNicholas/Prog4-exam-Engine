@@ -102,6 +102,8 @@ void dae::Minigin::LoadGame() const
 	peterAnimManager->AddAnimation("Peter_Forward.png", "forward", 96, 32, 3, 1, 0.5f);
 	peterAnimManager->AddAnimation("Peter_Left.png", "left", 96, 32, 3, 1, 0.5f);
 	peterAnimManager->AddAnimation("Peter_Right.png", "right", 96, 32, 3, 1, 0.5f);
+	peterAnimManager->AddAnimation("forward_Idle.png", "idleForward", 32, 32, 1, 1, -1);
+	peterAnimManager->AddAnimation("up_Idle.png", "idleUp", 32, 32, 1, 1, -1);
 	peterAnimManager->SetActiveAnimation("forward");
 
 
@@ -114,10 +116,8 @@ void dae::Minigin::LoadGame() const
 	scene.Add(peterPepperGo);
 
 
-	std::unique_ptr<MoveLeft> moveLeft = std::make_unique<MoveLeft>(peterPepperGo);
-	input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::IsPressed, std::move(moveLeft), 0);
-	std::unique_ptr<MoveRight> moveRight = std::make_unique<MoveRight>(peterPepperGo);
-	input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::IsPressed, std::move(moveRight), 0);
+	input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveLeft>(peterPepperGo)), 0);
+	input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveRight>(peterPepperGo)), 0);
 
 
 
@@ -132,18 +132,23 @@ void dae::Minigin::LoadGame() const
 	peterComp->GetHealth()->addObserver(peterUiComp);
 
 	//peterCommand
-	std::unique_ptr<HitCommand> hitPeterCommand = std::make_unique<HitCommand>(peterPepperGo.get());
-	input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(hitPeterCommand), 0);
+	input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<HitCommand>(peterPepperGo.get())), 0);
 
 	std::unique_ptr<BunDropped> scorePeterCommand = std::make_unique<BunDropped>(peterPepperGo.get());
 	scorePeterCommand->addObserver(peterUiComp);
 	input.AddCommand(dae::ControllerButton::ButtonY, dae::ButtonActivateState::OnButtonRelease, std::move(scorePeterCommand), 0);
 
-	std::unique_ptr<MoveUp> moveUp = std::make_unique<MoveUp>(peterPepperGo);
-	input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::IsPressed, std::move(moveUp), 0);
-	std::unique_ptr<MoveDown> moveDown = std::make_unique<MoveDown>(peterPepperGo);
-	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::IsPressed, std::move(moveDown), 0);
+	input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveUp>(peterPepperGo)), 0);
+	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveDown>(peterPepperGo)), 0);
 
+	input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleUp>(peterPepperGo)), 0);
+	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(peterPepperGo)), 0);
+	input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(peterPepperGo)), 0);
+	input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(peterPepperGo)), 0);
+
+
+
+	//second player
 	/*
 
 	//sally salt
@@ -327,33 +332,25 @@ void dae::Minigin::LoadGame() const
 		auto topBunGo = std::make_shared<GameObject>();
 		topBunGo->SetPosition(50, 210);
 		Bun* topBun = topBunGo->AddComponent<Bun>();
-		topBun->Init();
-		Texture2DComponent* topBunTexture = topBunGo->AddComponent<Texture2DComponent>();
-		topBunTexture->SetTexture("bun.png");
+		topBun->Init("bun.png");
 		scene.Add(topBunGo);
 
 		auto midBunGo = std::make_shared<GameObject>();
-		midBunGo->SetPosition(50, 300);
+		midBunGo->SetPosition(50, 290);
 		Bun* midBun = midBunGo->AddComponent<Bun>();
-		midBun->Init();
-		Texture2DComponent* midBunTexture = midBunGo->AddComponent<Texture2DComponent>();
-		midBunTexture->SetTexture("bun.png");
+		midBun->Init("salad.png");
 		scene.Add(midBunGo);
 
 		auto mid2BunGo = std::make_shared<GameObject>();
-		mid2BunGo->SetPosition(50, 440);
+		mid2BunGo->SetPosition(50, 435);
 		Bun* mid2Bun = mid2BunGo->AddComponent<Bun>();
-		mid2Bun->Init();
-		Texture2DComponent* midBun2Texture = mid2BunGo->AddComponent<Texture2DComponent>();
-		midBun2Texture->SetTexture("bun.png");
+		mid2Bun->Init("patty.png");
 		scene.Add(mid2BunGo);
 
 		auto botBunGo = std::make_shared<GameObject>();
 		botBunGo->SetPosition(50, 530);
 		Bun* botBun = botBunGo->AddComponent<Bun>();
-		botBun->Init();
-		Texture2DComponent* botBunTexture = botBunGo->AddComponent<Texture2DComponent>();
-		botBunTexture->SetTexture("bun.png");
+		botBun->Init("bun_Bottom.png");
 		scene.Add(botBunGo);
 
 		//ADDING TESTPLATE

@@ -98,6 +98,26 @@ private:
 	std::shared_ptr<dae::GameObject> m_actor;
 };
 
+class IdleForward : public Command
+{
+
+public:
+	explicit IdleForward(std::shared_ptr<dae::GameObject> actor);
+	void Execute() override;
+private:
+	std::shared_ptr<dae::GameObject> m_actor;
+};
+class IdleUp : public Command
+{
+
+public:
+	explicit IdleUp(std::shared_ptr<dae::GameObject> actor);
+	void Execute() override;
+private:
+	std::shared_ptr<dae::GameObject> m_actor;
+};
+
+
 class PlaySound : public Command
 {
 

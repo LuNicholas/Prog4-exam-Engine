@@ -19,6 +19,7 @@
 #include "Sound.h"
 #include "CollisionBox.h"
 #include "Bun.h"
+#include "Enemy.h"
 
 
 
@@ -367,6 +368,15 @@ void dae::Minigin::LoadGame() const
 		botBun->addObserver(peterUiComp);
 	}
 
+
+
+	//enemy test
+	auto enemyGO = std::make_shared<GameObject>();
+	Enemy* enemy = enemyGO->AddComponent<Enemy>();
+	enemy->Init();
+	enemyGO->SetPosition(154, 540);
+	enemy->AddPlayer(peterComp);
+	scene.Add(enemyGO);
 
 }
 

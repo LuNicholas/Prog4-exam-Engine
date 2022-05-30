@@ -53,7 +53,7 @@ void dae::PeterPepper::MoveLeft()
 			{
 				glm::vec3 currentPos = m_pGameObject->GetWorldPosition();
 				currentPos.x -= 1;
-				currentPos.y = pColliding->GetPosition().y - pCollider->GetSize().y + 5;
+				currentPos.y = pColliding->GetPosition().y - pCollider->GetSize().y + 5;//todo
 				m_pGameObject->SetPosition(currentPos.x, currentPos.y);
 				m_pGameObject->GetComponent<dae::AnimationManager>()->SetActiveAnimation("left");
 				break;
@@ -77,12 +77,53 @@ void dae::PeterPepper::MoveRight()
 			{
 				glm::vec3 currentPos = m_pGameObject->GetWorldPosition();
 				currentPos.x += 1;
-				currentPos.y = pColliding->GetPosition().y - pCollider->GetSize().y + 5;
+				currentPos.y = pColliding->GetPosition().y - pCollider->GetSize().y + 5;//todo
 				m_pGameObject->SetPosition(currentPos.x, currentPos.y);
 				m_pGameObject->GetComponent<dae::AnimationManager>()->SetActiveAnimation("right");
 				break;
 			}
 		}
+	}
+}
+void dae::PeterPepper::MoveUp()
+{
+	dae::CollisionBox* pCollider = m_pGameObject->GetComponent<dae::CollisionBox>();
+	auto collidingWith = pCollider->GetCollidingWith();
+
+	for (dae::CollisionBox* pColliding : collidingWith)
+	{
+		if (pColliding->GetTag() == "Ladder")
+		{
+			if (pColliding->IsPointInCollider(glm::vec2(pCollider->GetPosition().x + pCollider->GetSize().x / 2, pCollider->GetPosition().y)))
+			{
+				glm::vec3 currentPos = m_pGameObject->GetWorldPosition();
+				currentPos.y -= 1;
+				m_pGameObject->SetPosition(currentPos.x, currentPos.y);
+				m_pGameObject->GetComponent<dae::AnimationManager>()->SetActiveAnimation("up");
+				break;
+			}
+		}
+	}
+}
+void dae::PeterPepper::MoveDown()
+{
+	dae::CollisionBox* pCollider = m_pGameObject->GetComponent<dae::CollisionBox>();
+	auto collidingWith = pCollider->GetCollidingWith();
+
+	for (dae::CollisionBox* pColliding : collidingWith)
+	{
+		if (pColliding->GetTag() == "Ladder")
+		{
+			if (pColliding->IsPointInCollider(glm::vec2(pCollider->GetPosition().x + pCollider->GetSize().x / 2, pCollider->GetPosition().y + pCollider->GetSize().y)))
+			{
+				glm::vec3 currentPos = m_pGameObject->GetWorldPosition();
+				currentPos.y += 1;
+				m_pGameObject->SetPosition(currentPos.x, currentPos.y);
+				m_pGameObject->GetComponent<dae::AnimationManager>()->SetActiveAnimation("forward");
+				break;
+			}
+		}
+
 	}
 }
 

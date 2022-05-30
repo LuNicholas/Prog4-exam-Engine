@@ -15,6 +15,8 @@ namespace dae
 
 		void MoveLeft();
 		void MoveRight();
+		void MoveUp();
+		void MoveDown();
 		void IdleForward();
 		void IdleUp();
 

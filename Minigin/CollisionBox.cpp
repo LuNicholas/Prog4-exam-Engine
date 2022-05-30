@@ -22,7 +22,7 @@ void dae::CollisionBox::FixedUpdate(float deltaTime)
 }
 void dae::CollisionBox::Render() const
 {
-	//DrawBox();
+	DrawBox();
 }
 
 void dae::CollisionBox::SetBox(int width, int height)
@@ -57,11 +57,6 @@ void dae::CollisionBox::DrawBox() const
 	SDL_RenderDrawLineF(renderer, transform.x, transform.y + m_Height, transform.x + m_Width, transform.y + m_Height);
 	SDL_RenderDrawLineF(renderer, transform.x + m_Width, transform.y + m_Height, transform.x + m_Width, transform.y);
 	SDL_RenderDrawLineF(renderer, transform.x + m_Width, transform.y, transform.x, transform.y);
-
-	//Renderer::GetInstance().RenderLine(transform.x, transform.y, transform.x, transform.y + m_Height);
-	//Renderer::GetInstance().RenderLine(transform.x, transform.y + m_Height, transform.x + m_Width, transform.y + m_Height);
-	//Renderer::GetInstance().RenderLine(transform.x + m_Width, transform.y + m_Height, transform.x + m_Width, transform.y);
-	//Renderer::GetInstance().RenderLine(transform.x + m_Width, transform.y, transform.x, transform.y);
 }
 
 std::vector<dae::CollisionBox*> dae::CollisionBox::GetCollidingWith()

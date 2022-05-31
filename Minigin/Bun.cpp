@@ -18,8 +18,8 @@ dae::Bun::Bun()
 	, m_OnPlate(false)
 	, m_FloorOffset(7)
 	, m_WalkedOnOffset(5)
+	, m_pBigCollisionBox(nullptr)
 {
-	std::shared_ptr<GameObject> m_ColliderGo = std::make_shared<GameObject>();
 }
 dae::Bun::~Bun()
 {
@@ -38,12 +38,12 @@ void dae::Bun::Init(const std::string& textureFileName)
 		m_CollionBoxes.push_back(std::pair(false, box));
 	}
 
-	m_BigCollisionBox = m_pGameObject->AddComponent<CollisionBox>();
-	m_BigCollisionBox->SetPosition(thisPos.x, thisPos.y);
-	m_BigCollisionBox->SetBox(m_BoxWidth * m_NrOfBoxes, m_BoxHeight);
-	m_BigCollisionBox->SetTag("bun");
+	m_pBigCollisionBox = m_pGameObject->AddComponent<CollisionBox>();
+	m_pBigCollisionBox->SetPosition(thisPos.x, thisPos.y);
+	m_pBigCollisionBox->SetBox(m_BoxWidth * m_NrOfBoxes, m_BoxHeight);
+	m_pBigCollisionBox->SetTag("bun");
 
-	std::vector<CollisionBox*> colliders = m_BigCollisionBox->GetCollidingWith();
+	std::vector<CollisionBox*> colliders = m_pBigCollisionBox->GetCollidingWith();
 	for (CollisionBox* box : colliders)
 	{
 		if (box->GetTag() == "floor")
@@ -66,7 +66,7 @@ void dae::Bun::Update(float deltaTime)
 
 		m_pGameObject->SetPosition(currentPos.x, currentPos.y + (m_DroppingSpeed * deltaTime));
 
-		std::vector<CollisionBox*> colliders = m_BigCollisionBox->GetCollidingWith();
+		std::vector<CollisionBox*> colliders = m_pBigCollisionBox->GetCollidingWith();
 		for (CollisionBox* box : colliders)
 		{
 			if (box->GetTag() == "floor")
@@ -117,7 +117,7 @@ void dae::Bun::Update(float deltaTime)
 			std::vector<CollisionBox*> colliders = bunBox.second->GetCollidingWith();
 			for (CollisionBox* box : colliders)
 			{
-				if (box->GetTag() == "Player")
+				if (box->GetTag() == "player")
 				{
 					//set those boxes to have been collided
 					if (bunBox.second->IsPointInCollider(box->GetPosition() + glm::vec3(box->GetSize().x / 2, box->GetSize().y / 2, 0)))//check if middle point of player collides
@@ -168,5 +168,5 @@ void dae::Bun::resetIngredient()
 			bunBox.second->SetPosition(bunBox.second->GetPosition().x, bunBox.second->GetPosition().y + m_WalkedOnOffset);
 		}
 	}
-	m_BigCollisionBox->SetPosition(m_BigCollisionBox->GetPosition().x, m_BigCollisionBox->GetPosition().y + m_WalkedOnOffset);
+	m_pBigCollisionBox->SetPosition(m_pBigCollisionBox->GetPosition().x, m_pBigCollisionBox->GetPosition().y + m_WalkedOnOffset);
 }

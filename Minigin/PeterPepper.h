@@ -4,10 +4,16 @@
 
 namespace dae
 {
+	class MovementComponent;
+	class CollisionBox;
+	class AnimationManager;
+
 	class PeterPepper : public Component
 	{
 	public:
 		friend class GameObject;
+
+		void Init();
 
 		void Update(float deltaTime);
 		void FixedUpdate(float deltaTime);
@@ -31,7 +37,16 @@ namespace dae
 	private:
 		PeterPepper();
 
-		dae::Health* m_pHealth;
+		Health* m_pHealth;
+
+
+		MovementComponent* m_pMovementComp;
+		AnimationManager* m_pAnimationComp;
+
+		CollisionBox* m_pCollisionBox;
+		int m_WidthPlayer;
+		int m_HeightPlayer;
+
 
 		float m_MoveSpeed;
 

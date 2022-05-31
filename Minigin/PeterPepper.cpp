@@ -3,9 +3,15 @@
 #include "GameObject.h"
 #include "CollisionBox.h"
 #include "AnimationManager.h"
+#include "MovementComponent.h"
 
 dae::PeterPepper::PeterPepper()
 	:m_MoveSpeed(10)
+	, m_WidthPlayer(32)
+	, m_HeightPlayer(32)
+	, m_pCollisionBox(nullptr)
+	, m_pMovementComp(nullptr)
+	, m_pAnimationComp(nullptr)
 {
 	m_pHealth = new dae::Health(3);
 }
@@ -14,17 +20,30 @@ dae::PeterPepper::~PeterPepper()
 	delete m_pHealth;
 }
 
+void dae::PeterPepper::Init()
+{
+	m_pCollisionBox = m_pGameObject->AddComponent<CollisionBox>();
+	m_pCollisionBox->SetBox(m_WidthPlayer, m_HeightPlayer);
+	m_pCollisionBox->SetTag("player");
+
+	m_pMovementComp = m_pGameObject->AddComponent<MovementComponent>();
+	m_pMovementComp->SetMovementBox(m_pCollisionBox);
+
+
+
+	m_pAnimationComp = m_pGameObject->AddComponent<AnimationManager>();
+	m_pAnimationComp->AddAnimation("Peter_Up.png", "up", 96, 32, 3, 1, 0.5f);
+	m_pAnimationComp->AddAnimation("Peter_Forward.png", "forward", 96, 32, 3, 1, 0.5f);
+	m_pAnimationComp->AddAnimation("Peter_Left.png", "left", 96, 32, 3, 1, 0.5f);
+	m_pAnimationComp->AddAnimation("Peter_Right.png", "right", 96, 32, 3, 1, 0.5f);
+	m_pAnimationComp->AddAnimation("forward_Idle.png", "idleForward", 32, 32, 1, 1, -1);
+	m_pAnimationComp->AddAnimation("up_Idle.png", "idleUp", 32, 32, 1, 1, -1);
+	m_pAnimationComp->SetActiveAnimation("idleForward");
+
+}
+
 void dae::PeterPepper::Update(float deltaTime)
 {
-	//CollisionBox* collision = m_pGameObject->GetComponent<CollisionBox>();
-	//if (collision != nullptr)
-	//{
-	//	auto test = collision->GetCollidingWith();
-	//	if (test.size() > 0)
-	//	{
-	//		std::cout << "im collidng \n";
-	//	}
-	//}
 }
 void dae::PeterPepper::FixedUpdate(float deltaTime)
 {
@@ -40,98 +59,39 @@ dae::Health* dae::PeterPepper::GetHealth() const
 
 void dae::PeterPepper::MoveLeft()
 {
-	dae::CollisionBox* pCollider = m_pGameObject->GetComponent<dae::CollisionBox>();
-
-	auto collidingWith = pCollider->GetCollidingWith();
-
-	for (dae::CollisionBox* pColliding : collidingWith)
+	if (m_pMovementComp->MoveLeft())
 	{
-		if (pColliding->GetTag() == "floor")
-		{
-
-			if (pColliding->IsPointInCollider(glm::vec2(pCollider->GetPosition().x, pCollider->GetPosition().y + pCollider->GetSize().y)))
-			{
-				glm::vec3 currentPos = m_pGameObject->GetWorldPosition();
-				currentPos.x -= 1;
-				currentPos.y = pColliding->GetPosition().y - pCollider->GetSize().y + 5;//todo
-				m_pGameObject->SetPosition(currentPos.x, currentPos.y);
-				m_pGameObject->GetComponent<dae::AnimationManager>()->SetActiveAnimation("left");
-				break;
-			}
-		}
+		m_pAnimationComp->SetActiveAnimation("left");
 	}
 }
 
 void dae::PeterPepper::MoveRight()
 {
-	dae::CollisionBox* pCollider = m_pGameObject->GetComponent<dae::CollisionBox>();
-
-	auto collidingWith = pCollider->GetCollidingWith();
-
-	for (dae::CollisionBox* pColliding : collidingWith)
+	if (m_pMovementComp->MoveRight())
 	{
-		if (pColliding->GetTag() == "floor")
-		{
-
-			if (pColliding->IsPointInCollider(glm::vec2(pCollider->GetPosition().x + pCollider->GetSize().x, pCollider->GetPosition().y + pCollider->GetSize().y)))
-			{
-				glm::vec3 currentPos = m_pGameObject->GetWorldPosition();
-				currentPos.x += 1;
-				currentPos.y = pColliding->GetPosition().y - pCollider->GetSize().y + 5;//todo
-				m_pGameObject->SetPosition(currentPos.x, currentPos.y);
-				m_pGameObject->GetComponent<dae::AnimationManager>()->SetActiveAnimation("right");
-				break;
-			}
-		}
+		m_pAnimationComp->SetActiveAnimation("right");
 	}
 }
 void dae::PeterPepper::MoveUp()
 {
-	dae::CollisionBox* pCollider = m_pGameObject->GetComponent<dae::CollisionBox>();
-	auto collidingWith = pCollider->GetCollidingWith();
-
-	for (dae::CollisionBox* pColliding : collidingWith)
+	if (m_pMovementComp->MoveUp())
 	{
-		if (pColliding->GetTag() == "Ladder")
-		{
-			if (pColliding->IsPointInCollider(glm::vec2(pCollider->GetPosition().x + pCollider->GetSize().x / 2, pCollider->GetPosition().y)))
-			{
-				glm::vec3 currentPos = m_pGameObject->GetWorldPosition();
-				currentPos.y -= 1;
-				m_pGameObject->SetPosition(currentPos.x, currentPos.y);
-				m_pGameObject->GetComponent<dae::AnimationManager>()->SetActiveAnimation("up");
-				break;
-			}
-		}
+		m_pAnimationComp->SetActiveAnimation("up");
 	}
 }
 void dae::PeterPepper::MoveDown()
 {
-	dae::CollisionBox* pCollider = m_pGameObject->GetComponent<dae::CollisionBox>();
-	auto collidingWith = pCollider->GetCollidingWith();
-
-	for (dae::CollisionBox* pColliding : collidingWith)
+	if (m_pMovementComp->MoveDown())
 	{
-		if (pColliding->GetTag() == "Ladder")
-		{
-			if (pColliding->IsPointInCollider(glm::vec2(pCollider->GetPosition().x + pCollider->GetSize().x / 2, pCollider->GetPosition().y + pCollider->GetSize().y)))
-			{
-				glm::vec3 currentPos = m_pGameObject->GetWorldPosition();
-				currentPos.y += 1;
-				m_pGameObject->SetPosition(currentPos.x, currentPos.y);
-				m_pGameObject->GetComponent<dae::AnimationManager>()->SetActiveAnimation("forward");
-				break;
-			}
-		}
-
+		m_pAnimationComp->SetActiveAnimation("forward");
 	}
 }
 
 void dae::PeterPepper::IdleForward()
 {
-	m_pGameObject->GetComponent<dae::AnimationManager>()->SetActiveAnimation("idleForward");
+	m_pAnimationComp->SetActiveAnimation("idleForward");
 }
 void dae::PeterPepper::IdleUp()
 {
-	m_pGameObject->GetComponent<dae::AnimationManager>()->SetActiveAnimation("idleUp");
+	m_pAnimationComp->SetActiveAnimation("idleUp");
 }

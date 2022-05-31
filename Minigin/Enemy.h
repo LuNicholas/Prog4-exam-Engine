@@ -4,7 +4,17 @@
 namespace dae
 {
 	class PeterPepper;
+	class MovementComponent;
 	class CollisionBox;
+	class AnimationManager;
+
+	enum class MoveState
+	{
+		Up,
+		Dowm,
+		Left,
+		Right
+	};
 
 	class Enemy final : public Component
 	{
@@ -30,9 +40,17 @@ namespace dae
 		void MoveDown();
 
 		std::vector<PeterPepper*> m_Players;
+		int m_PlayerHeightOffset;
 
 		bool m_OnLadder;
 		bool m_GoingUp;
-		CollisionBox* m_CurrentLadder;
+		CollisionBox* m_pLastLadder;
+
+		bool m_GoingRight;
+
+		MoveState m_MovementState;
+
+		MovementComponent* m_pMovementComp;
+		AnimationManager* m_pAnimationComp;
 	};
 }

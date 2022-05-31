@@ -95,24 +95,25 @@ void dae::Minigin::LoadGame() const
 	//new peter pepper
 	auto peterPepperGo = std::make_shared<GameObject>();
 	PeterPepper* peterComp = peterPepperGo->AddComponent<PeterPepper>();
+	peterComp->Init();
 	peterPepperGo->SetPosition(300, 540);
 
 	//adding animation
-	AnimationManager* peterAnimManager = peterPepperGo->AddComponent<AnimationManager>();
-	peterAnimManager->AddAnimation("Peter_Up.png", "up", 96, 32, 3, 1, 0.5f);
-	peterAnimManager->AddAnimation("Peter_Forward.png", "forward", 96, 32, 3, 1, 0.5f);
-	peterAnimManager->AddAnimation("Peter_Left.png", "left", 96, 32, 3, 1, 0.5f);
-	peterAnimManager->AddAnimation("Peter_Right.png", "right", 96, 32, 3, 1, 0.5f);
-	peterAnimManager->AddAnimation("forward_Idle.png", "idleForward", 32, 32, 1, 1, -1);
-	peterAnimManager->AddAnimation("up_Idle.png", "idleUp", 32, 32, 1, 1, -1);
-	peterAnimManager->SetActiveAnimation("forward");
+	//AnimationManager* peterAnimManager = peterPepperGo->AddComponent<AnimationManager>();
+	//peterAnimManager->AddAnimation("Peter_Up.png", "up", 96, 32, 3, 1, 0.5f);
+	//peterAnimManager->AddAnimation("Peter_Forward.png", "forward", 96, 32, 3, 1, 0.5f);
+	//peterAnimManager->AddAnimation("Peter_Left.png", "left", 96, 32, 3, 1, 0.5f);
+	//peterAnimManager->AddAnimation("Peter_Right.png", "right", 96, 32, 3, 1, 0.5f);
+	//peterAnimManager->AddAnimation("forward_Idle.png", "idleForward", 32, 32, 1, 1, -1);
+	//peterAnimManager->AddAnimation("up_Idle.png", "idleUp", 32, 32, 1, 1, -1);
+	//peterAnimManager->SetActiveAnimation("idleForward");
 
 
 
 	//adding peter collision box
-	CollisionBox* ppBox = peterPepperGo->AddComponent<CollisionBox>();
-	ppBox->SetTag("Player");
-	ppBox->SetBox(32, 32);
+	//CollisionBox* ppBox = peterPepperGo->AddComponent<CollisionBox>();
+	//ppBox->SetTag("Player");
+	//ppBox->SetBox(32, 32);
 
 	scene.Add(peterPepperGo);
 

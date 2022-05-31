@@ -226,6 +226,7 @@ xcopy $(SolutionDir)3rdParty\steam_appid.txt $(OutputPath) /Y</Command>
     <ClInclude Include="Bun.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Events.h" />
+    <ClInclude Include="MovementComponent.h" />
     <ClInclude Include="SpriteAnimation.h" />
     <ClInclude Include="AnimationManager.h" />
     <ClInclude Include="CollisionBox.h" />
@@ -337,6 +338,7 @@ xcopy $(SolutionDir)3rdParty\steam_appid.txt $(OutputPath) /Y</Command>
     </ClCompile>
     <ClCompile Include="Bun.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="MovementComponent.cpp" />
     <ClCompile Include="SpriteAnimation.cpp" />
     <ClCompile Include="AnimationManager.cpp" />
     <ClCompile Include="CollisionBox.cpp" />

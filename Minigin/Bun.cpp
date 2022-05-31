@@ -6,6 +6,7 @@
 #include "Events.h"
 #include "ResourceManager.h"
 #include "Renderer.h"
+#include "Enemy.h"
 
 dae::Bun::Bun()
 	:m_IsDropping(true)
@@ -33,11 +34,16 @@ void dae::Bun::Init(const std::string& textureFileName)
 		CollisionBox* box = m_pGameObject->AddComponent<CollisionBox>();
 		box->SetPosition(thisPos.x + i * m_BoxWidth, thisPos.y);
 		box->SetBox(m_BoxWidth, m_BoxHeight);
-		box->SetTag("bun");
+		//box->SetTag("bun");
 		m_CollionBoxes.push_back(std::pair(false, box));
 	}
 
-	std::vector<CollisionBox*> colliders = m_CollionBoxes.front().second->GetCollidingWith();
+	m_BigCollisionBox = m_pGameObject->AddComponent<CollisionBox>();
+	m_BigCollisionBox->SetPosition(thisPos.x, thisPos.y);
+	m_BigCollisionBox->SetBox(m_BoxWidth * m_NrOfBoxes, m_BoxHeight);
+	m_BigCollisionBox->SetTag("bun");
+
+	std::vector<CollisionBox*> colliders = m_BigCollisionBox->GetCollidingWith();
 	for (CollisionBox* box : colliders)
 	{
 		if (box->GetTag() == "floor")
@@ -45,17 +51,6 @@ void dae::Bun::Init(const std::string& textureFileName)
 			m_CurrentFloor = box;
 		}
 	}
-
-	//m_pGameObject->AddChild(m_ColliderGo.get());
-
-	//for (size_t i = 0; i < 3; i++)
-	//{
-	//	CollisionBox* box = colliderGo->AddComponent<CollisionBox>();
-	//	box->SetBox(15, 10);
-	//	box->SetTag("bun");
-	//	box->SetPosition(i * 15, 50);
-	//	m_CollionBoxes.push_back(box);
-	//}
 	m_Texture = ResourceManager::GetInstance().LoadTexture(textureFileName);
 }
 
@@ -71,7 +66,7 @@ void dae::Bun::Update(float deltaTime)
 
 		m_pGameObject->SetPosition(currentPos.x, currentPos.y + (m_DroppingSpeed * deltaTime));
 
-		std::vector<CollisionBox*> colliders = m_CollionBoxes.front().second->GetCollidingWith();
+		std::vector<CollisionBox*> colliders = m_BigCollisionBox->GetCollidingWith();
 		for (CollisionBox* box : colliders)
 		{
 			if (box->GetTag() == "floor")
@@ -104,12 +99,16 @@ void dae::Bun::Update(float deltaTime)
 				m_OnPlate = true;
 				m_IsDropping = false;
 			}
+			else if (box->GetTag() == "enemy")
+			{
+				box->GetGameObject()->GetComponent<Enemy>()->KillEnemy();
+				Notify(*m_pGameObject, Event::EnemySquashed);
+			}
 		}
 		return;
 	}
 
 
-	//check the collision boxs iguess that collide with player(idea only check the outer collision boxes to lessen the checks)
 	int nrCollidedBoxes = 0;
 	for (std::pair<bool, CollisionBox*>& bunBox : m_CollionBoxes)
 	{
@@ -121,7 +120,7 @@ void dae::Bun::Update(float deltaTime)
 				if (box->GetTag() == "Player")
 				{
 					//set those boxes to have been collided
-					if (bunBox.second->IsPointInCollider(box->GetPosition() + glm::vec3(box->GetSize().x / 2, box->GetSize().y /2, 0)))//check if middle point of player collides
+					if (bunBox.second->IsPointInCollider(box->GetPosition() + glm::vec3(box->GetSize().x / 2, box->GetSize().y / 2, 0)))//check if middle point of player collides
 					{
 						bunBox.first = true;
 						bunBox.second->SetPosition(bunBox.second->GetPosition().x, bunBox.second->GetPosition().y + m_WalkedOnOffset);
@@ -153,7 +152,7 @@ void dae::Bun::Render() const
 	{
 		Renderer::GetInstance().RenderTexture(*m_Texture, m_CollionBoxes.at(i).second->GetBox(), glm::vec4(m_BoxWidth * i, 0, m_BoxWidth, m_BoxHeight));
 	}
-	
+
 }
 
 void dae::Bun::resetIngredient()
@@ -169,4 +168,5 @@ void dae::Bun::resetIngredient()
 			bunBox.second->SetPosition(bunBox.second->GetPosition().x, bunBox.second->GetPosition().y + m_WalkedOnOffset);
 		}
 	}
+	m_BigCollisionBox->SetPosition(m_BigCollisionBox->GetPosition().x, m_BigCollisionBox->GetPosition().y + m_WalkedOnOffset);
 }

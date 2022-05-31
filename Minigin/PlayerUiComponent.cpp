@@ -74,5 +74,10 @@ void dae::PlayerUiComponent::onNotify(const dae::GameObject& go, const Event& ev
 		AddScore(100);
 		break;
 	}
+	case Event::EnemySquashed:
+	{
+		AddScore(200);
+		break;
+	}
 	}
 }

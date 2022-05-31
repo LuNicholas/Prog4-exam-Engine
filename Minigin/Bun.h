@@ -27,6 +27,8 @@ namespace dae
 		Bun();
 		std::shared_ptr<GameObject> m_ColliderGo;
 		std::vector<std::pair<bool, CollisionBox*>> m_CollionBoxes;
+		CollisionBox* m_BigCollisionBox;
+
 		float m_BoxWidth;
 		float m_BoxHeight;
 		int m_NrOfBoxes;

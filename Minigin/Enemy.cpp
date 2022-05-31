@@ -40,7 +40,7 @@ void dae::Enemy::Update(float deltaTime)
 				if (m_CurrentLadder->IsPointInCollider(glm::vec2(pCollider->GetPosition().x + pCollider->GetSize().x / 2, pCollider->GetPosition().y)))
 				{
 					glm::vec2 currentPos = m_pGameObject->GetWorldPosition();
-					m_pGameObject->SetPosition(currentPos.x, currentPos.y - 2);
+					m_pGameObject->SetPosition(currentPos.x, currentPos.y - 2 * deltaTime);
 				}
 			}
 			else
@@ -48,11 +48,11 @@ void dae::Enemy::Update(float deltaTime)
 				if (m_CurrentLadder->IsPointInCollider(glm::vec2(pCollider->GetPosition().x + pCollider->GetSize().x / 2, pCollider->GetPosition().y + pCollider->GetSize().y - 5)))
 				{
 					glm::vec2 currentPos = m_pGameObject->GetWorldPosition();
-					m_pGameObject->SetPosition(currentPos.x, currentPos.y + 2);
+					m_pGameObject->SetPosition(currentPos.x, currentPos.y + 2 * deltaTime);
 				}
 			}
 		}
-		else if (thisPos.y > playerPos.y)
+		else if (thisPos.y > playerPos.y + 5)//todo
 		{
 			for (dae::CollisionBox* pColliding : colldingBoxes)
 			{
@@ -68,7 +68,7 @@ void dae::Enemy::Update(float deltaTime)
 			}
 
 		}
-		else if (thisPos.y < playerPos.y)
+		else if (thisPos.y < playerPos.y - 5)//todo
 		{
 			for (dae::CollisionBox* pColliding : colldingBoxes)
 			{
@@ -84,8 +84,23 @@ void dae::Enemy::Update(float deltaTime)
 			}
 		}
 
-		if(thisPos.x < playerPos.x)
-
+		if (thisPos.x < playerPos.x && false)//////TODO
+		{
+			for (dae::CollisionBox* pColliding : colldingBoxes)
+			{
+				if (pColliding->GetTag() == "floor")
+				{
+					if (pColliding->IsPointInCollider(glm::vec2(pCollider->GetPosition().x + pCollider->GetSize().x, pCollider->GetPosition().y + pCollider->GetSize().y)))
+					{
+						glm::vec3 currentPos = m_pGameObject->GetWorldPosition();
+						currentPos.x += 1;
+						currentPos.y = pColliding->GetPosition().y - pCollider->GetSize().y + 5;//todo
+						m_pGameObject->SetPosition(currentPos.x, currentPos.y);
+						break;
+					}
+				}
+			}
+		}
 
 	}
 	else if (m_Players.size() == 2)
@@ -138,5 +153,9 @@ void dae::Enemy::MoveUp()
 {
 }
 void dae::Enemy::MoveDown()
+{
+}
+
+void dae::Enemy::KillEnemy()
 {
 }

@@ -4,5 +4,6 @@
 enum Event
 {
 	PlayerHit,
-	BunDropped
+	BunDropped,
+	EnemySquashed
 };

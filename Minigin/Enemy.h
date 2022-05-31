@@ -19,6 +19,8 @@ namespace dae
 		void Init();
 		void AddPlayer(PeterPepper* player);
 
+		void KillEnemy();
+
 	private:
 		Enemy();
 

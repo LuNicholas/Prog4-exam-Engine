@@ -348,11 +348,11 @@ void dae::Minigin::LoadGame() const
 		mid2Bun->Init("patty.png");
 		scene.Add(mid2BunGo);
 
-		auto botBunGo = std::make_shared<GameObject>();
-		botBunGo->SetPosition(50, 530);
-		Bun* botBun = botBunGo->AddComponent<Bun>();
-		botBun->Init("bun_Bottom.png");
-		scene.Add(botBunGo);
+		//auto botBunGo = std::make_shared<GameObject>();
+		//botBunGo->SetPosition(50, 530);
+		//Bun* botBun = botBunGo->AddComponent<Bun>();
+		//botBun->Init("bun_Bottom.png");
+		//scene.Add(botBunGo);
 
 		//ADDING TESTPLATE
 		auto plate1 = std::make_shared<GameObject>();
@@ -365,7 +365,7 @@ void dae::Minigin::LoadGame() const
 		topBun->addObserver(peterUiComp);
 		midBun->addObserver(peterUiComp);
 		mid2Bun->addObserver(peterUiComp);
-		botBun->addObserver(peterUiComp);
+		//botBun->addObserver(peterUiComp);
 	}
 
 
@@ -374,7 +374,7 @@ void dae::Minigin::LoadGame() const
 	auto enemyGO = std::make_shared<GameObject>();
 	Enemy* enemy = enemyGO->AddComponent<Enemy>();
 	enemy->Init();
-	enemyGO->SetPosition(154, 540);
+	enemyGO->SetPosition(60, 540);
 	enemy->AddPlayer(peterComp);
 	scene.Add(enemyGO);
 

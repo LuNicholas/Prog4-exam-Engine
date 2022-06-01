@@ -16,7 +16,10 @@ dae::Enemy::Enemy()
 	, m_PlayerHeightOffset(4)
 	, m_pLastLadder(nullptr)
 	, m_pAnimationComp(nullptr)
-	, m_isDead(false)
+	, m_IsDead(false)
+	, m_IsStunnned(false)
+	, m_StunTime(1.5f)
+	, m_CurrentStunTime(0)
 {
 
 
@@ -42,13 +45,27 @@ void dae::Enemy::Init()
 	m_pAnimationComp->AddAnimation("Bean_Left.png", "left", 64, 32, 2, 1, 0.5f);
 	m_pAnimationComp->AddAnimation("Bean_Right.png", "right", 64, 32, 2, 1, 0.5f);
 	m_pAnimationComp->AddAnimation("Bean_Death.png", "death", 128, 32, 4, 1, 0.5f);
+	m_pAnimationComp->AddAnimation("Bean_Stunned.png", "stunned", 64, 32, 2, 1, 0.25f);
 	m_pAnimationComp->SetActiveAnimation("down");
 }
 
 void dae::Enemy::Update(float deltaTime)
 {
-	if (m_isDead)
+	if (m_IsDead)
 		return;
+
+
+	if (m_IsStunnned)
+	{
+		m_pAnimationComp->SetActiveAnimation("stunned");
+		m_CurrentStunTime += deltaTime;
+		if (m_CurrentStunTime >= m_StunTime)
+		{
+			m_IsStunnned = false;
+			m_CurrentStunTime = 0;
+		}
+		return;
+	}
 
 	glm::vec3 thisPos = m_Transform.GetPosition();
 
@@ -268,7 +285,6 @@ void dae::Enemy::MoveRight()
 				currentPos.x += 1;
 				currentPos.y = pColliding->GetPosition().y - pCollider->GetSize().y + 5;
 				m_pGameObject->SetPosition(currentPos.x, currentPos.y);
-				//m_pGameObject->GetComponent<dae::AnimationManager>()->SetActiveAnimation("right");
 				break;
 			}
 		}
@@ -278,65 +294,18 @@ void dae::Enemy::MoveRight()
 void dae::Enemy::KillEnemy()
 {
 	m_pAnimationComp->SetActiveAnimation("death");
-	m_isDead = true;
+	m_IsDead = true;
+
+
+	//cooldown before resetting and moving to other pos
+	//move enemy to reset
 }
-
-
-
-/*
-	if (m_OnLadder)
-	{
-		if (m_GoingUp)
-		{
-			if (thisPos.y < playerPos.y - 5 || (thisPos.y > playerPos.y - 5 && thisPos.y < playerPos.y + 5))// player is lower while going up or same height
-			{
-				if (thisPos.x > playerPos.x)// go left
-				{
-					if (m_pMovementComp->MoveRight())
-					{
-						m_GoingUp = false;
-						m_OnLadder = false;
-						m_GoingRight = true;
-					}
-				}
-				else if (thisPos.x < playerPos.x)
-				{
-					if (m_pMovementComp->MoveLeft())
-					{
-						m_GoingUp = false;
-						m_OnLadder = false;
-						m_GoingRight = false;
-					}
-				}
-
-			}
-
-
-			if (!m_pMovementComp->MoveUp())
-				m_OnLadder = false;
-		}
-		else
-		{
-			if (!m_pMovementComp->MoveDown())
-				m_OnLadder = false;
-		}
-	}
-	else if (thisPos.y > playerPos.y + 5)//todo //not on ladder with player being higher
-	{
-		if (m_pMovementComp->MoveUp())
-		{
-			m_OnLadder = true;
-			m_GoingUp = true;
-		}
-	}
-	else if (thisPos.y < playerPos.y - 5)//todo //not on ladder with player being lower
-	{
-		if (m_pMovementComp->MoveDown())
-		{
-			m_OnLadder = true;
-			m_GoingUp = false;
-		}
-	}
-
-
-*/
+void dae::Enemy::SetStunned()
+{
+	//m_pAnimationComp->SetActiveAnimation("stunned");
+	m_IsStunnned = true;
+}
+bool dae::Enemy::GetIsDead()
+{
+	return m_IsDead;
+}

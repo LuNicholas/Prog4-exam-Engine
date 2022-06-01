@@ -58,8 +58,6 @@ namespace dae
 		int m_WidthPlayer;
 		int m_HeightPlayer;
 
-		CollisionBox* m_pPepperBox;
-
 		float m_MoveSpeed;
 		LastLookDir m_LastLookingDirection;
 

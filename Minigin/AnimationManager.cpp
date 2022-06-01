@@ -16,11 +16,9 @@ dae::AnimationManager::~AnimationManager()
 
 void dae::AnimationManager::Update(float deltaTime)
 {
-
+	//todo add state for loop/play once maybe
 	m_Animations[m_ActiveAnim]->Update(deltaTime);
 	m_Animations[m_ActiveAnim]->SetTransform(m_Transform);
-
-
 }
 void dae::AnimationManager::FixedUpdate(float deltaTime)
 {
@@ -43,4 +41,9 @@ void dae::AnimationManager::AddAnimation(const std::string& spriteSheet ,const s
 void dae::AnimationManager::SetActiveAnimation(const std::string& id)
 {
 	m_ActiveAnim = id;
+}
+
+void dae::AnimationManager::ResetAnimation()
+{
+	m_Animations[m_ActiveAnim]->ResetAnimation();
 }

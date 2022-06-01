@@ -19,6 +19,8 @@ dae::Bun::Bun()
 	, m_FloorOffset(7)
 	, m_WalkedOnOffset(5)
 	, m_pBigCollisionBox(nullptr)
+	, m_EnemyOnTop(false)
+	, m_ExtraDrops(0)
 {
 }
 dae::Bun::~Bun()
@@ -34,7 +36,6 @@ void dae::Bun::Init(const std::string& textureFileName)
 		CollisionBox* box = m_pGameObject->AddComponent<CollisionBox>();
 		box->SetPosition(thisPos.x + i * m_BoxWidth, thisPos.y);
 		box->SetBox(m_BoxWidth, m_BoxHeight);
-		//box->SetTag("bun");
 		m_CollionBoxes.push_back(std::pair(false, box));
 	}
 
@@ -77,6 +78,20 @@ void dae::Bun::Update(float deltaTime)
 					m_CurrentFloor = box;
 
 					resetIngredient();
+					if (m_EnemyOnTop && m_ExtraDrops < m_EnemiesOnTop.size())
+					{
+						m_IsDropping = true;
+						m_EnemyOnTop = false;
+						for (GameObject* enemy : m_EnemiesOnTop)
+						{
+							enemy->GetComponent<Enemy>()->KillEnemy();
+							//todo reset vector
+						}
+					}
+					else
+					{
+						m_ExtraDrops++;
+					}
 				}
 			}
 			else if (box->GetTag() == "bun")
@@ -101,8 +116,21 @@ void dae::Bun::Update(float deltaTime)
 			}
 			else if (box->GetTag() == "enemy")
 			{
-				box->GetGameObject()->GetComponent<Enemy>()->KillEnemy();
-				Notify(*m_pGameObject, Event::EnemySquashed);
+				glm::vec3 boxPos = box->GetPosition();
+
+				if(m_pBigCollisionBox->IsPointInCollider(glm::vec2(boxPos.x + box->GetSize().x / 2, boxPos.y)))
+				{
+					box->GetGameObject()->GetComponent<Enemy>()->KillEnemy();
+					Notify(*m_pGameObject, Event::EnemySquashed);
+				}
+				else if (!box->GetGameObject()->GetComponent<Enemy>()->GetIsDead())
+				{
+					box->GetGameObject()->GetComponent<Enemy>()->SetStunned();
+					box->GetGameObject()->SetPosition(boxPos.x, boxPos.y + (m_DroppingSpeed * deltaTime));
+					m_EnemyOnTop = true;
+					m_EnemiesOnTop.push_back(box->GetGameObject());
+				}
+
 			}
 		}
 		return;

@@ -15,6 +15,7 @@ namespace dae
 		void Render() const;
 
 		void SetTransform(const Transform& transform);
+		void ResetAnimation();
 
 		~SpriteAnimation();
 		SpriteAnimation(const SpriteAnimation& other) = delete;
@@ -26,8 +27,8 @@ namespace dae
 
 		int m_Row = 0;
 		int m_Col = 0;
-
 		float m_FrameTime = 0;
+
 		float m_CurrentFrameTime = 0;
 		int m_CurrentSprite = 0;
 

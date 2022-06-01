@@ -333,16 +333,16 @@ void dae::Minigin::LoadGame() const
 		scene.Add(midBunGo);
 
 		auto mid2BunGo = std::make_shared<GameObject>();
-		mid2BunGo->SetPosition(50, 435);
+		mid2BunGo->SetPosition(50, 432);
 		Bun* mid2Bun = mid2BunGo->AddComponent<Bun>();
 		mid2Bun->Init("patty.png");
 		scene.Add(mid2BunGo);
 
-		//auto botBunGo = std::make_shared<GameObject>();
-		//botBunGo->SetPosition(50, 530);
-		//Bun* botBun = botBunGo->AddComponent<Bun>();
-		//botBun->Init("bun_Bottom.png");
-		//scene.Add(botBunGo);
+		auto botBunGo = std::make_shared<GameObject>();
+		botBunGo->SetPosition(50, 530);
+		Bun* botBun = botBunGo->AddComponent<Bun>();
+		botBun->Init("bun_Bottom.png");
+		scene.Add(botBunGo);
 
 		//ADDING TESTPLATE
 		auto plate1 = std::make_shared<GameObject>();

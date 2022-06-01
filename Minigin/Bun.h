@@ -6,6 +6,7 @@ namespace dae
 {
 	class CollisionBox;
 	class Texture2D;
+
 	class Bun final : public Component, public Subject
 	{
 		friend class GameObject;
@@ -38,6 +39,10 @@ namespace dae
 		CollisionBox* m_CurrentFloor;
 		float m_DroppingSpeed;
 		bool m_IsDropping;
+
+		bool m_EnemyOnTop;
+		int m_ExtraDrops;
+		std::vector<GameObject*> m_EnemiesOnTop;
 
 		std::shared_ptr<Texture2D> m_Texture{};
 

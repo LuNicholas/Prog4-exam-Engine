@@ -30,6 +30,8 @@ namespace dae
 		void AddPlayer(PeterPepper* player);
 
 		void KillEnemy();
+		void SetStunned();
+		bool GetIsDead():
 
 	private:
 		Enemy();
@@ -39,7 +41,11 @@ namespace dae
 		void MoveUp();
 		void MoveDown();
 
-		bool m_isDead;
+		bool m_IsDead;
+
+		bool m_IsStunnned;
+		float m_StunTime;
+		float m_CurrentStunTime;
 
 		std::vector<PeterPepper*> m_Players;
 		int m_PlayerHeightOffset;

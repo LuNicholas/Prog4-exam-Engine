@@ -18,6 +18,8 @@ namespace dae
 		void AddAnimation(const std::string& spriteSheet, const std::string& id, int width, int height, int col, int row, float frameTime);
 		void SetActiveAnimation(const std::string& id);
 
+		void ResetAnimation();
+
 		~AnimationManager();
 		AnimationManager(const AnimationManager& other) = delete;
 		AnimationManager(AnimationManager&& other) = delete;

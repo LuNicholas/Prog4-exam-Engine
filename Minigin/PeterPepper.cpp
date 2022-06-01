@@ -4,6 +4,7 @@
 #include "CollisionBox.h"
 #include "AnimationManager.h"
 #include "MovementComponent.h"
+#include "Pepper.h"
 
 dae::PeterPepper::PeterPepper()
 	:m_MoveSpeed(10)
@@ -106,16 +107,20 @@ void dae::PeterPepper::Pepper()
 	switch (m_LastLookingDirection)
 	{
 	case dae::PeterPepper::LastLookDir::Up:
-		m_pGameObject->GetChildAt(0)->SetPosition(m_Transform.GetPosition().x, m_Transform.GetPosition().y - 32);
+		m_pGameObject->GetChildAt(0)->GetComponent<dae::Pepper>()->Activate(glm::vec2(m_Transform.GetPosition().x, m_Transform.GetPosition().y - 32));
+		//m_pGameObject->GetChildAt(0)->SetPosition(m_Transform.GetPosition().x, m_Transform.GetPosition().y - 32);
 		break;
 	case dae::PeterPepper::LastLookDir::Dowm:
-		m_pGameObject->GetChildAt(0)->SetPosition(m_Transform.GetPosition().x, m_Transform.GetPosition().y + 32);
+		m_pGameObject->GetChildAt(0)->GetComponent<dae::Pepper>()->Activate(glm::vec2(m_Transform.GetPosition().x, m_Transform.GetPosition().y + 32));
+		//m_pGameObject->GetChildAt(0)->SetPosition(m_Transform.GetPosition().x, m_Transform.GetPosition().y + 32);
 		break;
 	case dae::PeterPepper::LastLookDir::Left:
-		m_pGameObject->GetChildAt(0)->SetPosition(m_Transform.GetPosition().x - 32, m_Transform.GetPosition().y);
+		m_pGameObject->GetChildAt(0)->GetComponent<dae::Pepper>()->Activate(glm::vec2(m_Transform.GetPosition().x - 32, m_Transform.GetPosition().y));
+		//m_pGameObject->GetChildAt(0)->SetPosition(m_Transform.GetPosition().x - 32, m_Transform.GetPosition().y);
 		break;
 	case dae::PeterPepper::LastLookDir::Right:
-		m_pGameObject->GetChildAt(0)->SetPosition(m_Transform.GetPosition().x + 32, m_Transform.GetPosition().y);
+		m_pGameObject->GetChildAt(0)->GetComponent<dae::Pepper>()->Activate(glm::vec2(m_Transform.GetPosition().x + 32, m_Transform.GetPosition().y));
+		//m_pGameObject->GetChildAt(0)->SetPosition(m_Transform.GetPosition().x + 32, m_Transform.GetPosition().y);
 		break;
 	}
 	

@@ -19,6 +19,7 @@ namespace dae
 		void Render() const;
 
 		void Init();
+		void Activate(glm::vec2 pos);
 
 		Pepper(const Pepper& other) = delete;
 		Pepper(Pepper&& other) = delete;
@@ -29,6 +30,10 @@ namespace dae
 		Pepper();
 
 		bool m_OnCooldown;
+		float m_CooldownTime;
+		float m_CurrentCdTime;
+
+		CollisionBox* m_pCollisionBox;
 
 		AnimationManager* m_pAnimationComp;
 	};

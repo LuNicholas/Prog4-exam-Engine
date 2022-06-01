@@ -31,7 +31,7 @@ namespace dae
 
 		void KillEnemy();
 		void SetStunned();
-		bool GetIsDead():
+		bool GetIsDead();
 
 	private:
 		Enemy();

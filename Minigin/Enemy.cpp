@@ -16,6 +16,7 @@ dae::Enemy::Enemy()
 	, m_PlayerHeightOffset(4)
 	, m_pLastLadder(nullptr)
 	, m_pAnimationComp(nullptr)
+	, m_isDead(false)
 {
 
 
@@ -40,11 +41,15 @@ void dae::Enemy::Init()
 	m_pAnimationComp->AddAnimation("Bean_Down.png", "down", 64, 32, 2, 1, 0.5f);
 	m_pAnimationComp->AddAnimation("Bean_Left.png", "left", 64, 32, 2, 1, 0.5f);
 	m_pAnimationComp->AddAnimation("Bean_Right.png", "right", 64, 32, 2, 1, 0.5f);
+	m_pAnimationComp->AddAnimation("Bean_Death.png", "death", 128, 32, 4, 1, 0.5f);
 	m_pAnimationComp->SetActiveAnimation("down");
 }
 
 void dae::Enemy::Update(float deltaTime)
 {
+	if (m_isDead)
+		return;
+
 	glm::vec3 thisPos = m_Transform.GetPosition();
 
 	CollisionBox* pCollider = m_pGameObject->GetComponent<CollisionBox>();
@@ -272,9 +277,9 @@ void dae::Enemy::MoveRight()
 
 void dae::Enemy::KillEnemy()
 {
+	m_pAnimationComp->SetActiveAnimation("death");
+	m_isDead = true;
 }
-
-
 
 
 

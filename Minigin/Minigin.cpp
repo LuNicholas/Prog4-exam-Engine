@@ -13,13 +13,13 @@
 #include "Component.h"
 #include "FpsComponent.h"
 #include "PlayerUiComponent.h"
-//#include "SpriteAnimation.h"
 #include "AnimationManager.h"
 #include "PeterPepper.h"
 #include "Sound.h"
 #include "CollisionBox.h"
 #include "Bun.h"
 #include "Enemy.h"
+#include "Pepper.h"
 
 
 
@@ -98,26 +98,17 @@ void dae::Minigin::LoadGame() const
 	peterComp->Init();
 	peterPepperGo->SetPosition(300, 540);
 
-	//adding animation
-	//AnimationManager* peterAnimManager = peterPepperGo->AddComponent<AnimationManager>();
-	//peterAnimManager->AddAnimation("Peter_Up.png", "up", 96, 32, 3, 1, 0.5f);
-	//peterAnimManager->AddAnimation("Peter_Forward.png", "forward", 96, 32, 3, 1, 0.5f);
-	//peterAnimManager->AddAnimation("Peter_Left.png", "left", 96, 32, 3, 1, 0.5f);
-	//peterAnimManager->AddAnimation("Peter_Right.png", "right", 96, 32, 3, 1, 0.5f);
-	//peterAnimManager->AddAnimation("forward_Idle.png", "idleForward", 32, 32, 1, 1, -1);
-	//peterAnimManager->AddAnimation("up_Idle.png", "idleUp", 32, 32, 1, 1, -1);
-	//peterAnimManager->SetActiveAnimation("idleForward");
-
-
-
-	//adding peter collision box
-	//CollisionBox* ppBox = peterPepperGo->AddComponent<CollisionBox>();
-	//ppBox->SetTag("Player");
-	//ppBox->SetBox(32, 32);
+	//pepper
+	auto pepperGo = peterPepperGo->AddChild();
+	pepperGo->SetFollowParent(false);
+	pepperGo->SetPosition(-1000, -1000);
+	Pepper* pepperComp = pepperGo->AddComponent<Pepper>();
+	pepperComp->Init();
 
 	scene.Add(peterPepperGo);
 
-
+	input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveUp>(peterPepperGo)), 0);
+	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveDown>(peterPepperGo)), 0);
 	input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveLeft>(peterPepperGo)), 0);
 	input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveRight>(peterPepperGo)), 0);
 
@@ -134,14 +125,12 @@ void dae::Minigin::LoadGame() const
 	peterComp->GetHealth()->addObserver(peterUiComp);
 
 	//peterCommand
-	input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<HitCommand>(peterPepperGo.get())), 0);
+	input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<PepperCommand>(peterPepperGo.get())), 0);
+
 
 	std::unique_ptr<BunDropped> scorePeterCommand = std::make_unique<BunDropped>(peterPepperGo.get());
 	scorePeterCommand->addObserver(peterUiComp);
 	input.AddCommand(dae::ControllerButton::ButtonY, dae::ButtonActivateState::OnButtonRelease, std::move(scorePeterCommand), 0);
-
-	input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveUp>(peterPepperGo)), 0);
-	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveDown>(peterPepperGo)), 0);
 
 	input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleUp>(peterPepperGo)), 0);
 	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(peterPepperGo)), 0);

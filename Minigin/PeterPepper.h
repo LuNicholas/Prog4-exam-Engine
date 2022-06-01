@@ -10,6 +10,14 @@ namespace dae
 
 	class PeterPepper : public Component
 	{
+		enum class LastLookDir
+		{
+			Up,
+			Dowm,
+			Left,
+			Right
+		};
+
 	public:
 		friend class GameObject;
 
@@ -18,6 +26,8 @@ namespace dae
 		void Update(float deltaTime);
 		void FixedUpdate(float deltaTime);
 		void Render() const;
+
+		void Pepper();
 
 		void MoveLeft();
 		void MoveRight();
@@ -43,12 +53,15 @@ namespace dae
 		MovementComponent* m_pMovementComp;
 		AnimationManager* m_pAnimationComp;
 
+
 		CollisionBox* m_pCollisionBox;
 		int m_WidthPlayer;
 		int m_HeightPlayer;
 
+		CollisionBox* m_pPepperBox;
 
 		float m_MoveSpeed;
+		LastLookDir m_LastLookingDirection;
 
 	};
 }

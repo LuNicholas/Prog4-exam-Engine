@@ -17,6 +17,7 @@ namespace dae
 		virtual void Render() const = 0;
 
 		void SetPosition(float x, float y) { m_Transform.SetPosition(x, y, 0.0f); };
+		void SetPosition(glm::vec2 pos) { m_Transform.SetPosition(pos.x, pos.y, 0.0f); };
 		glm::vec3 GetPosition() { return m_Transform.GetPosition(); };
 		GameObject* GetGameObject() { return m_pGameObject; };
 

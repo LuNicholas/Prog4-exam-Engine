@@ -39,6 +39,8 @@ namespace dae
 		void MoveUp();
 		void MoveDown();
 
+		bool m_isDead;
+
 		std::vector<PeterPepper*> m_Players;
 		int m_PlayerHeightOffset;
 

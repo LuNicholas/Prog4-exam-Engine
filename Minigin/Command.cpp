@@ -9,16 +9,18 @@
 #include "Events.h"
 
 
-//HitpepperCOmmand
-HitCommand::HitCommand(dae::GameObject* actor)
+//pepperCOmmand
+PepperCommand::PepperCommand(dae::GameObject* actor)
 	:m_actor(actor)
 {
 }
-void HitCommand::Execute()
+void PepperCommand::Execute()
 {
-	dae::PeterPepper* peterPepper = m_actor->GetComponent<dae::PeterPepper>();
-	if (peterPepper != nullptr)
-		peterPepper->GetHealth()->DealDamage(1, *m_actor);
+	//dae::PeterPepper* peterPepper = m_actor->GetComponent<dae::PeterPepper>();
+	//if (peterPepper != nullptr)
+	//	peterPepper->GetHealth()->DealDamage(1, *m_actor);
+
+	m_actor->GetComponent<dae::PeterPepper>()->Pepper();
 }
 
 //BunDropped

@@ -1,4 +1,4 @@
-#include "MiniginPCH.h"
+#include "BurgerTimePCH.h"
 #include "PeterPepper.h"
 #include "GameObject.h"
 #include "CollisionBox.h"
@@ -6,7 +6,7 @@
 #include "MovementComponent.h"
 #include "Pepper.h"
 
-dae::PeterPepper::PeterPepper()
+PeterPepper::PeterPepper()
 	:m_MoveSpeed(10)
 	, m_WidthPlayer(32)
 	, m_HeightPlayer(32)
@@ -19,22 +19,22 @@ dae::PeterPepper::PeterPepper()
 
 	
 }
-dae::PeterPepper::~PeterPepper()
+PeterPepper::~PeterPepper()
 {
 	delete m_pHealth;
 }
 
-void dae::PeterPepper::Init()
+void PeterPepper::Init()
 {
-	m_pCollisionBox = m_pGameObject->AddComponent<CollisionBox>();
+	m_pCollisionBox = m_pGameObject->AddComponent<dae::CollisionBox>();
 	m_pCollisionBox->SetBox(m_WidthPlayer, m_HeightPlayer);
 	m_pCollisionBox->SetTag("player");
 
-	m_pMovementComp = m_pGameObject->AddComponent<MovementComponent>();
+	m_pMovementComp = m_pGameObject->AddComponent<dae::MovementComponent>();
 	m_pMovementComp->SetMovementBox(m_pCollisionBox);
 
 
-	m_pAnimationComp = m_pGameObject->AddComponent<AnimationManager>();
+	m_pAnimationComp = m_pGameObject->AddComponent<dae::AnimationManager>();
 	m_pAnimationComp->AddAnimation("Peter_Up.png", "up", 96, 32, 3, 1, 0.5f);
 	m_pAnimationComp->AddAnimation("Peter_Forward.png", "forward", 96, 32, 3, 1, 0.5f);
 	m_pAnimationComp->AddAnimation("Peter_Left.png", "left", 96, 32, 3, 1, 0.5f);
@@ -44,22 +44,22 @@ void dae::PeterPepper::Init()
 	m_pAnimationComp->SetActiveAnimation("idleForward");
 }
 
-void dae::PeterPepper::Update(float deltaTime)
+void PeterPepper::Update(float deltaTime)
 {
 }
-void dae::PeterPepper::FixedUpdate(float deltaTime)
+void PeterPepper::FixedUpdate(float deltaTime)
 {
 }
-void dae::PeterPepper::Render() const
+void PeterPepper::Render() const
 {
 }
 
-dae::Health* dae::PeterPepper::GetHealth() const
+dae::Health* PeterPepper::GetHealth() const
 {
 	return m_pHealth;
 }
 
-void dae::PeterPepper::MoveLeft()
+void PeterPepper::MoveLeft()
 {
 	if (m_pMovementComp->MoveLeft())
 	{
@@ -68,7 +68,7 @@ void dae::PeterPepper::MoveLeft()
 	m_LastLookingDirection = LastLookDir::Left;
 }
 
-void dae::PeterPepper::MoveRight()
+void PeterPepper::MoveRight()
 {
 	if (m_pMovementComp->MoveRight())
 	{
@@ -76,7 +76,7 @@ void dae::PeterPepper::MoveRight()
 	}
 	m_LastLookingDirection = LastLookDir::Right;
 }
-void dae::PeterPepper::MoveUp()
+void PeterPepper::MoveUp()
 {
 	if (m_pMovementComp->MoveUp())
 	{
@@ -84,7 +84,7 @@ void dae::PeterPepper::MoveUp()
 	}
 	m_LastLookingDirection = LastLookDir::Up;
 }
-void dae::PeterPepper::MoveDown()
+void PeterPepper::MoveDown()
 {
 	if (m_pMovementComp->MoveDown())
 	{
@@ -93,32 +93,32 @@ void dae::PeterPepper::MoveDown()
 	m_LastLookingDirection = LastLookDir::Dowm;
 }
 
-void dae::PeterPepper::IdleForward()
+void PeterPepper::IdleForward()
 {
 	m_pAnimationComp->SetActiveAnimation("idleForward");
 }
-void dae::PeterPepper::IdleUp()
+void PeterPepper::IdleUp()
 {
 	m_pAnimationComp->SetActiveAnimation("idleUp");
 }
 
-void dae::PeterPepper::Pepper()
+void PeterPepper::Pepper()
 {
 	switch (m_LastLookingDirection)
 	{
-	case dae::PeterPepper::LastLookDir::Up:
+	case PeterPepper::LastLookDir::Up:
 		m_pGameObject->GetChildAt(0)->GetComponent<dae::Pepper>()->Activate(glm::vec2(m_Transform.GetPosition().x, m_Transform.GetPosition().y - 32));
 		//m_pGameObject->GetChildAt(0)->SetPosition(m_Transform.GetPosition().x, m_Transform.GetPosition().y - 32);
 		break;
-	case dae::PeterPepper::LastLookDir::Dowm:
+	case PeterPepper::LastLookDir::Dowm:
 		m_pGameObject->GetChildAt(0)->GetComponent<dae::Pepper>()->Activate(glm::vec2(m_Transform.GetPosition().x, m_Transform.GetPosition().y + 32));
 		//m_pGameObject->GetChildAt(0)->SetPosition(m_Transform.GetPosition().x, m_Transform.GetPosition().y + 32);
 		break;
-	case dae::PeterPepper::LastLookDir::Left:
+	case PeterPepper::LastLookDir::Left:
 		m_pGameObject->GetChildAt(0)->GetComponent<dae::Pepper>()->Activate(glm::vec2(m_Transform.GetPosition().x - 32, m_Transform.GetPosition().y));
 		//m_pGameObject->GetChildAt(0)->SetPosition(m_Transform.GetPosition().x - 32, m_Transform.GetPosition().y);
 		break;
-	case dae::PeterPepper::LastLookDir::Right:
+	case PeterPepper::LastLookDir::Right:
 		m_pGameObject->GetChildAt(0)->GetComponent<dae::Pepper>()->Activate(glm::vec2(m_Transform.GetPosition().x + 32, m_Transform.GetPosition().y));
 		//m_pGameObject->GetChildAt(0)->SetPosition(m_Transform.GetPosition().x + 32, m_Transform.GetPosition().y);
 		break;

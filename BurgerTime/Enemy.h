@@ -1,9 +1,10 @@
 #pragma once
 #include "Component.h"
 
+class PeterPepper;
+
 namespace dae
 {
-	class PeterPepper;
 	class MovementComponent;
 	class CollisionBox;
 	class AnimationManager;

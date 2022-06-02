@@ -7,11 +7,11 @@ namespace dae
 	class CollisionBox;
 	class Texture2D;
 
-	class Bun final : public Component, public Subject
+	class Ingredient final : public Component, public Subject
 	{
 		friend class GameObject;
 	public:
-		~Bun();
+		~Ingredient();
 
 		void Update(float deltaTime);
 		void FixedUpdate(float deltaTime);
@@ -19,13 +19,13 @@ namespace dae
 
 		void Init(const std::string& textureFileName);
 
-		Bun(const Bun& other) = delete;
-		Bun(Bun&& other) = delete;
-		Bun& operator=(const Bun& other) = delete;
-		Bun& operator=(Bun&& other) = delete;
+		Ingredient(const Ingredient& other) = delete;
+		Ingredient(Ingredient&& other) = delete;
+		Ingredient& operator=(const Ingredient& other) = delete;
+		Ingredient& operator=(Ingredient&& other) = delete;
 
 	private:
-		Bun();
+		Ingredient();
 		std::vector<std::pair<bool, CollisionBox*>> m_CollionBoxes;
 		CollisionBox* m_pBigCollisionBox;
 

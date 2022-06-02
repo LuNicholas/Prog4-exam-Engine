@@ -1,7 +1,7 @@
 #include "MiniginPCH.h"
 #include "Subject.h"
 #include "observer.h"
-#include "Events.h"
+//#include "Events.h"
 
 
 dae::Subject::Subject()
@@ -27,7 +27,7 @@ void dae::Subject::removeObserver(Observer* observer)
 	observer->m_next->m_previous= observer->m_previous;
 }
 
-void dae::Subject::Notify(const dae::GameObject& go, const Event& event)
+void dae::Subject::Notify(const dae::GameObject& go, const Event& event)//todo event enum fix
 {
 	Observer* observer = m_head;
 	while (observer != nullptr)

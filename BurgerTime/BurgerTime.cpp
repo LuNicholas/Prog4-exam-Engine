@@ -1,96 +1,76 @@
-#include "MiniginPCH.h"
+#include "BurgerTimePCH.h"
+#if _DEBUG
+#if __has_include(<vld.h>)
+#include <vld.h>
+#endif
+#endif
+
 #include "Minigin.h"
-#include <thread>
-#include "InputManager.h"
 #include "SceneManager.h"
-#include "Renderer.h"
-#include "ResourceManager.h"
-#include "TextComponent.h"
-#include "Texture2DComponent.h"
-#include "ImguiExerciseComponent.h"
-#include "GameObject.h"
 #include "Scene.h"
-#include "Component.h"
+#include "InputManager.h"
+#include "GameObject.h"
+#include "Texture2DComponent.h"
+#include "ResourceManager.h"
+#include "Texture2DComponent.h"
 #include "FpsComponent.h"
-#include "AnimationManager.h"
+#include "PeterPepper.h"
+#include "Pepper.h"
+#include "PlayerUiComponent.h"
+#include "GameCommands.h"
 #include "Sound.h"
 #include "CollisionBox.h"
+#include "Ingredient.h"
+#include "Enemy.h"
 
 
+void Level1();
 
-using namespace std;
-
-void PrintSDLVersion()
+int main(int, char* [])
 {
-	SDL_version compiled{};
-	SDL_version linked{};
+	dae::Minigin engine;
+	engine.Initialize();
 
-	SDL_VERSION(&compiled);
-	SDL_GetVersion(&linked);
-	printf("We compiled against SDL version %d.%d.%d ...\n",
-		compiled.major, compiled.minor, compiled.patch);
-	printf("We are linking against SDL version %d.%d.%d.\n",
-		linked.major, linked.minor, linked.patch);
+	Level1();
+
+	engine.Run();
+
+	engine.Cleanup();
+	return 0;
 }
 
-void dae::Minigin::Initialize()
+void Level1()
 {
-	PrintSDLVersion();
+	dae::ResourceManager::GetInstance().Init("../Data/");///////COMMENTED SHIT IN MINIGIN THISH THISH 
 
-	if (SDL_Init(SDL_INIT_VIDEO) != 0)
-	{
-		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
-	}
+	auto& scene = dae::SceneManager::GetInstance().CreateScene("test");
+	auto& input = dae::InputManager::GetInstance();
 
-	m_Window = SDL_CreateWindow(
-		"Programming 4 assignment",
-		SDL_WINDOWPOS_CENTERED,
-		SDL_WINDOWPOS_CENTERED,
-		624,
-		700,
-		SDL_WINDOW_OPENGL
-	);
-	if (m_Window == nullptr)
-	{
-		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
-	}
 
-	Renderer::GetInstance().Init(m_Window);
-}
-
-/**
- * Code constructing the scene world starts here
- */
-void dae::Minigin::LoadGame() const
-{
-	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
-	auto& input = InputManager::GetInstance();
-
-	/*
-	auto go = std::make_shared<GameObject>();
+	auto go = std::make_shared<dae::GameObject>();
 	scene.Add(go);
 
 
-	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
+	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 
 	//levelsprite
-	auto levelGO = std::make_shared<GameObject>();
-	Texture2DComponent* levelTexture = levelGO->AddComponent<Texture2DComponent>();
+	auto levelGO = std::make_shared<dae::GameObject>();
+	dae::Texture2DComponent* levelTexture = levelGO->AddComponent<dae::Texture2DComponent>();
 	levelTexture->SetTexture("level1.png");
 	levelTexture->SetPosition(0, 700 - 600);
 	scene.Add(levelGO);
 
 
 	//fps game object
-	auto fpsGo = std::make_shared<GameObject>();
-	FpsComponent* fpsComponent = fpsGo->AddComponent<FpsComponent>();
+	auto fpsGo = std::make_shared<dae::GameObject>();
+	dae::FpsComponent* fpsComponent = fpsGo->AddComponent<dae::FpsComponent>();
 	fpsComponent->SetPosition(10, 10);
 	fpsComponent->SetFont(font);
 	scene.Add(fpsGo);
 
 
 	//new peter pepper
-	auto peterPepperGo = std::make_shared<GameObject>();
+	auto peterPepperGo = std::make_shared<dae::GameObject>();
 	PeterPepper* peterComp = peterPepperGo->AddComponent<PeterPepper>();
 	peterComp->Init();
 	peterPepperGo->SetPosition(300, 540);
@@ -99,10 +79,11 @@ void dae::Minigin::LoadGame() const
 	auto pepperGo = peterPepperGo->AddChild();
 	pepperGo->SetFollowParent(false);
 	pepperGo->SetPosition(-1000, -1000);
-	Pepper* pepperComp = pepperGo->AddComponent<Pepper>();
+	dae::Pepper* pepperComp = pepperGo->AddComponent<dae::Pepper>();
 	pepperComp->Init();
 
 	scene.Add(peterPepperGo);
+
 
 	input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveUp>(peterPepperGo)), 0);
 	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveDown>(peterPepperGo)), 0);
@@ -112,8 +93,8 @@ void dae::Minigin::LoadGame() const
 
 
 	//UI
-	auto UiPeter = std::make_shared<GameObject>();
-	PlayerUiComponent* peterUiComp = UiPeter->AddComponent<PlayerUiComponent>();
+	auto UiPeter = std::make_shared<dae::GameObject>();
+	dae::PlayerUiComponent* peterUiComp = UiPeter->AddComponent<dae::PlayerUiComponent>();
 	peterUiComp->SetFont(font);
 	peterUiComp->SetLives(peterComp->GetHealth()->GetHealth());
 	peterUiComp->SetLives(3);
@@ -137,16 +118,16 @@ void dae::Minigin::LoadGame() const
 
 
 	//second player
+	
 	/*
-
 	//sally salt
-	auto sallySaltGo = std::make_shared<GameObject>();
+	auto sallySaltGo = std::make_shared<dae::GameObject>();
 	PeterPepper* sallyComp = sallySaltGo->AddComponent<PeterPepper>();
 	scene.Add(sallySaltGo);
 
 
 	//UI
-	auto UiSally = std::make_shared<GameObject>();
+	auto UiSally = std::make_shared<dae::GameObject>();
 	PlayerUiComponent* sallyUiComp = UiSally->AddComponent<PlayerUiComponent>();
 	sallyUiComp->SetFont(font);
 	sallyUiComp->SetLives(sallyComp->GetHealth()->GetHealth());
@@ -163,7 +144,7 @@ void dae::Minigin::LoadGame() const
 	std::unique_ptr<BunDropped> scoreSallyCommand = std::make_unique<BunDropped>(sallySaltGo.get());
 	scoreSallyCommand->addObserver(sallyUiComp);
 	input.AddCommand(dae::ControllerButton::ButtonY, dae::ButtonActivateState::OnButtonRelease, std::move(scoreSallyCommand), 1);
-
+	*/
 	///
 
 
@@ -191,58 +172,58 @@ void dae::Minigin::LoadGame() const
 
 
 
-	//LEVEL COLLISION 
+	//LEVEL COLLISION
 	//LEVEL FLOORS
 	{
 		int floorWidth = 13;
-		auto levelFloor = std::make_shared<GameObject>();
-		CollisionBox* floor1 = levelFloor->AddComponent<CollisionBox>();
+		auto levelFloor = std::make_shared<dae::GameObject>();
+		dae::CollisionBox* floor1 = levelFloor->AddComponent<dae::CollisionBox>();
 		floor1->SetTag("floor");
 		floor1->SetPosition(5, 565);
 		floor1->SetBox(613, floorWidth);
 
-		CollisionBox* floor2 = levelFloor->AddComponent<CollisionBox>();
+		dae::CollisionBox* floor2 = levelFloor->AddComponent<dae::CollisionBox>();
 		floor2->SetTag("floor");
 		floor2->SetPosition(5, 469);
 		floor2->SetBox(470, floorWidth);
 
-		CollisionBox* floor3 = levelFloor->AddComponent<CollisionBox>();
+		dae::CollisionBox* floor3 = levelFloor->AddComponent<dae::CollisionBox>();
 		floor3->SetTag("floor");
 		floor3->SetPosition(438, 420);
 		floor3->SetBox(180, floorWidth);
 
-		CollisionBox* floor4 = levelFloor->AddComponent<CollisionBox>();
+		dae::CollisionBox* floor4 = levelFloor->AddComponent<dae::CollisionBox>();
 		floor4->SetTag("floor");
 		floor4->SetPosition(150, 373);
 		floor4->SetBox(325, floorWidth);
 
-		CollisionBox* floor5 = levelFloor->AddComponent<CollisionBox>();
+		dae::CollisionBox* floor5 = levelFloor->AddComponent<dae::CollisionBox>();
 		floor5->SetTag("floor");
 		floor5->SetPosition(5, 325);
 		floor5->SetBox(180, floorWidth);
 
 
-		CollisionBox* floor6 = levelFloor->AddComponent<CollisionBox>();
+		dae::CollisionBox* floor6 = levelFloor->AddComponent<dae::CollisionBox>();
 		floor6->SetTag("floor");
 		floor6->SetPosition(438, 325);
 		floor6->SetBox(180, floorWidth);
 
-		CollisionBox* floor7 = levelFloor->AddComponent<CollisionBox>();
+		dae::CollisionBox* floor7 = levelFloor->AddComponent<dae::CollisionBox>();
 		floor7->SetTag("floor");
 		floor7->SetPosition(150, 277);
 		floor7->SetBox(180, floorWidth);
 
-		CollisionBox* floor8 = levelFloor->AddComponent<CollisionBox>();
+		dae::CollisionBox* floor8 = levelFloor->AddComponent<dae::CollisionBox>();
 		floor8->SetTag("floor");
 		floor8->SetPosition(5, 230);
 		floor8->SetBox(180, floorWidth);
 
-		CollisionBox* floor9 = levelFloor->AddComponent<CollisionBox>();
+		dae::CollisionBox* floor9 = levelFloor->AddComponent<dae::CollisionBox>();
 		floor9->SetTag("floor");
 		floor9->SetPosition(292, 230);
 		floor9->SetBox(325, floorWidth);
 
-		CollisionBox* floor10 = levelFloor->AddComponent<CollisionBox>();
+		dae::CollisionBox* floor10 = levelFloor->AddComponent<dae::CollisionBox>();
 		floor10->SetTag("floor");
 		floor10->SetPosition(5, 133);
 		floor10->SetBox(613, floorWidth);
@@ -255,58 +236,58 @@ void dae::Minigin::LoadGame() const
 	{
 		//testLadder
 		int ladderWidth = 10;
-		auto ladderGO = std::make_shared<GameObject>();
-		CollisionBox* ladder1 = ladderGO->AddComponent<CollisionBox>();
+		auto ladderGO = std::make_shared<dae::GameObject>();
+		dae::CollisionBox* ladder1 = ladderGO->AddComponent<dae::CollisionBox>();
 		ladder1->SetTag("Ladder");
 		ladder1->SetPosition(18, 300);
 		ladder1->SetBox(ladderWidth, 271);
 
-		CollisionBox* ladder2 = ladderGO->AddComponent<CollisionBox>();
+		dae::CollisionBox* ladder2 = ladderGO->AddComponent<dae::CollisionBox>();
 		ladder2->SetTag("Ladder");
 		ladder2->SetPosition(18, 108);
 		ladder2->SetBox(ladderWidth, 130);
 
-		CollisionBox* ladder3 = ladderGO->AddComponent<CollisionBox>();
+		dae::CollisionBox* ladder3 = ladderGO->AddComponent<dae::CollisionBox>();
 		ladder3->SetTag("Ladder");
 		ladder3->SetPosition(90, 205);
 		ladder3->SetBox(ladderWidth, 271);
 
-		CollisionBox* ladder4 = ladderGO->AddComponent<CollisionBox>();
+		dae::CollisionBox* ladder4 = ladderGO->AddComponent<dae::CollisionBox>();
 		ladder4->SetTag("Ladder");
 		ladder4->SetPosition(164, 109);
 		ladder4->SetBox(ladderWidth, 462);
 
-		CollisionBox* ladder5 = ladderGO->AddComponent<CollisionBox>();
+		dae::CollisionBox* ladder5 = ladderGO->AddComponent<dae::CollisionBox>();
 		ladder5->SetTag("Ladder");
 		ladder5->SetPosition(235, 109);
 		ladder5->SetBox(ladderWidth, 176);
 
-		CollisionBox* ladder6 = ladderGO->AddComponent<CollisionBox>();
+		dae::CollisionBox* ladder6 = ladderGO->AddComponent<dae::CollisionBox>();
 		ladder6->SetTag("Ladder");
 		ladder6->SetPosition(307, 109);
 		ladder6->SetBox(ladderWidth, 462);
 
-		CollisionBox* ladder7 = ladderGO->AddComponent<CollisionBox>();
+		dae::CollisionBox* ladder7 = ladderGO->AddComponent<dae::CollisionBox>();
 		ladder7->SetTag("Ladder");
 		ladder7->SetPosition(380, 205);
 		ladder7->SetBox(ladderWidth, 176);
 
-		CollisionBox* ladder8 = ladderGO->AddComponent<CollisionBox>();
+		dae::CollisionBox* ladder8 = ladderGO->AddComponent<dae::CollisionBox>();
 		ladder8->SetTag("Ladder");
 		ladder8->SetPosition(450, 109);
 		ladder8->SetBox(ladderWidth, 462);
 
-		CollisionBox* ladder9 = ladderGO->AddComponent<CollisionBox>();
+		dae::CollisionBox* ladder9 = ladderGO->AddComponent<dae::CollisionBox>();
 		ladder9->SetTag("Ladder");
 		ladder9->SetPosition(523, 300);
 		ladder9->SetBox(ladderWidth, 271);
 
-		CollisionBox* ladder10 = ladderGO->AddComponent<CollisionBox>();
+		dae::CollisionBox* ladder10 = ladderGO->AddComponent<dae::CollisionBox>();
 		ladder10->SetTag("Ladder");
 		ladder10->SetPosition(595, 396);
 		ladder10->SetBox(ladderWidth, 175);
 
-		CollisionBox* ladder11 = ladderGO->AddComponent<CollisionBox>();
+		dae::CollisionBox* ladder11 = ladderGO->AddComponent<dae::CollisionBox>();
 		ladder11->SetTag("Ladder");
 		ladder11->SetPosition(595, 109);
 		ladder11->SetBox(ladderWidth, 222);
@@ -317,33 +298,33 @@ void dae::Minigin::LoadGame() const
 	//first burger
 	{
 		//add burgers
-		auto topBunGo = std::make_shared<GameObject>();
+		auto topBunGo = std::make_shared<dae::GameObject>();
 		topBunGo->SetPosition(50, 210);
-		Bun* topBun = topBunGo->AddComponent<Bun>();
+		dae::Ingredient* topBun = topBunGo->AddComponent<dae::Ingredient>();
 		topBun->Init("bun.png");
 		scene.Add(topBunGo);
 
-		auto midBunGo = std::make_shared<GameObject>();
+		auto midBunGo = std::make_shared<dae::GameObject>();
 		midBunGo->SetPosition(50, 290);
-		Bun* midBun = midBunGo->AddComponent<Bun>();
+		dae::Ingredient* midBun = midBunGo->AddComponent<dae::Ingredient>();
 		midBun->Init("salad.png");
 		scene.Add(midBunGo);
 
-		auto mid2BunGo = std::make_shared<GameObject>();
+		auto mid2BunGo = std::make_shared<dae::GameObject>();
 		mid2BunGo->SetPosition(50, 432);
-		Bun* mid2Bun = mid2BunGo->AddComponent<Bun>();
+		dae::Ingredient* mid2Bun = mid2BunGo->AddComponent<dae::Ingredient>();
 		mid2Bun->Init("patty.png");
 		scene.Add(mid2BunGo);
 
-		auto botBunGo = std::make_shared<GameObject>();
+		auto botBunGo = std::make_shared<dae::GameObject>();
 		botBunGo->SetPosition(50, 530);
-		Bun* botBun = botBunGo->AddComponent<Bun>();
+		dae::Ingredient* botBun = botBunGo->AddComponent<dae::Ingredient>();
 		botBun->Init("bun_Bottom.png");
 		scene.Add(botBunGo);
 
 		//ADDING TESTPLATE
-		auto plate1 = std::make_shared<GameObject>();
-		CollisionBox* floor6 = plate1->AddComponent<CollisionBox>();
+		auto plate1 = std::make_shared<dae::GameObject>();
+		dae::CollisionBox* floor6 = plate1->AddComponent<dae::CollisionBox>();
 		floor6->SetTag("plate");
 		floor6->SetPosition(38, 695);
 		floor6->SetBox(20, 10);
@@ -358,73 +339,14 @@ void dae::Minigin::LoadGame() const
 
 
 	//enemy test
-	auto enemyGO = std::make_shared<GameObject>();
-	Enemy* enemy = enemyGO->AddComponent<Enemy>();
+	auto enemyGO = std::make_shared<dae::GameObject>();
+	dae::Enemy* enemy = enemyGO->AddComponent<dae::Enemy>();
 	enemy->Init();
 	enemyGO->SetPosition(60, 540);
 	enemy->AddPlayer(peterComp);
 	scene.Add(enemyGO);
 
-	*/
 
 }
 
-void dae::Minigin::Cleanup()
-{
 
-	SoundServiceLocator::RegisterSoundSystem(nullptr);
-	Renderer::GetInstance().Destroy();
-	SDL_DestroyWindow(m_Window);
-	m_Window = nullptr;
-	SDL_Quit();
-}
-
-void dae::Minigin::Run()
-{
-	//Initialize();
-
-	// tell the resource manager where he can find the game data
-	//ResourceManager::GetInstance().Init("../Data/");
-
-	LoadGame();
-
-	{
-		auto& renderer = Renderer::GetInstance();
-		auto& sceneManager = SceneManager::GetInstance();
-		auto& input = InputManager::GetInstance();
-
-
-
-		// todo: this update loop could use some work.
-		bool doContinue = true;
-		auto lastTime = chrono::high_resolution_clock::now();
-		float lag = 0.0f;
-		float fixedTimeStep = 0.02f;
-		while (doContinue)
-		{
-
-			//time
-			const auto currentTime = chrono::high_resolution_clock::now();
-			float deltaTime = chrono::duration<float>(currentTime - lastTime).count();
-			lastTime = currentTime;
-			lag += deltaTime;
-
-
-			doContinue = input.ProcessInput();
-			input.CheckInput();
-
-
-			while (lag >= fixedTimeStep)
-			{
-				sceneManager.FixedUpdate(deltaTime);
-				lag -= fixedTimeStep;
-			}
-
-			sceneManager.Update(deltaTime);
-			renderer.Render();
-
-		}
-	}
-
-	//Cleanup();
-}

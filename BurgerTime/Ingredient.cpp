@@ -1,5 +1,5 @@
-#include "MiniginPCH.h"
-#include "Bun.h"
+#include "BurgerTimePCH.h"
+#include "Ingredient.h"
 #include "GameObject.h"
 #include "CollisionBox.h"
 #include "Subject.h"
@@ -8,7 +8,7 @@
 #include "Renderer.h"
 #include "Enemy.h"
 
-dae::Bun::Bun()
+dae::Ingredient::Ingredient()
 	:m_IsDropping(true)
 	, m_CurrentFloor(nullptr)
 	, m_DroppingSpeed(80)
@@ -23,11 +23,11 @@ dae::Bun::Bun()
 	, m_ExtraDrops(0)
 {
 }
-dae::Bun::~Bun()
+dae::Ingredient::~Ingredient()
 {
 }
 
-void dae::Bun::Init(const std::string& textureFileName)
+void dae::Ingredient::Init(const std::string& textureFileName)
 {
 	glm::vec2 thisPos = m_Transform.GetPosition();
 
@@ -36,7 +36,7 @@ void dae::Bun::Init(const std::string& textureFileName)
 		CollisionBox* box = m_pGameObject->AddComponent<CollisionBox>();
 		box->SetPosition(thisPos.x + i * m_BoxWidth, thisPos.y);
 		box->SetBox(m_BoxWidth, m_BoxHeight);
-		m_CollionBoxes.push_back(std::pair(false, box));
+		m_CollionBoxes.push_back(std::pair<bool, CollisionBox*>(false, box));
 	}
 
 	m_pBigCollisionBox = m_pGameObject->AddComponent<CollisionBox>();
@@ -56,7 +56,7 @@ void dae::Bun::Init(const std::string& textureFileName)
 }
 
 
-void dae::Bun::Update(float deltaTime)
+void dae::Ingredient::Update(float deltaTime)
 {
 	if (m_OnPlate)
 		return;
@@ -96,15 +96,15 @@ void dae::Bun::Update(float deltaTime)
 			}
 			else if (box->GetTag() == "bun")
 			{
-				if (box->GetGameObject()->GetComponent<Bun>()->m_OnPlate)
+				if (box->GetGameObject()->GetComponent<Ingredient>()->m_OnPlate)
 				{
 					m_OnPlate = true;
 					m_IsDropping = false;
 				}
-				else if (box->GetGameObject()->GetComponent<Bun>()->m_IsDropping == false)
+				else if (box->GetGameObject()->GetComponent<Ingredient>()->m_IsDropping == false)
 				{
-					box->GetGameObject()->GetComponent<Bun>()->m_IsDropping = true;
-					box->GetGameObject()->GetComponent<Bun>()->resetIngredient();
+					box->GetGameObject()->GetComponent<Ingredient>()->m_IsDropping = true;
+					box->GetGameObject()->GetComponent<Ingredient>()->resetIngredient();
 					Notify(*m_pGameObject, Event::BunDropped);
 				}
 
@@ -171,10 +171,10 @@ void dae::Bun::Update(float deltaTime)
 	}
 
 }
-void dae::Bun::FixedUpdate(float deltaTime)
+void dae::Ingredient::FixedUpdate(float deltaTime)
 {
 }
-void dae::Bun::Render() const
+void dae::Ingredient::Render() const
 {
 	for (size_t i = 0; i < m_CollionBoxes.size(); i++)
 	{
@@ -183,7 +183,7 @@ void dae::Bun::Render() const
 
 }
 
-void dae::Bun::resetIngredient()
+void dae::Ingredient::resetIngredient()
 {
 	for (std::pair<bool, CollisionBox*>& bunBox : m_CollionBoxes)
 	{

@@ -1,4 +1,4 @@
-#include "MiniginPCH.h"
+#include "BurgerTimePCH.h"
 #include "PlayerUiComponent.h"
 #include "PeterPepper.h"
 #include "Events.h"
@@ -64,7 +64,7 @@ void dae::PlayerUiComponent::onNotify(const dae::GameObject& go, const Event& ev
 	{
 	case Event::PlayerHit:
 	{
-		dae::PeterPepper* peterPepper = go.GetComponent<dae::PeterPepper>();
+		PeterPepper* peterPepper = go.GetComponent<PeterPepper>();
 		if (peterPepper != nullptr)
 			SetLives(peterPepper->GetHealth()->GetHealth());
 		break;

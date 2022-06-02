@@ -105,3 +105,25 @@ public:
 	void Execute() override;
 
 };
+
+
+class ButtonManager;
+class NextButton : public Command
+{
+
+public:
+	explicit NextButton(ButtonManager* buttonManager);
+	void Execute() override;
+private:
+	ButtonManager* m_pButtonManager;
+};
+
+class PreviousButton : public Command
+{
+
+public:
+	explicit PreviousButton(ButtonManager* buttonManager);
+	void Execute() override;
+private:
+	ButtonManager* m_pButtonManager;
+};

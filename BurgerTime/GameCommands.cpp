@@ -9,6 +9,7 @@
 #include "AnimationManager.h"
 #include "Events.h"
 #include "SceneManager.h"//todo remove this probs after tests
+#include "ButtonManager.h"
 
 
 //pepperCOmmand
@@ -113,6 +114,26 @@ NextScene::NextScene()
 }
 void NextScene::Execute()
 {
-	std::cout << "nextScene\n";
 	dae::SceneManager::GetInstance().NextScene();
+}
+
+
+NextButton::NextButton(ButtonManager* buttonManager)
+	:m_pButtonManager(buttonManager)
+{
+
+}
+void NextButton::Execute()
+{
+	m_pButtonManager->NextButton();
+}
+
+PreviousButton::PreviousButton(ButtonManager* buttonManager)
+	:m_pButtonManager(buttonManager)
+{
+
+}
+void PreviousButton::Execute()
+{
+	m_pButtonManager->PreviousButton();
 }

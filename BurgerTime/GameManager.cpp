@@ -53,6 +53,10 @@ void GameManager::Reset()
 		enemy->Reset();
 	}
 }
+void GameManager::FullReset()
+{
+	//RESET ENEMIES 
+}
 
 void GameManager::onNotify(const dae::GameObject& go, const Event& event)
 {

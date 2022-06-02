@@ -21,10 +21,11 @@ dae::Enemy::Enemy()
 	, m_StunTime(1.5f)
 	, m_CurrentStunTime(0)
 	, m_IsActive(false)
-	, m_DeathTime(3.f)
+	, m_DeathTime(6.f)
 	, m_Paused(false)
 	, m_InitialSpawnTime(0)
 	, m_SpawnTimer(0)
+	, m_DissapearTime(1.0f)
 {
 
 
@@ -81,9 +82,10 @@ void dae::Enemy::Update(float deltaTime)
 			m_IsDead = false;
 			m_pGameObject->SetPosition(m_SpawnPoint.x, m_SpawnPoint.y);
 		}
-		else if (m_SpawnTimer >= 0.5f)
+		else if (m_SpawnTimer >= m_DissapearTime)
 		{
 			m_pGameObject->SetPosition(-1000, -1000);
+			return;
 		}
 		else
 		{

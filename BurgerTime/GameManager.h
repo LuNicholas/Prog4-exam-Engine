@@ -5,6 +5,7 @@
 namespace dae
 {
 	class Enemy;
+	class Ingredient;
 }
 
 class GameManager : public dae::Component, public dae::Observer
@@ -31,11 +32,13 @@ private:
 
 	void Pause();
 	void Reset();
+	void FullReset();
 
 	bool m_GamePaused;
 	float m_PauseTime = 2.f;
 	float m_PauseTimer = 0;
 
 	std::vector<dae::Enemy*> m_Enemies;
+	std::vector<dae::Ingredient*> m_Ingredients;
 };
 

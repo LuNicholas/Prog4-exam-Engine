@@ -25,10 +25,11 @@
 #include "AnimationManager.h"
 #include "Plate.h"
 #include "GameManager.h"
+#include "ButtonManager.h"
 
 
 void Level1();
-void Test();
+void MainMenu();
 
 int main(int, char* [])
 {
@@ -38,32 +39,41 @@ int main(int, char* [])
 
 	//adding player to all scenes?????????? to preserve everything
 
-	Test();
+	MainMenu();
 	Level1();
 
-	dae::SceneManager::GetInstance().SetActiveScene("level1");
-
+	dae::SceneManager::GetInstance().SetActiveScene("mainMenu");
+	
 	engine.Run();
 
 	engine.Cleanup();
 	return 0;
 }
 
-void Test()
+void MainMenu()
 {
 
-	auto& scene = dae::SceneManager::GetInstance().CreateScene("testLevel");
+	auto& scene = dae::SceneManager::GetInstance().CreateScene("mainMenu");
 	auto& input = dae::InputManager::GetInstance();
 
 	//levelsprite
 	auto levelGO = std::make_shared<dae::GameObject>();
 	dae::Texture2DComponent* levelTexture = levelGO->AddComponent<dae::Texture2DComponent>();
-	levelTexture->SetTexture("level1.png");
-	levelTexture->SetPosition(0, 0);
+	levelTexture->SetTexture("MainMenu.png");
+	levelTexture->SetPosition(50, 100);
 	scene.Add(levelGO);
 
+	auto buttonsGo = std::make_shared<dae::GameObject>();
+	ButtonManager* buttonManager = buttonsGo->AddComponent<ButtonManager>();
+	buttonManager->AddButton(glm::vec2(225, 320), glm::vec2(135, 25));//1 Player
+	buttonManager->AddButton(glm::vec2(224, 352), glm::vec2(150, 25));//2 Players
+	buttonManager->AddButton(glm::vec2(270, 385), glm::vec2(43, 25));// VS
+	scene.Add(buttonsGo);
 
-	input.AddCommand(dae::ControllerButton::ButtonX, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<NextScene>()), 0);
+	input.AddCommand(dae::ControllerButton::ButtonX, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<NextScene>()), 0);
+
+	input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<PreviousButton>(buttonManager)), 0);
+	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<NextButton>(buttonManager)), 0);
 }
 
 void Level1()

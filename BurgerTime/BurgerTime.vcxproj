@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Button.h" />
+    <ClInclude Include="ButtonManager.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Ingredient.h" />
     <ClInclude Include="BurgerTimePCH.h" />
@@ -33,6 +35,8 @@
     <ClInclude Include="PlayerUiComponent.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="ButtonManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Ingredient.cpp" />
     <ClCompile Include="BurgerTime.cpp" />

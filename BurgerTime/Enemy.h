@@ -64,6 +64,7 @@ namespace dae
 		bool m_IsActive;
 		float m_SpawnTimer;
 		float m_DeathTime;
+		float m_DissapearTime;
 		bool m_Paused;
 	};
 }

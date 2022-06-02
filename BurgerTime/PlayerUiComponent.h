@@ -17,6 +17,7 @@ namespace dae
 		void SetPosition(float x, float y);
 		void SetFont(std::shared_ptr<Font> font);
 		void SetLives(int lives);
+		
 
 		void AddScore(int score);
 
@@ -31,7 +32,10 @@ namespace dae
 		void onNotify(const dae::GameObject& go, const Event& event) override;
 		PlayerUiComponent();
 
+		void SetPeppers(int pepperAmount);
+
 		dae::TextComponent* m_pHpText;
+		dae::TextComponent* m_pPepperText;
 		dae::TextComponent* m_pScoreText;
 		int m_score = 0;
 	};

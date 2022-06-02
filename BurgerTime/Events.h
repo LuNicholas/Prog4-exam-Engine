@@ -6,5 +6,6 @@ enum Event
 	PlayerHit,
 	BunDropped,
 	EnemySquashed,
-	PlayerReset
+	PepperUse,
+	PlayerReset,
 };

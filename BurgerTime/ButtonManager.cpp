@@ -9,6 +9,11 @@ ButtonManager::ButtonManager()
 }
 ButtonManager::~ButtonManager()
 {
+	for (auto button : m_Buttons)
+	{
+		delete button;
+	}
+	m_Buttons.clear();
 }
 
 void ButtonManager::Update(float deltaTime)

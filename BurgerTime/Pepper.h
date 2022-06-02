@@ -20,6 +20,7 @@ namespace dae
 
 		void Init();
 		void Activate(glm::vec2 pos);
+		bool OnCooldown()const;
 
 		Pepper(const Pepper& other) = delete;
 		Pepper(Pepper&& other) = delete;

@@ -15,17 +15,16 @@ PeterPepper::PeterPepper()
 	, m_pMovementComp(nullptr)
 	, m_pAnimationComp(nullptr)
 	, m_LastLookingDirection(LastLookDir::Right)
+	, m_Peppers(5)
 {
-	m_pHealth = new dae::Health(3);
-
-	
+	m_pHealth = new dae::Health(4);
 }
 PeterPepper::~PeterPepper()
 {
 	delete m_pHealth;
 }
 
-void PeterPepper::Init(const glm::vec2& spawnPos)
+void PeterPepper::Init(const glm::vec2& spawnPos, int peppers)
 {
 	m_pCollisionBox = m_pGameObject->AddComponent<dae::CollisionBox>();
 	m_pCollisionBox->SetBox(m_WidthPlayer, m_HeightPlayer);
@@ -47,6 +46,8 @@ void PeterPepper::Init(const glm::vec2& spawnPos)
 
 	m_SpawnPos = spawnPos;
 	m_pGameObject->SetPosition(spawnPos.x, spawnPos.y);
+
+	m_Peppers = peppers;
 }
 
 void PeterPepper::Update(float deltaTime)
@@ -75,6 +76,10 @@ void PeterPepper::Render() const
 dae::Health* PeterPepper::GetHealth() const
 {
 	return m_pHealth;
+}
+int PeterPepper::GetPeppers() const
+{
+	return m_Peppers;
 }
 
 void PeterPepper::MoveLeft()
@@ -141,6 +146,13 @@ void PeterPepper::Pepper()
 	if (m_IsDead)
 		return;
 
+	if (m_pGameObject->GetChildAt(0)->GetComponent<dae::Pepper>()->OnCooldown())
+		return;
+
+	if (m_Peppers == 0)
+		return;
+
+	m_Peppers--;
 	switch (m_LastLookingDirection)
 	{
 	case PeterPepper::LastLookDir::Up:
@@ -156,7 +168,8 @@ void PeterPepper::Pepper()
 		m_pGameObject->GetChildAt(0)->GetComponent<dae::Pepper>()->Activate(glm::vec2(m_Transform.GetPosition().x + 32, m_Transform.GetPosition().y));
 		break;
 	}
-	
+
+	Notify(*m_pGameObject, Event::PepperUse);
 }
 
 void PeterPepper::Kill()
@@ -170,7 +183,7 @@ void PeterPepper::Kill()
 	}
 	else
 	{
-
+		//todo
 		//BIG RESET
 	}
 }

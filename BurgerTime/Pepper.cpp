@@ -64,3 +64,8 @@ void dae::Pepper::Activate(glm::vec2 pos)
 		m_OnCooldown = true;
 	}
 }
+
+bool dae::Pepper::OnCooldown() const
+{
+	return m_OnCooldown;
+}

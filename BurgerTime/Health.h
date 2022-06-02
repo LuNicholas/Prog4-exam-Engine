@@ -4,7 +4,7 @@
 
 namespace dae
 {
-	class Health final// : public Subject
+	class Health final
 	{
 	public:
 		friend class GameObject;

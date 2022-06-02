@@ -42,7 +42,7 @@ int main(int, char* [])
 	MainMenu();
 	Level1();
 
-	dae::SceneManager::GetInstance().SetActiveScene("mainMenu");
+	//dae::SceneManager::GetInstance().SetActiveScene("mainMenu");
 	
 	engine.Run();
 
@@ -78,10 +78,8 @@ void MainMenu()
 
 void Level1()
 {
-	
-
 	auto& scene = dae::SceneManager::GetInstance().CreateScene("level1");
-	//dae::SceneManager::GetInstance().SetActiveScene("level1");
+	dae::SceneManager::GetInstance().SetActiveScene("level1");
 	auto& input = dae::InputManager::GetInstance();
 
 
@@ -110,7 +108,7 @@ void Level1()
 	//new peter pepper
 	auto peterPepperGo = std::make_shared<dae::GameObject>();
 	PeterPepper* peterComp = peterPepperGo->AddComponent<PeterPepper>();
-	peterComp->Init(glm::vec2(300, 540));
+	peterComp->Init(glm::vec2(300, 540), 5);
 
 	//pepper
 	auto pepperGo = peterPepperGo->AddChild();
@@ -133,11 +131,20 @@ void Level1()
 	auto UiPeter = std::make_shared<dae::GameObject>();
 	dae::PlayerUiComponent* peterUiComp = UiPeter->AddComponent<dae::PlayerUiComponent>();
 	peterUiComp->SetFont(font);
+	peterUiComp->SetLives(4);
 	peterUiComp->SetLives(peterComp->GetHealth()->GetHealth());
-	peterUiComp->SetLives(3);
 	peterUiComp->SetPosition(450, 10);
 	scene.Add(UiPeter);
-	//peterComp->GetHealth()->addObserver(peterUiComp);
+
+	dae::Texture2DComponent* livesTexture = UiPeter->AddComponent<dae::Texture2DComponent>();
+	livesTexture->SetTexture("Peter_Lives.png");
+	livesTexture->SetPosition(435, 18);
+
+	dae::Texture2DComponent* pepperTexture = UiPeter->AddComponent<dae::Texture2DComponent>();
+	pepperTexture->SetTexture("Peter_Pepper.png");
+	pepperTexture->SetPosition(380, 18);
+
+
 	peterComp->addObserver(peterUiComp);
 
 	//peterCommand
@@ -150,7 +157,7 @@ void Level1()
 
 	//second player
 	
-	/*
+	
 	//sally salt
 	auto sallySaltGo = std::make_shared<dae::GameObject>();
 	PeterPepper* sallyComp = sallySaltGo->AddComponent<PeterPepper>();
@@ -158,25 +165,25 @@ void Level1()
 
 
 	//UI
-	auto UiSally = std::make_shared<dae::GameObject>();
-	PlayerUiComponent* sallyUiComp = UiSally->AddComponent<PlayerUiComponent>();
-	sallyUiComp->SetFont(font);
-	sallyUiComp->SetLives(sallyComp->GetHealth()->GetHealth());
-	sallyUiComp->SetLives(3);
-	sallyUiComp->SetPosition(10, 325);
-	scene.Add(UiSally);
+	//auto UiSally = std::make_shared<dae::GameObject>();
+	//PlayerUiComponent* sallyUiComp = UiSally->AddComponent<PlayerUiComponent>();
+	//sallyUiComp->SetFont(font);
+	//sallyUiComp->SetLives(sallyComp->GetHealth()->GetHealth());
+	//sallyUiComp->SetLives(3);
+	//sallyUiComp->SetPosition(10, 325);
+	//scene.Add(UiSally);
 
-	sallyComp->GetHealth()->addObserver(sallyUiComp);
+	//sallyComp->GetHealth()->addObserver(sallyUiComp);
 
 	//sallyCommand
-	std::unique_ptr<HitCommand> hitSallyCommand = std::make_unique<HitCommand>(sallySaltGo.get());
-	input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(hitSallyCommand), 1);
+	//std::unique_ptr<HitCommand> hitSallyCommand = std::make_unique<HitCommand>(sallySaltGo.get());
+	//input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(hitSallyCommand), 1);
 
-	std::unique_ptr<BunDropped> scoreSallyCommand = std::make_unique<BunDropped>(sallySaltGo.get());
-	scoreSallyCommand->addObserver(sallyUiComp);
-	input.AddCommand(dae::ControllerButton::ButtonY, dae::ButtonActivateState::OnButtonRelease, std::move(scoreSallyCommand), 1);
-	*/
-	///
+	//std::unique_ptr<BunDropped> scoreSallyCommand = std::make_unique<BunDropped>(sallySaltGo.get());
+	//scoreSallyCommand->addObserver(sallyUiComp);
+	//input.AddCommand(dae::ControllerButton::ButtonY, dae::ButtonActivateState::OnButtonRelease, std::move(scoreSallyCommand), 1);
+	
+	
 
 
 	std::cout << "\n Button A :Lose live\n Button Y: add score \n";

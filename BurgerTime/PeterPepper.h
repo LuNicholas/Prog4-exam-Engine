@@ -24,7 +24,7 @@ public:
 
 	friend class dae::GameObject;
 
-	void Init(const glm::vec2& spawnPos);
+	void Init(const glm::vec2& spawnPos, int peppers);
 
 	void Update(float deltaTime);
 	void FixedUpdate(float deltaTime);
@@ -41,6 +41,7 @@ public:
 	void IdleUp();
 
 	dae::Health* GetHealth() const;
+	int GetPeppers() const;
 
 	~PeterPepper();
 	PeterPepper(const PeterPepper& other) = delete;
@@ -70,5 +71,6 @@ private:
 	float m_PauseTime = 2.f;
 	float m_PauseTimer = 0;
 
+	int m_Peppers;
 };
 

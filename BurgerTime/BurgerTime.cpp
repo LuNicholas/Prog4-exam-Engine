@@ -22,16 +22,22 @@
 #include "CollisionBox.h"
 #include "Ingredient.h"
 #include "Enemy.h"
+#include "AnimationManager.h"
 
 
 void Level1();
+void Test();
 
 int main(int, char* [])
 {
 	dae::Minigin engine;
 	engine.Initialize();
+	dae::ResourceManager::GetInstance().Init("../Data/");///////COMMENTED SHIT IN MINIGIN THISH THISH 
 
+	Test();
 	Level1();
+
+	dae::SceneManager::GetInstance().SetActiveScene("level1");
 
 	engine.Run();
 
@@ -39,11 +45,29 @@ int main(int, char* [])
 	return 0;
 }
 
+void Test()
+{
+
+	auto& scene = dae::SceneManager::GetInstance().CreateScene("testLevel");
+	auto& input = dae::InputManager::GetInstance();
+
+	//levelsprite
+	auto levelGO = std::make_shared<dae::GameObject>();
+	dae::Texture2DComponent* levelTexture = levelGO->AddComponent<dae::Texture2DComponent>();
+	levelTexture->SetTexture("level1.png");
+	levelTexture->SetPosition(0, 0);
+	scene.Add(levelGO);
+
+
+	input.AddCommand(dae::ControllerButton::ButtonX, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<NextScene>()), 0);
+}
+
 void Level1()
 {
-	dae::ResourceManager::GetInstance().Init("../Data/");///////COMMENTED SHIT IN MINIGIN THISH THISH 
+	
 
-	auto& scene = dae::SceneManager::GetInstance().CreateScene("test");
+	auto& scene = dae::SceneManager::GetInstance().CreateScene("level1");
+	//dae::SceneManager::GetInstance().SetActiveScene("level1");
 	auto& input = dae::InputManager::GetInstance();
 
 
@@ -311,7 +335,7 @@ void Level1()
 		scene.Add(midBunGo);
 
 		auto mid2BunGo = std::make_shared<dae::GameObject>();
-		mid2BunGo->SetPosition(50, 432);
+		mid2BunGo->SetPosition(50, 430);
 		dae::Ingredient* mid2Bun = mid2BunGo->AddComponent<dae::Ingredient>();
 		mid2Bun->Init("patty.png");
 		scene.Add(mid2BunGo);
@@ -341,8 +365,17 @@ void Level1()
 	//enemy test
 	auto enemyGO = std::make_shared<dae::GameObject>();
 	dae::Enemy* enemy = enemyGO->AddComponent<dae::Enemy>();
-	enemy->Init();
-	enemyGO->SetPosition(60, 540);
+
+	dae::AnimationManager* BeanAnimationComp = enemyGO->AddComponent<dae::AnimationManager>();
+	BeanAnimationComp->AddAnimation("Bean_Up.png", "up", 64, 32, 2, 1, 0.5f);
+	BeanAnimationComp->AddAnimation("Bean_Down.png", "down", 64, 32, 2, 1, 0.5f);
+	BeanAnimationComp->AddAnimation("Bean_Left.png", "left", 64, 32, 2, 1, 0.5f);
+	BeanAnimationComp->AddAnimation("Bean_Right.png", "right", 64, 32, 2, 1, 0.5f);
+	BeanAnimationComp->AddAnimation("Bean_Death.png", "death", 128, 32, 4, 1, 0.5f);
+	BeanAnimationComp->AddAnimation("Bean_Stunned.png", "stunned", 64, 32, 2, 1, 0.25f);
+	BeanAnimationComp->SetActiveAnimation("down");
+
+	enemy->Init(BeanAnimationComp, glm::vec2(0,540), 2.f);
 	enemy->AddPlayer(peterComp);
 	scene.Add(enemyGO);
 

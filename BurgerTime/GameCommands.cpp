@@ -8,6 +8,7 @@
 #include "Sound.h"
 #include "AnimationManager.h"
 #include "Events.h"
+#include "SceneManager.h"//todo remove this probs after tests
 
 
 //pepperCOmmand
@@ -102,4 +103,16 @@ PlaySound::PlaySound(int id)
 void PlaySound::Execute()
 {
 	SoundServiceLocator::GetSoundSystem().Play(m_SoundId, 10);
+}
+
+
+
+NextScene::NextScene()
+{
+
+}
+void NextScene::Execute()
+{
+	std::cout << "nextScene\n";
+	dae::SceneManager::GetInstance().NextScene();
 }

@@ -97,3 +97,11 @@ private:
 	int m_SoundId;
 };
 
+class NextScene : public Command
+{
+
+public:
+	explicit NextScene();
+	void Execute() override;
+
+};

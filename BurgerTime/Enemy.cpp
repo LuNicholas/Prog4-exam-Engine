@@ -20,6 +20,8 @@ dae::Enemy::Enemy()
 	, m_IsStunnned(false)
 	, m_StunTime(1.5f)
 	, m_CurrentStunTime(0)
+	, m_IsActive(false)
+	, m_DeathTime(3.f)
 {
 
 
@@ -28,7 +30,7 @@ dae::Enemy::~Enemy()
 {
 }
 
-void dae::Enemy::Init()
+void dae::Enemy::Init(dae::AnimationManager* animComp, glm::vec2 spawnPoint, float initialSpawnTime)
 {
 	CollisionBox* collider = m_pGameObject->AddComponent<CollisionBox>();
 	collider->SetBox(32, 32);
@@ -38,21 +40,49 @@ void dae::Enemy::Init()
 	m_pMovementComp->SetMovementBox(collider);
 	m_pMovementComp->SetSpeed(0.5f);
 
+	m_pAnimationComp = animComp;
 
-	m_pAnimationComp = m_pGameObject->AddComponent<AnimationManager>();
-	m_pAnimationComp->AddAnimation("Bean_Up.png", "up", 64, 32, 2, 1, 0.5f);
-	m_pAnimationComp->AddAnimation("Bean_Down.png", "down", 64, 32, 2, 1, 0.5f);
-	m_pAnimationComp->AddAnimation("Bean_Left.png", "left", 64, 32, 2, 1, 0.5f);
-	m_pAnimationComp->AddAnimation("Bean_Right.png", "right", 64, 32, 2, 1, 0.5f);
-	m_pAnimationComp->AddAnimation("Bean_Death.png", "death", 128, 32, 4, 1, 0.5f);
-	m_pAnimationComp->AddAnimation("Bean_Stunned.png", "stunned", 64, 32, 2, 1, 0.25f);
-	m_pAnimationComp->SetActiveAnimation("down");
+	m_pGameObject->SetPosition(spawnPoint.x, spawnPoint.y);
+	m_SpawnPoint = spawnPoint;
 }
+
 
 void dae::Enemy::Update(float deltaTime)
 {
+
+	if (!m_IsActive)
+	{
+		m_SpawnTimer += deltaTime;
+		if (m_SpawnTimer >= m_InitialSpawnTime)
+		{
+			m_IsActive = true;
+			m_SpawnTimer = 0;
+		}
+		else
+		{
+			return;
+		}
+	}
+
+
 	if (m_IsDead)
-		return;
+	{
+		m_SpawnTimer += deltaTime;
+		if (m_SpawnTimer >= m_DeathTime)
+		{
+			m_SpawnTimer = 0;
+			m_IsDead = false;
+			m_pGameObject->SetPosition(m_SpawnPoint.x, m_SpawnPoint.y);
+		}
+		else if (m_SpawnTimer >= 0.5f)
+		{
+			m_pGameObject->SetPosition(-1000, -1000);
+		}
+		else
+		{
+			return;
+		}
+	}
 
 
 	if (m_IsStunnned)
@@ -66,6 +96,11 @@ void dae::Enemy::Update(float deltaTime)
 		}
 		return;
 	}
+
+
+
+
+
 
 	glm::vec3 thisPos = m_Transform.GetPosition();
 

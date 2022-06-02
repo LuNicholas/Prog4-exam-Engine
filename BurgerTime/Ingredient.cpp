@@ -148,7 +148,7 @@ void dae::Ingredient::Update(float deltaTime)
 				if (box->GetTag() == "player")
 				{
 					//set those boxes to have been collided
-					if (bunBox.second->IsPointInCollider(box->GetPosition() + glm::vec3(box->GetSize().x / 2, box->GetSize().y / 2, 0)))//check if middle point of player collides
+					if (bunBox.second->IsPointInCollider(box->GetPosition() + glm::vec3(box->GetSize().x / 2, box->GetSize().y, 0)))//check if middle point of player collides
 					{
 						bunBox.first = true;
 						bunBox.second->SetPosition(bunBox.second->GetPosition().x, bunBox.second->GetPosition().y + m_WalkedOnOffset);

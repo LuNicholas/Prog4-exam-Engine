@@ -23,6 +23,8 @@
 #include "Ingredient.h"
 #include "Enemy.h"
 #include "AnimationManager.h"
+#include "Plate.h"
+#include "GameManager.h"
 
 
 void Level1();
@@ -33,6 +35,8 @@ int main(int, char* [])
 	dae::Minigin engine;
 	engine.Initialize();
 	dae::ResourceManager::GetInstance().Init("../Data/");///////COMMENTED SHIT IN MINIGIN THISH THISH 
+
+	//adding player to all scenes?????????? to preserve everything
 
 	Test();
 	Level1();
@@ -96,8 +100,7 @@ void Level1()
 	//new peter pepper
 	auto peterPepperGo = std::make_shared<dae::GameObject>();
 	PeterPepper* peterComp = peterPepperGo->AddComponent<PeterPepper>();
-	peterComp->Init();
-	peterPepperGo->SetPosition(300, 540);
+	peterComp->Init(glm::vec2(300, 540));
 
 	//pepper
 	auto pepperGo = peterPepperGo->AddChild();
@@ -124,22 +127,16 @@ void Level1()
 	peterUiComp->SetLives(3);
 	peterUiComp->SetPosition(450, 10);
 	scene.Add(UiPeter);
-	peterComp->GetHealth()->addObserver(peterUiComp);
+	//peterComp->GetHealth()->addObserver(peterUiComp);
+	peterComp->addObserver(peterUiComp);
 
 	//peterCommand
 	input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<PepperCommand>(peterPepperGo.get())), 0);
-
-
-	std::unique_ptr<BunDropped> scorePeterCommand = std::make_unique<BunDropped>(peterPepperGo.get());
-	scorePeterCommand->addObserver(peterUiComp);
-	input.AddCommand(dae::ControllerButton::ButtonY, dae::ButtonActivateState::OnButtonRelease, std::move(scorePeterCommand), 0);
 
 	input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleUp>(peterPepperGo)), 0);
 	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(peterPepperGo)), 0);
 	input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(peterPepperGo)), 0);
 	input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(peterPepperGo)), 0);
-
-
 
 	//second player
 	
@@ -319,45 +316,57 @@ void Level1()
 		scene.Add(ladderGO);
 	}
 
-	//first burger
+	//ingredients
 	{
-		//add burgers
-		auto topBunGo = std::make_shared<dae::GameObject>();
-		topBunGo->SetPosition(50, 210);
-		dae::Ingredient* topBun = topBunGo->AddComponent<dae::Ingredient>();
-		topBun->Init("bun.png");
-		scene.Add(topBunGo);
+		//first burger
+		{
+			//add burgers
+			auto topBun0Go = std::make_shared<dae::GameObject>();
+			topBun0Go->SetPosition(50, 210);
+			dae::Ingredient* topBun0Comp = topBun0Go->AddComponent<dae::Ingredient>();
+			topBun0Comp->Init("bun.png");
+			scene.Add(topBun0Go);
 
-		auto midBunGo = std::make_shared<dae::GameObject>();
-		midBunGo->SetPosition(50, 290);
-		dae::Ingredient* midBun = midBunGo->AddComponent<dae::Ingredient>();
-		midBun->Init("salad.png");
-		scene.Add(midBunGo);
+			auto salad0Go = std::make_shared<dae::GameObject>();
+			salad0Go->SetPosition(50, 290);
+			dae::Ingredient* salad0Comp = salad0Go->AddComponent<dae::Ingredient>();
+			salad0Comp->Init("salad.png");
+			scene.Add(salad0Go);
 
-		auto mid2BunGo = std::make_shared<dae::GameObject>();
-		mid2BunGo->SetPosition(50, 430);
-		dae::Ingredient* mid2Bun = mid2BunGo->AddComponent<dae::Ingredient>();
-		mid2Bun->Init("patty.png");
-		scene.Add(mid2BunGo);
+			auto patty0Go = std::make_shared<dae::GameObject>();
+			patty0Go->SetPosition(50, 430);
+			dae::Ingredient* patty0Comp = patty0Go->AddComponent<dae::Ingredient>();
+			patty0Comp->Init("patty.png");
+			scene.Add(patty0Go);
 
-		auto botBunGo = std::make_shared<dae::GameObject>();
-		botBunGo->SetPosition(50, 530);
-		dae::Ingredient* botBun = botBunGo->AddComponent<dae::Ingredient>();
-		botBun->Init("bun_Bottom.png");
-		scene.Add(botBunGo);
+			auto botBun0Go = std::make_shared<dae::GameObject>();
+			botBun0Go->SetPosition(50, 530);
+			dae::Ingredient* botBun0Comp = botBun0Go->AddComponent<dae::Ingredient>();
+			botBun0Comp->Init("bun_Bottom.png");
+			scene.Add(botBun0Go);
 
-		//ADDING TESTPLATE
-		auto plate1 = std::make_shared<dae::GameObject>();
-		dae::CollisionBox* floor6 = plate1->AddComponent<dae::CollisionBox>();
-		floor6->SetTag("plate");
-		floor6->SetPosition(38, 695);
-		floor6->SetBox(20, 10);
-		scene.Add(plate1);
+			//ADDING TESTPLATE
+			auto plate0Go = std::make_shared<dae::GameObject>();
+			Plate* plate0Comp = plate0Go->AddComponent<Plate>();
+			plate0Comp->Init();
+			plate0Comp->AddIngredient(topBun0Comp);
+			plate0Comp->AddIngredient(salad0Comp);
+			plate0Comp->AddIngredient(patty0Comp);
+			plate0Comp->AddIngredient(botBun0Comp);
+			plate0Go->SetPosition(38, 695);
+			scene.Add(plate0Go);
 
-		topBun->addObserver(peterUiComp);
-		midBun->addObserver(peterUiComp);
-		mid2Bun->addObserver(peterUiComp);
-		//botBun->addObserver(peterUiComp);
+
+			topBun0Comp->addObserver(peterUiComp);
+			salad0Comp->addObserver(peterUiComp);
+			patty0Comp->addObserver(peterUiComp);
+			botBun0Comp->addObserver(peterUiComp);
+
+			//gamestate where to set requirements for next stage
+			//add the all the plates to the gamestate and check if theyre all finished
+			//if theyre all finished go to next scene
+
+		}
 	}
 
 
@@ -379,6 +388,12 @@ void Level1()
 	enemy->AddPlayer(peterComp);
 	scene.Add(enemyGO);
 
+
+	auto gameManagerGo = std::make_shared<dae::GameObject>();
+	GameManager* gameManagerComp = gameManagerGo->AddComponent<GameManager>();
+	peterComp->addObserver(gameManagerComp);
+	scene.Add(gameManagerGo);
+	gameManagerComp->AddEnemy(enemy);
 
 }
 

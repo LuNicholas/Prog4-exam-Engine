@@ -29,6 +29,8 @@ namespace dae
 
 		void Init(dae::AnimationManager* animComp, glm::vec2 spawnPoint, float initialSpawnTime);
 		void AddPlayer(PeterPepper* player);
+		void Pause();
+		void Reset();
 
 		void KillEnemy();
 		void SetStunned();
@@ -36,11 +38,6 @@ namespace dae
 
 	private:
 		Enemy();
-
-		void MoveLeft();
-		void MoveRight();
-		void MoveUp();
-		void MoveDown();
 
 		bool m_IsDead;
 
@@ -67,5 +64,6 @@ namespace dae
 		bool m_IsActive;
 		float m_SpawnTimer;
 		float m_DeathTime;
+		bool m_Paused;
 	};
 }

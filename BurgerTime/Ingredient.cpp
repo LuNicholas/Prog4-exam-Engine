@@ -198,3 +198,8 @@ void dae::Ingredient::resetIngredient()
 	}
 	m_pBigCollisionBox->SetPosition(m_pBigCollisionBox->GetPosition().x, m_pBigCollisionBox->GetPosition().y + m_WalkedOnOffset);
 }
+
+bool dae::Ingredient::IsOnPlate()
+{
+	return m_OnPlate;
+}

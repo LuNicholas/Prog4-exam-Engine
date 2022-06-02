@@ -22,6 +22,9 @@ dae::Enemy::Enemy()
 	, m_CurrentStunTime(0)
 	, m_IsActive(false)
 	, m_DeathTime(3.f)
+	, m_Paused(false)
+	, m_InitialSpawnTime(0)
+	, m_SpawnTimer(0)
 {
 
 
@@ -42,13 +45,18 @@ void dae::Enemy::Init(dae::AnimationManager* animComp, glm::vec2 spawnPoint, flo
 
 	m_pAnimationComp = animComp;
 
-	m_pGameObject->SetPosition(spawnPoint.x, spawnPoint.y);
+	m_pGameObject->SetPosition(-1000, -1000);
 	m_SpawnPoint = spawnPoint;
+
+	m_InitialSpawnTime = initialSpawnTime;
 }
 
 
 void dae::Enemy::Update(float deltaTime)
 {
+
+	if (m_Paused)
+		return;
 
 	if (!m_IsActive)
 	{
@@ -57,14 +65,13 @@ void dae::Enemy::Update(float deltaTime)
 		{
 			m_IsActive = true;
 			m_SpawnTimer = 0;
+			m_pGameObject->SetPosition(m_SpawnPoint.x, m_SpawnPoint.y);
 		}
 		else
 		{
 			return;
 		}
 	}
-
-
 	if (m_IsDead)
 	{
 		m_SpawnTimer += deltaTime;
@@ -83,8 +90,6 @@ void dae::Enemy::Update(float deltaTime)
 			return;
 		}
 	}
-
-
 	if (m_IsStunnned)
 	{
 		m_pAnimationComp->SetActiveAnimation("stunned");
@@ -98,7 +103,7 @@ void dae::Enemy::Update(float deltaTime)
 	}
 
 
-
+	
 
 
 
@@ -111,6 +116,13 @@ void dae::Enemy::Update(float deltaTime)
 	if (m_Players.size() == 1)
 	{
 		playerPos = m_Players.front()->GetPosition();
+
+
+		if (m_Players.front()->GetGameObject()->GetComponent<CollisionBox>()->IsOverlappingWith(pCollider))
+		{
+			m_Players.front()->Kill();
+		}
+
 	}
 	else if (m_Players.size() == 2)
 	{
@@ -300,31 +312,6 @@ void dae::Enemy::AddPlayer(PeterPepper* player)
 	}
 }
 
-void dae::Enemy::MoveLeft()
-{
-}
-void dae::Enemy::MoveRight()
-{
-	dae::CollisionBox* pCollider = m_pGameObject->GetComponent<dae::CollisionBox>();
-
-	auto collidingWith = pCollider->GetCollidingWith();
-
-	for (dae::CollisionBox* pColliding : collidingWith)
-	{
-		if (pColliding->GetTag() == "floor")
-		{
-
-			if (pColliding->IsPointInCollider(glm::vec2(pCollider->GetPosition().x + pCollider->GetSize().x, pCollider->GetPosition().y + pCollider->GetSize().y)))
-			{
-				glm::vec3 currentPos = m_pGameObject->GetWorldPosition();
-				currentPos.x += 1;
-				currentPos.y = pColliding->GetPosition().y - pCollider->GetSize().y + 5;
-				m_pGameObject->SetPosition(currentPos.x, currentPos.y);
-				break;
-			}
-		}
-	}
-}
 
 void dae::Enemy::KillEnemy()
 {
@@ -343,4 +330,18 @@ void dae::Enemy::SetStunned()
 bool dae::Enemy::GetIsDead()
 {
 	return m_IsDead;
+}
+
+void dae::Enemy::Pause()
+{
+	m_Paused = true;
+}
+void dae::Enemy::Reset()
+{
+	m_Paused = false;
+	m_IsActive = false;
+	m_IsDead = false;
+	m_SpawnTimer = 0;
+	m_DeathTime = 0;
+	m_pGameObject->SetPosition(-1000, -1000);
 }

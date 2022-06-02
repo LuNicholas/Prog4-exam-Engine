@@ -19,6 +19,8 @@ namespace dae
 
 		void Init(const std::string& textureFileName);
 
+		bool IsOnPlate();
+
 		Ingredient(const Ingredient& other) = delete;
 		Ingredient(Ingredient&& other) = delete;
 		Ingredient& operator=(const Ingredient& other) = delete;

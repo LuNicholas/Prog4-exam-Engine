@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameManager.h" />
     <ClInclude Include="Ingredient.h" />
     <ClInclude Include="BurgerTimePCH.h" />
     <ClInclude Include="Enemy.h" />
@@ -28,9 +29,11 @@
     <ClInclude Include="MovementComponent.h" />
     <ClInclude Include="Pepper.h" />
     <ClInclude Include="PeterPepper.h" />
+    <ClInclude Include="Plate.h" />
     <ClInclude Include="PlayerUiComponent.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Ingredient.cpp" />
     <ClCompile Include="BurgerTime.cpp" />
     <ClCompile Include="BurgerTimePCH.cpp">
@@ -45,6 +48,7 @@
     <ClCompile Include="MovementComponent.cpp" />
     <ClCompile Include="Pepper.cpp" />
     <ClCompile Include="PeterPepper.cpp" />
+    <ClCompile Include="Plate.cpp" />
     <ClCompile Include="PlayerUiComponent.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

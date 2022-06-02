@@ -5,5 +5,6 @@ enum Event
 {
 	PlayerHit,
 	BunDropped,
-	EnemySquashed
+	EnemySquashed,
+	PlayerReset
 };

@@ -10,7 +10,7 @@ namespace dae
 
 }
 
-class PeterPepper : public dae::Component
+class PeterPepper final : public dae::Component, public dae::Subject
 {
 	enum class LastLookDir
 	{
@@ -24,13 +24,14 @@ public:
 
 	friend class dae::GameObject;
 
-	void Init();
+	void Init(const glm::vec2& spawnPos);
 
 	void Update(float deltaTime);
 	void FixedUpdate(float deltaTime);
 	void Render() const;
 
 	void Pepper();
+	void Kill();
 
 	void MoveLeft();
 	void MoveRight();
@@ -56,6 +57,7 @@ private:
 	dae::MovementComponent* m_pMovementComp;
 	dae::AnimationManager* m_pAnimationComp;
 
+	glm::vec2 m_SpawnPos;
 
 	dae::CollisionBox* m_pCollisionBox;
 	int m_WidthPlayer;
@@ -63,6 +65,10 @@ private:
 
 	float m_MoveSpeed;
 	LastLookDir m_LastLookingDirection;
+
+	bool m_IsDead;
+	float m_PauseTime = 2.f;
+	float m_PauseTimer = 0;
 
 };
 

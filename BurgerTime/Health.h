@@ -4,7 +4,7 @@
 
 namespace dae
 {
-	class Health final : public Subject
+	class Health final// : public Subject
 	{
 	public:
 		friend class GameObject;
@@ -13,7 +13,7 @@ namespace dae
 
 		int GetHealth() const;
 		void SetHealth(int health);
-		void DealDamage(int damage, const GameObject& hitGameObject);
+		int DealDamage(int damage);
 
 		Health(const Health& other) = delete;
 		Health(Health&& other) = delete;

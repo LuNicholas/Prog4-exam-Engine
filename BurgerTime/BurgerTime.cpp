@@ -28,7 +28,8 @@
 #include "ButtonManager.h"
 
 
-void Level1();
+std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters();
+void Level1(std::vector<std::shared_ptr<dae::GameObject>> players);
 void MainMenu();
 
 int main(int, char* [])
@@ -37,13 +38,24 @@ int main(int, char* [])
 	engine.Initialize();
 	dae::ResourceManager::GetInstance().Init("../Data/");///////COMMENTED SHIT IN MINIGIN THISH THISH 
 
+	dae::SceneManager::GetInstance().CreateScene("mainMenu");
+	dae::SceneManager::GetInstance().CreateScene("level1");
+
+
 	//adding player to all scenes?????????? to preserve everything
+	auto players = CreateCharacters();
 
 	MainMenu();
-	Level1();
+	Level1(players);
 
-	//dae::SceneManager::GetInstance().SetActiveScene("mainMenu");
-	
+
+
+
+
+
+	dae::SceneManager::GetInstance().SetActiveScene("mainMenu");
+	//dae::SceneManager::GetInstance().SetActiveScene("level1");
+
 	engine.Run();
 
 	engine.Cleanup();
@@ -53,7 +65,7 @@ int main(int, char* [])
 void MainMenu()
 {
 
-	auto& scene = dae::SceneManager::GetInstance().CreateScene("mainMenu");
+	auto& scene = dae::SceneManager::GetInstance().GetScene("mainMenu");
 	auto& input = dae::InputManager::GetInstance();
 
 	//levelsprite
@@ -76,16 +88,112 @@ void MainMenu()
 	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<NextButton>(buttonManager)), 0);
 }
 
-void Level1()
+std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 {
-	auto& scene = dae::SceneManager::GetInstance().CreateScene("level1");
-	dae::SceneManager::GetInstance().SetActiveScene("level1");
+	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto& input = dae::InputManager::GetInstance();
 
+	std::vector<std::shared_ptr<dae::GameObject>> playerGOs;
 
-	auto go = std::make_shared<dae::GameObject>();
-	scene.Add(go);
+	///PLAYER 1
+	//new peter pepper
+	auto peterPepperGo = std::make_shared<dae::GameObject>();
+	//dae::SceneManager::GetInstance().GetScene("level1").Add(peterPepperGo);
 
+	PeterPepper* peterComp = peterPepperGo->AddComponent<PeterPepper>();
+	peterComp->Init(glm::vec2(300, 540), 5);
+	playerGOs.push_back(peterPepperGo);
+
+	//pepper
+	auto pepperGo = peterPepperGo->AddChild();
+	pepperGo->SetFollowParent(false);
+	pepperGo->SetPosition(-1000, -1000);
+	pepperGo->AddComponent<dae::Pepper>()->Init();
+
+
+	input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveUp>(peterPepperGo)), 0);
+	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveDown>(peterPepperGo)), 0);
+	input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveLeft>(peterPepperGo)), 0);
+	input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveRight>(peterPepperGo)), 0);
+	input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<PepperCommand>(peterPepperGo.get())), 0);
+	input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleUp>(peterPepperGo)), 0);
+	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(peterPepperGo)), 0);
+	input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(peterPepperGo)), 0);
+	input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(peterPepperGo)), 0);
+
+
+	//UI
+	auto UiPeter = peterPepperGo->AddChild();
+	UiPeter->SetFollowParent(false);
+	dae::PlayerUiComponent* peterUiComp = UiPeter->AddComponent<dae::PlayerUiComponent>();
+	peterUiComp->SetFont(font);
+	peterUiComp->SetLives(4);
+	peterUiComp->SetLives(peterComp->GetHealth()->GetHealth());
+	peterUiComp->SetPosition(450, 10);
+
+	dae::Texture2DComponent* livesTexture = UiPeter->AddComponent<dae::Texture2DComponent>();
+	livesTexture->SetTexture("Peter_Lives.png");
+	livesTexture->SetPosition(435, 18);
+
+	dae::Texture2DComponent* pepperTexture = UiPeter->AddComponent<dae::Texture2DComponent>();
+	pepperTexture->SetTexture("Peter_Pepper.png");
+	pepperTexture->SetPosition(380, 18);
+	peterComp->addObserver(peterUiComp);
+
+
+	//////////////////////
+	//second playert
+	auto sallySaltGo = std::make_shared<dae::GameObject>();
+	//dae::SceneManager::GetInstance().GetScene("level1").Add(sallySaltGo);
+	PeterPepper* sallyComp = sallySaltGo->AddComponent<PeterPepper>();
+	sallyComp->Init(glm::vec2(350, 540), 5);
+	playerGOs.push_back(sallySaltGo);
+
+
+	//pepper
+	auto sallyPepperGo = sallySaltGo->AddChild();
+	sallyPepperGo->SetFollowParent(false);
+	sallyPepperGo->SetPosition(-1000, -1000);
+	sallyPepperGo->AddComponent<dae::Pepper>()->Init();
+
+	input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveUp>(sallySaltGo)), 1);
+	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveDown>(sallySaltGo)), 1);
+	input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveLeft>(sallySaltGo)), 1);
+	input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveRight>(sallySaltGo)), 1);
+	input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<PepperCommand>(sallySaltGo.get())), 1);
+	input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleUp>(sallySaltGo)), 1);
+	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(sallySaltGo)), 1);
+	input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(sallySaltGo)), 1);
+	input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(sallySaltGo)), 1);
+
+
+	//UI
+	auto UiSally = sallySaltGo->AddChild();
+	UiSally->SetFollowParent(false);
+	dae::PlayerUiComponent* sallyUiComp = UiSally->AddComponent<dae::PlayerUiComponent>();
+	sallyUiComp->SetFont(font);
+	sallyUiComp->SetLives(4);
+	sallyUiComp->SetLives(sallyComp->GetHealth()->GetHealth());
+	sallyUiComp->SetPosition(450, 40);
+
+	dae::Texture2DComponent* livesTextureSally = UiSally->AddComponent<dae::Texture2DComponent>();
+	livesTextureSally->SetTexture("Peter_Lives.png");
+	livesTextureSally->SetPosition(435, 48);
+
+	dae::Texture2DComponent* pepperTextureSally = UiSally->AddComponent<dae::Texture2DComponent>();
+	pepperTextureSally->SetTexture("Peter_Pepper.png");
+	pepperTextureSally->SetPosition(380, 48);
+	sallyComp->addObserver(sallyUiComp);
+
+
+
+	return playerGOs;
+}
+
+void Level1(std::vector<std::shared_ptr<dae::GameObject>> players)
+{
+	auto& scene = dae::SceneManager::GetInstance().GetScene("level1");
+	auto& input = dae::InputManager::GetInstance();
 
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 
@@ -105,88 +213,98 @@ void Level1()
 	scene.Add(fpsGo);
 
 
-	//new peter pepper
-	auto peterPepperGo = std::make_shared<dae::GameObject>();
-	PeterPepper* peterComp = peterPepperGo->AddComponent<PeterPepper>();
-	peterComp->Init(glm::vec2(300, 540), 5);
+	////new peter pepper
+	//auto peterPepperGo = std::make_shared<dae::GameObject>();
+	//PeterPepper* peterComp = peterPepperGo->AddComponent<PeterPepper>();
+	//peterComp->Init(glm::vec2(300, 540), 5);
 
-	//pepper
-	auto pepperGo = peterPepperGo->AddChild();
-	pepperGo->SetFollowParent(false);
-	pepperGo->SetPosition(-1000, -1000);
-	dae::Pepper* pepperComp = pepperGo->AddComponent<dae::Pepper>();
-	pepperComp->Init();
+	////pepper
+	//auto pepperGo = peterPepperGo->AddChild();
+	//pepperGo->SetFollowParent(false);
+	//pepperGo->SetPosition(-1000, -1000);
+	//pepperGo->AddComponent<dae::Pepper>()->Init();
 
-	scene.Add(peterPepperGo);
+	//scene.Add(peterPepperGo);
+	////dae::SceneManager::GetInstance().GetScene("mainMenu").Add(peterPepperGo);
 
-
-	input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveUp>(peterPepperGo)), 0);
-	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveDown>(peterPepperGo)), 0);
-	input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveLeft>(peterPepperGo)), 0);
-	input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveRight>(peterPepperGo)), 0);
-
-
-
-	//UI
-	auto UiPeter = std::make_shared<dae::GameObject>();
-	dae::PlayerUiComponent* peterUiComp = UiPeter->AddComponent<dae::PlayerUiComponent>();
-	peterUiComp->SetFont(font);
-	peterUiComp->SetLives(4);
-	peterUiComp->SetLives(peterComp->GetHealth()->GetHealth());
-	peterUiComp->SetPosition(450, 10);
-	scene.Add(UiPeter);
-
-	dae::Texture2DComponent* livesTexture = UiPeter->AddComponent<dae::Texture2DComponent>();
-	livesTexture->SetTexture("Peter_Lives.png");
-	livesTexture->SetPosition(435, 18);
-
-	dae::Texture2DComponent* pepperTexture = UiPeter->AddComponent<dae::Texture2DComponent>();
-	pepperTexture->SetTexture("Peter_Pepper.png");
-	pepperTexture->SetPosition(380, 18);
+	//input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveUp>(peterPepperGo)), 0);
+	//input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveDown>(peterPepperGo)), 0);
+	//input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveLeft>(peterPepperGo)), 0);
+	//input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveRight>(peterPepperGo)), 0);
+	//input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<PepperCommand>(peterPepperGo.get())), 0);
+	//input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleUp>(peterPepperGo)), 0);
+	//input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(peterPepperGo)), 0);
+	//input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(peterPepperGo)), 0);
+	//input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(peterPepperGo)), 0);
 
 
-	peterComp->addObserver(peterUiComp);
+	////UI
+	////auto UiPeter = std::make_shared<dae::GameObject>();
+	//auto UiPeter = peterPepperGo->AddChild();
+	//UiPeter->SetFollowParent(false);
+	//dae::PlayerUiComponent* peterUiComp = UiPeter->AddComponent<dae::PlayerUiComponent>();
+	//peterUiComp->SetFont(font);
+	//peterUiComp->SetLives(4);
+	//peterUiComp->SetLives(peterComp->GetHealth()->GetHealth());
+	//peterUiComp->SetPosition(450, 10);
+	////scene.Add(UiPeter);
 
-	//peterCommand
-	input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<PepperCommand>(peterPepperGo.get())), 0);
+	//dae::Texture2DComponent* livesTexture = UiPeter->AddComponent<dae::Texture2DComponent>();
+	//livesTexture->SetTexture("Peter_Lives.png");
+	//livesTexture->SetPosition(435, 18);
 
-	input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleUp>(peterPepperGo)), 0);
-	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(peterPepperGo)), 0);
-	input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(peterPepperGo)), 0);
-	input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(peterPepperGo)), 0);
-
-	//second player
-	
-	
-	//sally salt
-	auto sallySaltGo = std::make_shared<dae::GameObject>();
-	PeterPepper* sallyComp = sallySaltGo->AddComponent<PeterPepper>();
-	scene.Add(sallySaltGo);
+	//dae::Texture2DComponent* pepperTexture = UiPeter->AddComponent<dae::Texture2DComponent>();
+	//pepperTexture->SetTexture("Peter_Pepper.png");
+	//pepperTexture->SetPosition(380, 18);
+	//peterComp->addObserver(peterUiComp);
 
 
-	//UI
-	//auto UiSally = std::make_shared<dae::GameObject>();
-	//PlayerUiComponent* sallyUiComp = UiSally->AddComponent<PlayerUiComponent>();
+	////second player
+
+
+	////sally salt
+	//auto sallySaltGo = std::make_shared<dae::GameObject>();
+	//PeterPepper* sallyComp = sallySaltGo->AddComponent<PeterPepper>();
+	//sallyComp->Init(glm::vec2(350, 540), 5);
+	//scene.Add(sallySaltGo);
+
+
+	////pepper
+	//auto sallyPepperGo = sallySaltGo->AddChild();
+	//sallyPepperGo->SetFollowParent(false);
+	//sallyPepperGo->SetPosition(-1000, -1000);
+	//sallyPepperGo->AddComponent<dae::Pepper>()->Init();
+
+	//input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveUp>(sallySaltGo)), 1);
+	//input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveDown>(sallySaltGo)), 1);
+	//input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveLeft>(sallySaltGo)), 1);
+	//input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveRight>(sallySaltGo)), 1);
+	//input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<PepperCommand>(sallySaltGo.get())), 1);
+	//input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleUp>(sallySaltGo)), 1);
+	//input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(sallySaltGo)), 1);
+	//input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(sallySaltGo)), 1);
+	//input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(sallySaltGo)), 1);
+
+
+	////UI
+	//auto UiSally = sallySaltGo->AddChild();
+	//dae::PlayerUiComponent* sallyUiComp = UiSally->AddComponent<dae::PlayerUiComponent>();
 	//sallyUiComp->SetFont(font);
+	//sallyUiComp->SetLives(4);
 	//sallyUiComp->SetLives(sallyComp->GetHealth()->GetHealth());
-	//sallyUiComp->SetLives(3);
-	//sallyUiComp->SetPosition(10, 325);
+	//sallyUiComp->SetPosition(450, 40);
 	//scene.Add(UiSally);
 
-	//sallyComp->GetHealth()->addObserver(sallyUiComp);
+	//dae::Texture2DComponent* livesTextureSally = UiSally->AddComponent<dae::Texture2DComponent>();
+	//livesTextureSally->SetTexture("Peter_Lives.png");
+	//livesTextureSally->SetPosition(435, 48);
 
-	//sallyCommand
-	//std::unique_ptr<HitCommand> hitSallyCommand = std::make_unique<HitCommand>(sallySaltGo.get());
-	//input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(hitSallyCommand), 1);
-
-	//std::unique_ptr<BunDropped> scoreSallyCommand = std::make_unique<BunDropped>(sallySaltGo.get());
-	//scoreSallyCommand->addObserver(sallyUiComp);
-	//input.AddCommand(dae::ControllerButton::ButtonY, dae::ButtonActivateState::OnButtonRelease, std::move(scoreSallyCommand), 1);
-	
-	
+	//dae::Texture2DComponent* pepperTextureSally = UiSally->AddComponent<dae::Texture2DComponent>();
+	//pepperTextureSally->SetTexture("Peter_Pepper.png");
+	//pepperTextureSally->SetPosition(380, 48);
+	//sallyComp->addObserver(sallyUiComp);
 
 
-	std::cout << "\n Button A :Lose live\n Button Y: add score \n";
 
 
 
@@ -373,11 +491,10 @@ void Level1()
 			plate0Go->SetPosition(38, 695);
 			scene.Add(plate0Go);
 
-
-			topBun0Comp->addObserver(peterUiComp);
-			salad0Comp->addObserver(peterUiComp);
-			patty0Comp->addObserver(peterUiComp);
-			botBun0Comp->addObserver(peterUiComp);
+			topBun0Comp->addObserver(players.at(0)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
+			salad0Comp->addObserver(players.at(0)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
+			patty0Comp->addObserver(players.at(0)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
+			botBun0Comp->addObserver(players.at(0)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
 
 			//gamestate where to set requirements for next stage
 			//add the all the plates to the gamestate and check if theyre all finished
@@ -385,6 +502,7 @@ void Level1()
 
 		}
 	}
+
 
 
 
@@ -401,16 +519,26 @@ void Level1()
 	BeanAnimationComp->AddAnimation("Bean_Stunned.png", "stunned", 64, 32, 2, 1, 0.25f);
 	BeanAnimationComp->SetActiveAnimation("down");
 
-	enemy->Init(BeanAnimationComp, glm::vec2(0,540), 2.f);
-	enemy->AddPlayer(peterComp);
+	enemy->Init(BeanAnimationComp, glm::vec2(0, 540), 2.f);
+	enemy->AddPlayer(players.front()->GetComponent<PeterPepper>());
+	enemy->AddPlayer(players.at(1)->GetComponent<PeterPepper>());
 	scene.Add(enemyGO);
+
+
+
 
 
 	auto gameManagerGo = std::make_shared<dae::GameObject>();
 	GameManager* gameManagerComp = gameManagerGo->AddComponent<GameManager>();
-	peterComp->addObserver(gameManagerComp);
+	players.at(0)->GetComponent<PeterPepper>()->addObserver(gameManagerComp);
 	scene.Add(gameManagerGo);
 	gameManagerComp->AddEnemy(enemy);
+
+
+	for (auto& player : players)
+	{
+		scene.Add(player);
+	}
 
 }
 

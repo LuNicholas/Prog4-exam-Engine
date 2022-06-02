@@ -14,6 +14,7 @@ namespace dae
 		void Render();
 
 		void SetActiveScene(const std::string& name);
+		dae::Scene& GetScene(const std::string& name);
 		void NextScene();
 
 	private:

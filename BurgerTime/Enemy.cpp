@@ -105,7 +105,7 @@ void dae::Enemy::Update(float deltaTime)
 	}
 
 
-	
+
 
 
 
@@ -118,17 +118,28 @@ void dae::Enemy::Update(float deltaTime)
 	if (m_Players.size() == 1)
 	{
 		playerPos = m_Players.front()->GetPosition();
-
-
-		if (m_Players.front()->GetGameObject()->GetComponent<CollisionBox>()->IsOverlappingWith(pCollider))
-		{
-			m_Players.front()->Kill();
-		}
-
 	}
 	else if (m_Players.size() == 2)
 	{
 		//get closest of the 2 players
+		if (glm::distance(m_pGameObject->GetWorldPosition(), m_Players.front()->GetPosition()) < glm::distance(m_pGameObject->GetWorldPosition(), m_Players.at(1)->GetPosition()))
+		{
+			playerPos = m_Players.front()->GetPosition();
+		}
+		else
+		{
+			playerPos = m_Players.at(1)->GetPosition();
+		}
+
+	}
+
+	//check collision with player
+	for (auto& player : m_Players)
+	{
+		if (player->GetGameObject()->GetComponent<CollisionBox>()->IsOverlappingWith(pCollider))
+		{
+			player->Kill();
+		}
 	}
 
 	if (m_OnLadder)

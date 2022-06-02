@@ -69,3 +69,19 @@ void dae::SceneManager::NextScene()
 		}
 	}
 }
+
+dae::Scene& dae::SceneManager::GetScene(const std::string& name)
+{
+	const auto it = std::find_if(m_Scenes.begin(), m_Scenes.end(), [name](std::shared_ptr<Scene> scene)
+		{
+			return scene->GetSceneName() == name;
+		});
+
+	if (it != m_Scenes.end())
+	{
+		return *(*it);
+	}
+
+
+	return CreateScene(name);
+}

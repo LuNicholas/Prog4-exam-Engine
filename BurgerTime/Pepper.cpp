@@ -10,6 +10,8 @@ dae::Pepper::Pepper()
 	:m_OnCooldown(false)
 	, m_CooldownTime(1.f)
 	, m_CurrentCdTime(0)
+	, m_pCollisionBox(nullptr)
+	, m_pAnimationComp(nullptr)
 {
 }
 dae::Pepper::~Pepper()

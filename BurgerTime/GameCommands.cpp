@@ -108,13 +108,38 @@ void PlaySound::Execute()
 
 
 
-NextScene::NextScene()
+NextScene::NextScene(ButtonManager* buttonManager, PeterPepper* player1, PeterPepper* player2)
+	:m_pButtonManager(buttonManager)
+	, m_pPlayer1(player1)
+	, m_pPlayer2(player2)
 {
 
 }
 void NextScene::Execute()
 {
 	dae::SceneManager::GetInstance().NextScene();
+
+	switch (m_pButtonManager->GetCurrentButton())
+	{
+	case 0:
+	{
+		m_pPlayer1->SetActive(true);
+		m_pPlayer2->SetActive(false);
+		break;
+	}
+	case 1:
+	{
+		m_pPlayer1->SetActive(true);
+		m_pPlayer2->SetActive(true);
+		break;
+	}
+	case 2:
+	{
+		//m_pPlayer2->GetGameObject()->GetComponent<dae::CollisionBox>()->SetTag()
+		break;
+	}
+	}
+
 }
 
 

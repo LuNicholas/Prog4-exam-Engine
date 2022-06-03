@@ -46,3 +46,7 @@ void ButtonManager::PreviousButton()
 	if (m_CurrentButton < 0)
 		m_CurrentButton = m_Buttons.size()-1;
 }
+int ButtonManager::GetCurrentButton() const
+{
+	return m_CurrentButton;
+}

@@ -18,6 +18,7 @@ namespace dae
 		void SetFont(std::shared_ptr<Font> font);
 		void SetLives(int lives);
 		
+		void SetVisible(bool visibility);
 
 		void AddScore(int score);
 
@@ -38,6 +39,8 @@ namespace dae
 		dae::TextComponent* m_pPepperText;
 		dae::TextComponent* m_pScoreText;
 		int m_score = 0;
+
+		bool m_Visible;
 	};
 
 }

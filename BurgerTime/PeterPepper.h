@@ -42,6 +42,8 @@ public:
 
 	dae::Health* GetHealth() const;
 	int GetPeppers() const;
+	void SetActive(bool activity);
+	bool GetActive()const;
 
 	~PeterPepper();
 	PeterPepper(const PeterPepper& other) = delete;
@@ -72,5 +74,7 @@ private:
 	float m_PauseTimer = 0;
 
 	int m_Peppers;
+
+	bool m_IsActive;
 };
 

@@ -6,6 +6,7 @@
 #include "MovementComponent.h"
 #include "Pepper.h"
 #include "Events.h"
+#include "PlayerUiComponent.h"
 
 PeterPepper::PeterPepper()
 	:m_MoveSpeed(10)
@@ -16,6 +17,8 @@ PeterPepper::PeterPepper()
 	, m_pAnimationComp(nullptr)
 	, m_LastLookingDirection(LastLookDir::Right)
 	, m_Peppers(5)
+	, m_IsActive(false)
+	, m_IsDead(false)
 {
 	m_pHealth = new dae::Health(4);
 }
@@ -52,6 +55,9 @@ void PeterPepper::Init(const glm::vec2& spawnPos, int peppers)
 
 void PeterPepper::Update(float deltaTime)
 {
+	if (!m_IsActive)
+		return;
+
 	if (!m_IsDead)
 		return;
 
@@ -68,9 +74,13 @@ void PeterPepper::Update(float deltaTime)
 }
 void PeterPepper::FixedUpdate(float deltaTime)
 {
+	if (!m_IsActive)
+		return;
 }
 void PeterPepper::Render() const
 {
+	if (!m_IsActive)
+		return;
 }
 
 dae::Health* PeterPepper::GetHealth() const
@@ -84,6 +94,8 @@ int PeterPepper::GetPeppers() const
 
 void PeterPepper::MoveLeft()
 {
+	if (!m_IsActive)
+		return;
 	if (m_IsDead)
 		return;
 
@@ -95,6 +107,8 @@ void PeterPepper::MoveLeft()
 }
 void PeterPepper::MoveRight()
 {
+	if (!m_IsActive)
+		return;
 	if (m_IsDead)
 		return;
 
@@ -106,6 +120,8 @@ void PeterPepper::MoveRight()
 }
 void PeterPepper::MoveUp()
 {
+	if (!m_IsActive)
+		return;
 	if (m_IsDead)
 		return;
 
@@ -117,6 +133,8 @@ void PeterPepper::MoveUp()
 }
 void PeterPepper::MoveDown()
 {
+	if (!m_IsActive)
+		return;
 	if (m_IsDead)
 		return;
 
@@ -128,6 +146,8 @@ void PeterPepper::MoveDown()
 }
 void PeterPepper::IdleForward()
 {
+	if (!m_IsActive)
+		return;
 	if (m_IsDead)
 		return;
 
@@ -135,6 +155,9 @@ void PeterPepper::IdleForward()
 }
 void PeterPepper::IdleUp()
 {
+	if (!m_IsActive)
+		return;
+
 	if (m_IsDead)
 		return;
 
@@ -143,6 +166,9 @@ void PeterPepper::IdleUp()
 
 void PeterPepper::Pepper()
 {
+	if (!m_IsActive)
+		return;
+
 	if (m_IsDead)
 		return;
 
@@ -186,4 +212,20 @@ void PeterPepper::Kill()
 		//todo
 		//BIG RESET
 	}
+}
+
+void PeterPepper::SetActive(bool activity)
+{
+	m_IsActive = activity;
+
+	if (activity == false)
+	{
+		m_pGameObject->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>()->SetVisible(false);
+		m_pGameObject->GetChildAt(1)->SetPosition(-1000, -1000);
+		m_pAnimationComp->SetPosition(-1000, -1000);
+	}
+}
+bool PeterPepper::GetActive() const
+{
+	return m_IsActive;
 }

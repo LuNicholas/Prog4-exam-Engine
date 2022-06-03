@@ -30,7 +30,7 @@
 
 std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters();
 void Level1(std::vector<std::shared_ptr<dae::GameObject>> players);
-void MainMenu();
+ButtonManager* MainMenu();
 
 int main(int, char* [])
 {
@@ -42,10 +42,13 @@ int main(int, char* [])
 	dae::SceneManager::GetInstance().CreateScene("level1");
 
 
-	//adding player to all scenes?????????? to preserve everything
+	auto buttonManager = MainMenu();
 	auto players = CreateCharacters();
 
-	MainMenu();
+
+	dae::InputManager::GetInstance().AddCommand(dae::ControllerButton::ButtonX, dae::ButtonActivateState::OnButtonDown
+		, std::move(std::make_unique<NextScene>(buttonManager, players.at(0)->GetComponent<PeterPepper>(), players.at(1)->GetComponent<PeterPepper>())), 0);
+
 	Level1(players);
 
 
@@ -62,7 +65,7 @@ int main(int, char* [])
 	return 0;
 }
 
-void MainMenu()
+ButtonManager* MainMenu()
 {
 
 	auto& scene = dae::SceneManager::GetInstance().GetScene("mainMenu");
@@ -82,10 +85,10 @@ void MainMenu()
 	buttonManager->AddButton(glm::vec2(270, 385), glm::vec2(43, 25));// VS
 	scene.Add(buttonsGo);
 
-	input.AddCommand(dae::ControllerButton::ButtonX, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<NextScene>()), 0);
-
 	input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<PreviousButton>(buttonManager)), 0);
 	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<NextButton>(buttonManager)), 0);
+
+	return buttonManager;
 }
 
 std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()

@@ -97,17 +97,22 @@ private:
 	int m_SoundId;
 };
 
+class PeterPepper;
+class ButtonManager;
 class NextScene : public Command
 {
 
 public:
-	explicit NextScene();
+	explicit NextScene(ButtonManager* buttonManager, PeterPepper* player1, PeterPepper* player2);
 	void Execute() override;
 
+private:
+	ButtonManager* m_pButtonManager;
+	PeterPepper* m_pPlayer1;
+	PeterPepper* m_pPlayer2;
 };
 
 
-class ButtonManager;
 class NextButton : public Command
 {
 

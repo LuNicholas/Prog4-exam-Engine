@@ -115,11 +115,8 @@ void dae::Enemy::Update(float deltaTime)
 	std::vector<CollisionBox*> colldingBoxes = pCollider->GetCollidingWith();
 
 	glm::vec3 playerPos;
-	if (m_Players.size() == 1)
-	{
-		playerPos = m_Players.front()->GetPosition();
-	}
-	else if (m_Players.size() == 2)
+
+	if (m_Players.at(1)->GetActive() == true)
 	{
 		//get closest of the 2 players
 		if (glm::distance(m_pGameObject->GetWorldPosition(), m_Players.front()->GetPosition()) < glm::distance(m_pGameObject->GetWorldPosition(), m_Players.at(1)->GetPosition()))
@@ -131,6 +128,10 @@ void dae::Enemy::Update(float deltaTime)
 			playerPos = m_Players.at(1)->GetPosition();
 		}
 
+	}
+	else 
+	{
+		playerPos = m_Players.front()->GetPosition();
 	}
 
 	//check collision with player

@@ -6,6 +6,7 @@
 
 
 GameManager::GameManager()
+	:m_GamePaused(false)
 {
 }
 GameManager::~GameManager()

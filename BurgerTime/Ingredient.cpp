@@ -132,7 +132,7 @@ void dae::Ingredient::Update(float deltaTime)
 					else//not the top is getting hit so should be on burger
 					{
 						box->GetGameObject()->GetComponent<Enemy>()->KillEnemy();
-						Notify(*m_pGameObject, Event::EnemySquashed);
+						Notify(*m_pGameObject, Event::HotDogKilled);
 						//box->GetGameObject()->SetPosition(boxPos.x, boxPos.y + (m_DroppingSpeed * deltaTime));
 						m_EnemyOnTop = true;
 						m_EnemiesOnTop++;

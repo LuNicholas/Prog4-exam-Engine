@@ -26,10 +26,11 @@
 #include "Plate.h"
 #include "GameManager.h"
 #include "ButtonManager.h"
+#include "LevelReader.h"
 
 
 std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters();
-void Level1(std::vector<std::shared_ptr<dae::GameObject>> players);
+void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players);
 ButtonManager* MainMenu();
 
 int main(int, char* [])
@@ -50,10 +51,6 @@ int main(int, char* [])
 		, std::move(std::make_unique<NextScene>(buttonManager, players.at(0)->GetComponent<PeterPepper>(), players.at(1)->GetComponent<PeterPepper>())), 0);
 
 	Level1(players);
-
-
-
-
 
 
 	dae::SceneManager::GetInstance().SetActiveScene("mainMenu");
@@ -193,7 +190,7 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	return playerGOs;
 }
 
-void Level1(std::vector<std::shared_ptr<dae::GameObject>> players)
+void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 {
 	auto& scene = dae::SceneManager::GetInstance().GetScene("level1");
 	auto& input = dae::InputManager::GetInstance();
@@ -216,100 +213,6 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>> players)
 	scene.Add(fpsGo);
 
 
-	////new peter pepper
-	//auto peterPepperGo = std::make_shared<dae::GameObject>();
-	//PeterPepper* peterComp = peterPepperGo->AddComponent<PeterPepper>();
-	//peterComp->Init(glm::vec2(300, 540), 5);
-
-	////pepper
-	//auto pepperGo = peterPepperGo->AddChild();
-	//pepperGo->SetFollowParent(false);
-	//pepperGo->SetPosition(-1000, -1000);
-	//pepperGo->AddComponent<dae::Pepper>()->Init();
-
-	//scene.Add(peterPepperGo);
-	////dae::SceneManager::GetInstance().GetScene("mainMenu").Add(peterPepperGo);
-
-	//input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveUp>(peterPepperGo)), 0);
-	//input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveDown>(peterPepperGo)), 0);
-	//input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveLeft>(peterPepperGo)), 0);
-	//input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveRight>(peterPepperGo)), 0);
-	//input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<PepperCommand>(peterPepperGo.get())), 0);
-	//input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleUp>(peterPepperGo)), 0);
-	//input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(peterPepperGo)), 0);
-	//input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(peterPepperGo)), 0);
-	//input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(peterPepperGo)), 0);
-
-
-	////UI
-	////auto UiPeter = std::make_shared<dae::GameObject>();
-	//auto UiPeter = peterPepperGo->AddChild();
-	//UiPeter->SetFollowParent(false);
-	//dae::PlayerUiComponent* peterUiComp = UiPeter->AddComponent<dae::PlayerUiComponent>();
-	//peterUiComp->SetFont(font);
-	//peterUiComp->SetLives(4);
-	//peterUiComp->SetLives(peterComp->GetHealth()->GetHealth());
-	//peterUiComp->SetPosition(450, 10);
-	////scene.Add(UiPeter);
-
-	//dae::Texture2DComponent* livesTexture = UiPeter->AddComponent<dae::Texture2DComponent>();
-	//livesTexture->SetTexture("Peter_Lives.png");
-	//livesTexture->SetPosition(435, 18);
-
-	//dae::Texture2DComponent* pepperTexture = UiPeter->AddComponent<dae::Texture2DComponent>();
-	//pepperTexture->SetTexture("Peter_Pepper.png");
-	//pepperTexture->SetPosition(380, 18);
-	//peterComp->addObserver(peterUiComp);
-
-
-	////second player
-
-
-	////sally salt
-	//auto sallySaltGo = std::make_shared<dae::GameObject>();
-	//PeterPepper* sallyComp = sallySaltGo->AddComponent<PeterPepper>();
-	//sallyComp->Init(glm::vec2(350, 540), 5);
-	//scene.Add(sallySaltGo);
-
-
-	////pepper
-	//auto sallyPepperGo = sallySaltGo->AddChild();
-	//sallyPepperGo->SetFollowParent(false);
-	//sallyPepperGo->SetPosition(-1000, -1000);
-	//sallyPepperGo->AddComponent<dae::Pepper>()->Init();
-
-	//input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveUp>(sallySaltGo)), 1);
-	//input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveDown>(sallySaltGo)), 1);
-	//input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveLeft>(sallySaltGo)), 1);
-	//input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveRight>(sallySaltGo)), 1);
-	//input.AddCommand(dae::ControllerButton::ButtonA, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<PepperCommand>(sallySaltGo.get())), 1);
-	//input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleUp>(sallySaltGo)), 1);
-	//input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(sallySaltGo)), 1);
-	//input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(sallySaltGo)), 1);
-	//input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(sallySaltGo)), 1);
-
-
-	////UI
-	//auto UiSally = sallySaltGo->AddChild();
-	//dae::PlayerUiComponent* sallyUiComp = UiSally->AddComponent<dae::PlayerUiComponent>();
-	//sallyUiComp->SetFont(font);
-	//sallyUiComp->SetLives(4);
-	//sallyUiComp->SetLives(sallyComp->GetHealth()->GetHealth());
-	//sallyUiComp->SetPosition(450, 40);
-	//scene.Add(UiSally);
-
-	//dae::Texture2DComponent* livesTextureSally = UiSally->AddComponent<dae::Texture2DComponent>();
-	//livesTextureSally->SetTexture("Peter_Lives.png");
-	//livesTextureSally->SetPosition(435, 48);
-
-	//dae::Texture2DComponent* pepperTextureSally = UiSally->AddComponent<dae::Texture2DComponent>();
-	//pepperTextureSally->SetTexture("Peter_Pepper.png");
-	//pepperTextureSally->SetPosition(380, 48);
-	//sallyComp->addObserver(sallyUiComp);
-
-
-
-
 
 
 
@@ -330,129 +233,11 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>> players)
 	std::cout << "\n\n Button B :PLAY SOUND\n";
 
 
-
-	//LEVEL COLLISION
-	//LEVEL FLOORS
-	{
-		int floorWidth = 13;
-		auto levelFloor = std::make_shared<dae::GameObject>();
-		dae::CollisionBox* floor1 = levelFloor->AddComponent<dae::CollisionBox>();
-		floor1->SetTag("floor");
-		floor1->SetPosition(5, 565);
-		floor1->SetBox(613, floorWidth);
-
-		dae::CollisionBox* floor2 = levelFloor->AddComponent<dae::CollisionBox>();
-		floor2->SetTag("floor");
-		floor2->SetPosition(5, 469);
-		floor2->SetBox(470, floorWidth);
-
-		dae::CollisionBox* floor3 = levelFloor->AddComponent<dae::CollisionBox>();
-		floor3->SetTag("floor");
-		floor3->SetPosition(438, 420);
-		floor3->SetBox(180, floorWidth);
-
-		dae::CollisionBox* floor4 = levelFloor->AddComponent<dae::CollisionBox>();
-		floor4->SetTag("floor");
-		floor4->SetPosition(150, 373);
-		floor4->SetBox(325, floorWidth);
-
-		dae::CollisionBox* floor5 = levelFloor->AddComponent<dae::CollisionBox>();
-		floor5->SetTag("floor");
-		floor5->SetPosition(5, 325);
-		floor5->SetBox(180, floorWidth);
-
-
-		dae::CollisionBox* floor6 = levelFloor->AddComponent<dae::CollisionBox>();
-		floor6->SetTag("floor");
-		floor6->SetPosition(438, 325);
-		floor6->SetBox(180, floorWidth);
-
-		dae::CollisionBox* floor7 = levelFloor->AddComponent<dae::CollisionBox>();
-		floor7->SetTag("floor");
-		floor7->SetPosition(150, 277);
-		floor7->SetBox(180, floorWidth);
-
-		dae::CollisionBox* floor8 = levelFloor->AddComponent<dae::CollisionBox>();
-		floor8->SetTag("floor");
-		floor8->SetPosition(5, 230);
-		floor8->SetBox(180, floorWidth);
-
-		dae::CollisionBox* floor9 = levelFloor->AddComponent<dae::CollisionBox>();
-		floor9->SetTag("floor");
-		floor9->SetPosition(292, 230);
-		floor9->SetBox(325, floorWidth);
-
-		dae::CollisionBox* floor10 = levelFloor->AddComponent<dae::CollisionBox>();
-		floor10->SetTag("floor");
-		floor10->SetPosition(5, 133);
-		floor10->SetBox(613, floorWidth);
-
-		scene.Add(levelFloor);
-
-	}
-
-	//LEVEL LADDERS
-	{
-		//testLadder
-		int ladderWidth = 10;
-		auto ladderGO = std::make_shared<dae::GameObject>();
-		dae::CollisionBox* ladder1 = ladderGO->AddComponent<dae::CollisionBox>();
-		ladder1->SetTag("Ladder");
-		ladder1->SetPosition(18, 300);
-		ladder1->SetBox(ladderWidth, 271);
-
-		dae::CollisionBox* ladder2 = ladderGO->AddComponent<dae::CollisionBox>();
-		ladder2->SetTag("Ladder");
-		ladder2->SetPosition(18, 108);
-		ladder2->SetBox(ladderWidth, 130);
-
-		dae::CollisionBox* ladder3 = ladderGO->AddComponent<dae::CollisionBox>();
-		ladder3->SetTag("Ladder");
-		ladder3->SetPosition(90, 205);
-		ladder3->SetBox(ladderWidth, 271);
-
-		dae::CollisionBox* ladder4 = ladderGO->AddComponent<dae::CollisionBox>();
-		ladder4->SetTag("Ladder");
-		ladder4->SetPosition(164, 109);
-		ladder4->SetBox(ladderWidth, 462);
-
-		dae::CollisionBox* ladder5 = ladderGO->AddComponent<dae::CollisionBox>();
-		ladder5->SetTag("Ladder");
-		ladder5->SetPosition(235, 109);
-		ladder5->SetBox(ladderWidth, 176);
-
-		dae::CollisionBox* ladder6 = ladderGO->AddComponent<dae::CollisionBox>();
-		ladder6->SetTag("Ladder");
-		ladder6->SetPosition(307, 109);
-		ladder6->SetBox(ladderWidth, 462);
-
-		dae::CollisionBox* ladder7 = ladderGO->AddComponent<dae::CollisionBox>();
-		ladder7->SetTag("Ladder");
-		ladder7->SetPosition(380, 205);
-		ladder7->SetBox(ladderWidth, 176);
-
-		dae::CollisionBox* ladder8 = ladderGO->AddComponent<dae::CollisionBox>();
-		ladder8->SetTag("Ladder");
-		ladder8->SetPosition(450, 109);
-		ladder8->SetBox(ladderWidth, 462);
-
-		dae::CollisionBox* ladder9 = ladderGO->AddComponent<dae::CollisionBox>();
-		ladder9->SetTag("Ladder");
-		ladder9->SetPosition(523, 300);
-		ladder9->SetBox(ladderWidth, 271);
-
-		dae::CollisionBox* ladder10 = ladderGO->AddComponent<dae::CollisionBox>();
-		ladder10->SetTag("Ladder");
-		ladder10->SetPosition(595, 396);
-		ladder10->SetBox(ladderWidth, 175);
-
-		dae::CollisionBox* ladder11 = ladderGO->AddComponent<dae::CollisionBox>();
-		ladder11->SetTag("Ladder");
-		ladder11->SetPosition(595, 109);
-		ladder11->SetBox(ladderWidth, 222);
-
-		scene.Add(ladderGO);
-	}
+	//add level
+	LevelReader levelReader;
+	auto level = std::make_shared<dae::GameObject>();
+	levelReader.AddLevel("../Data/level1.txt", level);
+	scene.Add(level);
 
 	//ingredients
 	{
@@ -523,7 +308,7 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>> players)
 	BeanAnimationComp->SetActiveAnimation("down");
 
 	enemy->Init(BeanAnimationComp, glm::vec2(0, 540), 2.f);
-	enemy->AddPlayer(players.front()->GetComponent<PeterPepper>());
+	enemy->AddPlayer(players.at(0)->GetComponent<PeterPepper>());
 	enemy->AddPlayer(players.at(1)->GetComponent<PeterPepper>());
 	scene.Add(enemyGO);
 
@@ -533,10 +318,10 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>> players)
 
 	auto gameManagerGo = std::make_shared<dae::GameObject>();
 	GameManager* gameManagerComp = gameManagerGo->AddComponent<GameManager>();
-	players.at(0)->GetComponent<PeterPepper>()->addObserver(gameManagerComp);
 	players.at(1)->GetComponent<PeterPepper>()->addObserver(gameManagerComp);
-	scene.Add(gameManagerGo);
+	players.at(0)->GetComponent<PeterPepper>()->addObserver(gameManagerComp);
 	gameManagerComp->AddEnemy(enemy);
+	scene.Add(gameManagerGo);
 
 
 

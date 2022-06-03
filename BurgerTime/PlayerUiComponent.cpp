@@ -93,12 +93,12 @@ void dae::PlayerUiComponent::onNotify(const dae::GameObject& go, const Event& ev
 	}
 	case Event::BunDropped:
 	{
-		AddScore(100);
+		AddScore(50);
 		break;
 	}
-	case Event::EnemySquashed:
+	case Event::HotDogKilled:
 	{
-		AddScore(200);
+		AddScore(100);
 		break;
 	}
 	case Event::PepperUse:

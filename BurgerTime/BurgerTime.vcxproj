@@ -28,6 +28,7 @@
     <ClInclude Include="Events.h" />
     <ClInclude Include="GameCommands.h" />
     <ClInclude Include="Health.h" />
+    <ClInclude Include="LevelReader.h" />
     <ClInclude Include="MovementComponent.h" />
     <ClInclude Include="Pepper.h" />
     <ClInclude Include="PeterPepper.h" />
@@ -49,6 +50,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="GameCommands.cpp" />
     <ClCompile Include="Health.cpp" />
+    <ClCompile Include="LevelReader.cpp" />
     <ClCompile Include="MovementComponent.cpp" />
     <ClCompile Include="Pepper.cpp" />
     <ClCompile Include="PeterPepper.cpp" />

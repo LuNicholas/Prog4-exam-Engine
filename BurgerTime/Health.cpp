@@ -24,7 +24,6 @@ void dae::Health::SetHealth(int health)
 	m_currentHealth = health;
 }
 
-
 int dae::Health::DealDamage(int damage)
 {
 	m_currentHealth -= damage;

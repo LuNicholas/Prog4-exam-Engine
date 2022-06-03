@@ -5,7 +5,7 @@ enum Event
 {
 	PlayerHit,
 	BunDropped,
-	EnemySquashed,
+	HotDogKilled,
 	PepperUse,
 	PlayerReset,
 	PlayerActivated,

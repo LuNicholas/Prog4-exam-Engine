@@ -22,7 +22,7 @@ void dae::CollisionBox::FixedUpdate(float deltaTime)
 }
 void dae::CollisionBox::Render() const
 {
-	//DrawBox();
+	DrawBox();
 }
 
 void dae::CollisionBox::SetBox(int width, int height)

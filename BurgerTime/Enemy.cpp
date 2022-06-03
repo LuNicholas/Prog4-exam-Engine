@@ -148,6 +148,12 @@ void dae::Enemy::Update(float deltaTime)
 		{
 			m_Players.at(1)->Kill();
 		}
+
+		//check overlap with player1
+		if (m_Players.at(0)->GetGameObject()->GetComponent<CollisionBox>()->IsOverlappingWith(pCollider))
+		{
+			m_Players.at(0)->Kill();
+		}
 	}
 	else 
 	{

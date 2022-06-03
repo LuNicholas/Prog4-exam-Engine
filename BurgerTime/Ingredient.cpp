@@ -21,6 +21,7 @@ dae::Ingredient::Ingredient()
 	, m_pBigCollisionBox(nullptr)
 	, m_EnemyOnTop(false)
 	, m_ExtraDrops(0)
+	, m_EnemiesOnTop(0)
 {
 }
 dae::Ingredient::~Ingredient()
@@ -78,28 +79,31 @@ void dae::Ingredient::Update(float deltaTime)
 					m_CurrentFloor = box;
 
 					resetIngredient();
-					if (m_EnemyOnTop && m_ExtraDrops < m_EnemiesOnTop.size())
+					if (m_EnemyOnTop)
 					{
-						m_IsDropping = true;
-						m_EnemyOnTop = false;
-						for (GameObject* enemy : m_EnemiesOnTop)
+						if (m_ExtraDrops < m_EnemiesOnTop)
 						{
-							enemy->GetComponent<Enemy>()->KillEnemy();
-							//todo reset vector
+							m_IsDropping = true;
+							m_EnemyOnTop = false;
+							m_EnemyOnTop = 0;
+						}
+						else
+						{
+							m_ExtraDrops++;
 						}
 					}
-					else
-					{
-						m_ExtraDrops++;
-					}
+
 				}
 			}
 			else if (box->GetTag() == "bun")
 			{
 				if (box->GetGameObject()->GetComponent<Ingredient>()->m_OnPlate)
 				{
+
 					m_OnPlate = true;
 					m_IsDropping = false;
+
+
 				}
 				else if (box->GetGameObject()->GetComponent<Ingredient>()->m_IsDropping == false)
 				{
@@ -116,19 +120,23 @@ void dae::Ingredient::Update(float deltaTime)
 			}
 			else if (box->GetTag() == "enemy")
 			{
-				glm::vec3 boxPos = box->GetPosition();
+				if (!box->GetGameObject()->GetComponent<Enemy>()->GetIsDead())
+				{
 
-				if(m_pBigCollisionBox->IsPointInCollider(glm::vec2(boxPos.x + box->GetSize().x / 2, boxPos.y)))
-				{
-					box->GetGameObject()->GetComponent<Enemy>()->KillEnemy();
-					Notify(*m_pGameObject, Event::EnemySquashed);
-				}
-				else if (!box->GetGameObject()->GetComponent<Enemy>()->GetIsDead())
-				{
-					box->GetGameObject()->GetComponent<Enemy>()->SetStunned();
-					box->GetGameObject()->SetPosition(boxPos.x, boxPos.y + (m_DroppingSpeed * deltaTime));
-					m_EnemyOnTop = true;
-					m_EnemiesOnTop.push_back(box->GetGameObject());
+					glm::vec3 boxPos = box->GetPosition();
+
+					if (m_pBigCollisionBox->IsPointInCollider(glm::vec2(boxPos.x + box->GetSize().x / 2, boxPos.y)))//top of enemy getting hit 
+					{
+						box->GetGameObject()->GetComponent<Enemy>()->KillEnemy();
+					}
+					else//not the top is getting hit so should be on burger
+					{
+						box->GetGameObject()->GetComponent<Enemy>()->KillEnemy();
+						Notify(*m_pGameObject, Event::EnemySquashed);
+						//box->GetGameObject()->SetPosition(boxPos.x, boxPos.y + (m_DroppingSpeed * deltaTime));
+						m_EnemyOnTop = true;
+						m_EnemiesOnTop++;
+					}
 				}
 
 			}

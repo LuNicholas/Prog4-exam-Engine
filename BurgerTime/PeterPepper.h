@@ -44,6 +44,7 @@ public:
 	int GetPeppers() const;
 	void SetActive(bool activity);
 	bool GetActive()const;
+	bool GetIsDead()const;
 
 	~PeterPepper();
 	PeterPepper(const PeterPepper& other) = delete;

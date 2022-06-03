@@ -44,7 +44,8 @@ namespace dae
 
 		bool m_EnemyOnTop;
 		int m_ExtraDrops;
-		std::vector<GameObject*> m_EnemiesOnTop;
+		//std::vector<GameObject*> m_EnemiesOnTop;
+		int m_EnemiesOnTop;
 
 		std::shared_ptr<Texture2D> m_Texture{};
 

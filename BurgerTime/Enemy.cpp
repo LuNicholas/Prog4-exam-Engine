@@ -119,7 +119,21 @@ void dae::Enemy::Update(float deltaTime)
 	if (m_Players.at(1)->GetActive() == true)
 	{
 		//get closest of the 2 players
-		if (glm::distance(m_pGameObject->GetWorldPosition(), m_Players.front()->GetPosition()) < glm::distance(m_pGameObject->GetWorldPosition(), m_Players.at(1)->GetPosition()))
+		bool isPlayer1Dead = m_Players.front()->GetGameObject()->GetComponent<PeterPepper>()->GetIsDead();
+		bool isPlayer2Dead = m_Players.at(1)->GetGameObject()->GetComponent<PeterPepper>()->GetIsDead();
+
+		if (!isPlayer1Dead && !isPlayer2Dead)
+		{
+			if (glm::distance(m_pGameObject->GetWorldPosition(), m_Players.front()->GetPosition()) < glm::distance(m_pGameObject->GetWorldPosition(), m_Players.at(1)->GetPosition()))
+			{
+				playerPos = m_Players.front()->GetPosition();
+			}
+			else
+			{
+				playerPos = m_Players.at(1)->GetPosition();
+			}
+		}
+		else if (isPlayer2Dead)
 		{
 			playerPos = m_Players.front()->GetPosition();
 		}
@@ -128,20 +142,32 @@ void dae::Enemy::Update(float deltaTime)
 			playerPos = m_Players.at(1)->GetPosition();
 		}
 
+
+		//check overlap with player2
+		if (m_Players.at(1)->GetGameObject()->GetComponent<CollisionBox>()->IsOverlappingWith(pCollider))
+		{
+			m_Players.at(1)->Kill();
+		}
 	}
 	else 
 	{
 		playerPos = m_Players.front()->GetPosition();
-	}
 
-	//check collision with player
-	for (auto& player : m_Players)
-	{
-		if (player->GetGameObject()->GetComponent<CollisionBox>()->IsOverlappingWith(pCollider))
+		//check overlap with player1
+		if (m_Players.at(0)->GetGameObject()->GetComponent<CollisionBox>()->IsOverlappingWith(pCollider))
 		{
-			player->Kill();
+			m_Players.at(0)->Kill();
 		}
 	}
+
+	////check collision with player
+	//for (auto& player : m_Players)
+	//{
+	//	if (player->GetGameObject()->GetComponent<CollisionBox>()->IsOverlappingWith(pCollider))
+	//	{
+	//		player->Kill();
+	//	}
+	//}
 
 	if (m_OnLadder)
 	{
@@ -331,7 +357,7 @@ void dae::Enemy::KillEnemy()
 {
 	m_pAnimationComp->SetActiveAnimation("death");
 	m_IsDead = true;
-
+	m_OnLadder = false;
 
 	//cooldown before resetting and moving to other pos
 	//move enemy to reset
@@ -356,6 +382,5 @@ void dae::Enemy::Reset()
 	m_IsActive = false;
 	m_IsDead = false;
 	m_SpawnTimer = 0;
-	m_DeathTime = 0;
 	m_pGameObject->SetPosition(-1000, -1000);
 }

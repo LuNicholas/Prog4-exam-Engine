@@ -7,6 +7,7 @@
 
 GameManager::GameManager()
 	:m_GamePaused(false)
+	, m_PlayerAmount(0)
 {
 }
 GameManager::~GameManager()
@@ -65,8 +66,16 @@ void GameManager::onNotify(const dae::GameObject& go, const Event& event)
 	{
 	case Event::PlayerHit:
 	{
-		m_GamePaused = true;
-		Pause();
+		if (m_PlayerAmount < 2)
+		{
+			m_GamePaused = true;
+			Pause();
+		}
+		break;
+	}
+	case Event::PlayerActivated:
+	{
+		m_PlayerAmount++;
 		break;
 	}
 

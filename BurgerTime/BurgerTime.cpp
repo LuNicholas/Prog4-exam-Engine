@@ -534,8 +534,10 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>> players)
 	auto gameManagerGo = std::make_shared<dae::GameObject>();
 	GameManager* gameManagerComp = gameManagerGo->AddComponent<GameManager>();
 	players.at(0)->GetComponent<PeterPepper>()->addObserver(gameManagerComp);
+	players.at(1)->GetComponent<PeterPepper>()->addObserver(gameManagerComp);
 	scene.Add(gameManagerGo);
 	gameManagerComp->AddEnemy(enemy);
+
 
 
 	for (auto& player : players)

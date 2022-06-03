@@ -8,4 +8,5 @@ enum Event
 	EnemySquashed,
 	PepperUse,
 	PlayerReset,
+	PlayerActivated,
 };

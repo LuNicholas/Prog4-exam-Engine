@@ -38,6 +38,8 @@ private:
 	float m_PauseTime = 2.f;
 	float m_PauseTimer = 0;
 
+	int m_PlayerAmount;
+
 	std::vector<dae::Enemy*> m_Enemies;
 	std::vector<dae::Ingredient*> m_Ingredients;
 };

@@ -9,7 +9,7 @@
 #include "PlayerUiComponent.h"
 
 PeterPepper::PeterPepper()
-	:m_MoveSpeed(10)
+	:m_MoveSpeed(6)
 	, m_WidthPlayer(32)
 	, m_HeightPlayer(32)
 	, m_pCollisionBox(nullptr)
@@ -200,6 +200,8 @@ void PeterPepper::Pepper()
 
 void PeterPepper::Kill()
 {
+	if (m_IsDead)
+		return;
 
 	m_pAnimationComp->SetActiveAnimation("death");
 	if (m_pHealth->DealDamage(1) >= 0)
@@ -224,8 +226,16 @@ void PeterPepper::SetActive(bool activity)
 		m_pGameObject->GetChildAt(1)->SetPosition(-1000, -1000);
 		m_pAnimationComp->SetPosition(-1000, -1000);
 	}
+	else
+	{
+		Notify(*m_pGameObject, Event::PlayerActivated);
+	}
 }
 bool PeterPepper::GetActive() const
 {
 	return m_IsActive;
+}
+bool PeterPepper::GetIsDead() const
+{
+	return m_IsDead;
 }

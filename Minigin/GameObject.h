@@ -21,6 +21,8 @@ namespace dae
 
 		template <typename T>
 		T* GetComponent() const;
+		template <typename T>
+		T* GetComponentAt(int index) const;
 
 		template <typename T>
 		void RemoveComponent(T* component);
@@ -89,6 +91,19 @@ T* dae::GameObject::GetComponent() const
 
 	return nullptr;
 }
+template <class T>
+T* dae::GameObject::GetComponentAt(int index) const
+{
+	if (index > int(m_pComponents.size()))
+		return nullptr;
+
+	Component* comp = m_pComponents.at(index);
+	if (typeid(*comp) == typeid(T))
+		return dynamic_cast<T*>(comp);
+
+	return nullptr;
+}
+
 
 template <class T>
 void dae::GameObject::RemoveComponent(T* component)

@@ -85,3 +85,8 @@ dae::Scene& dae::SceneManager::GetScene(const std::string& name)
 
 	return CreateScene(name);
 }
+
+dae::Scene& dae::SceneManager::GetCurrentScene()
+{
+	return *m_ActiveScene;
+}

@@ -10,6 +10,7 @@
 #include "Events.h"
 #include "SceneManager.h"//todo remove this probs after tests
 #include "ButtonManager.h"
+#include "Scene.h"
 
 
 //pepperCOmmand
@@ -117,29 +118,31 @@ NextScene::NextScene(ButtonManager* buttonManager, PeterPepper* player1, PeterPe
 }
 void NextScene::Execute()
 {
-	dae::SceneManager::GetInstance().NextScene();
+	if (dae::SceneManager::GetInstance().GetCurrentScene().GetSceneName() == dae::SceneManager::GetInstance().GetScene("mainMenu").GetSceneName())
+	{
+		dae::SceneManager::GetInstance().NextScene();
 
-	switch (m_pButtonManager->GetCurrentButton())
-	{
-	case 0:
-	{
-		m_pPlayer1->SetActive(true);
-		m_pPlayer2->SetActive(false);
-		break;
+		switch (m_pButtonManager->GetCurrentButton())
+		{
+		case 0:
+		{
+			m_pPlayer1->SetActive(true);
+			m_pPlayer2->SetActive(false);
+			break;
+		}
+		case 1:
+		{
+			m_pPlayer1->SetActive(true);
+			m_pPlayer2->SetActive(true);
+			break;
+		}
+		case 2:
+		{
+			//m_pPlayer2->GetGameObject()->GetComponent<dae::CollisionBox>()->SetTag()
+			break;
+		}
+		}
 	}
-	case 1:
-	{
-		m_pPlayer1->SetActive(true);
-		m_pPlayer2->SetActive(true);
-		break;
-	}
-	case 2:
-	{
-		//m_pPlayer2->GetGameObject()->GetComponent<dae::CollisionBox>()->SetTag()
-		break;
-	}
-	}
-
 }
 
 

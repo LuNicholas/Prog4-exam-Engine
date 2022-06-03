@@ -56,7 +56,7 @@ namespace dae
 		bool m_IsConnected = false;
 
 		using ButtonInfo = std::pair<ControllerButton, ButtonActivateState>;
-		using	ControllerCommandMap = std::map<ButtonInfo, std::unique_ptr<Command>>;
+		using	ControllerCommandMap = std::multimap<ButtonInfo, std::unique_ptr<Command>>;
 		ControllerCommandMap m_consoleCommands;
 	};
 

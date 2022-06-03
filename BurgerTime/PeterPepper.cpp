@@ -7,9 +7,10 @@
 #include "Pepper.h"
 #include "Events.h"
 #include "PlayerUiComponent.h"
+#include "Texture2DComponent.h"
 
 PeterPepper::PeterPepper()
-	:m_MoveSpeed(6)
+	:m_MoveSpeed(100)
 	, m_WidthPlayer(32)
 	, m_HeightPlayer(32)
 	, m_pCollisionBox(nullptr)
@@ -35,6 +36,7 @@ void PeterPepper::Init(const glm::vec2& spawnPos, int peppers)
 
 	m_pMovementComp = m_pGameObject->AddComponent<dae::MovementComponent>();
 	m_pMovementComp->SetMovementBox(m_pCollisionBox);
+	m_pMovementComp->SetSpeed(m_MoveSpeed);
 
 
 	m_pAnimationComp = m_pGameObject->AddComponent<dae::AnimationManager>();
@@ -152,6 +154,7 @@ void PeterPepper::IdleForward()
 		return;
 
 	m_pAnimationComp->SetActiveAnimation("idleForward");
+	m_pMovementComp->Idle();
 }
 void PeterPepper::IdleUp()
 {
@@ -162,6 +165,7 @@ void PeterPepper::IdleUp()
 		return;
 
 	m_pAnimationComp->SetActiveAnimation("idleUp");
+	m_pMovementComp->Idle();
 }
 
 void PeterPepper::Pepper()
@@ -223,11 +227,15 @@ void PeterPepper::SetActive(bool activity)
 	if (activity == false)
 	{
 		m_pGameObject->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>()->SetVisible(false);
-		m_pGameObject->GetChildAt(1)->SetPosition(-1000, -1000);
-		m_pAnimationComp->SetPosition(-1000, -1000);
+		m_pGameObject->GetChildAt(1)->GetComponentAt<dae::Texture2DComponent>(1)->SetVisibility(false);
+		m_pGameObject->GetChildAt(1)->GetComponentAt<dae::Texture2DComponent>(2)->SetVisibility(false);
+		m_pGameObject->SetPosition(-1000, -1000);
 	}
 	else
 	{
+		m_pGameObject->SetPosition(m_SpawnPos.x, m_SpawnPos.y);
+		m_pGameObject->GetChildAt(1)->GetComponentAt<dae::Texture2DComponent>(1)->SetVisibility(true);
+		m_pGameObject->GetChildAt(1)->GetComponentAt<dae::Texture2DComponent>(2)->SetVisibility(true);
 		Notify(*m_pGameObject, Event::PlayerActivated);
 	}
 }

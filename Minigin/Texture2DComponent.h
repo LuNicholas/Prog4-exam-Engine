@@ -16,6 +16,7 @@ namespace dae
 
 		void SetPosition(float x, float y);
 		void SetTexture(std::string filename);
+		void SetVisibility(bool visibility);
 
 		virtual ~Texture2DComponent() = default;
 		Texture2DComponent(const Texture2DComponent& other) = delete;
@@ -26,5 +27,7 @@ namespace dae
 		Texture2DComponent();
 
 		std::shared_ptr<Texture2D> m_Texture{};	
+
+		bool m_Visible;
 	};
 }

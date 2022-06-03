@@ -7,6 +7,7 @@ dae::MovementComponent::MovementComponent()
 	:m_FloorOffset(5)
 	, m_pCollisionBox(nullptr)
 	, m_Speed(1)
+	, m_CurrentMoveState(MovementState::idle)
 {
 }
 dae::MovementComponent::~MovementComponent()
@@ -24,6 +25,38 @@ void dae::MovementComponent::SetSpeed(float speed)
 
 void dae::MovementComponent::Update(float deltaTime)
 {
+	glm::vec3 currentPos;
+
+	switch (m_CurrentMoveState)
+	{
+	case dae::MovementComponent::MovementState::up:
+		currentPos = m_pGameObject->GetWorldPosition();
+		currentPos.y -= (m_Speed * deltaTime);
+		m_pGameObject->SetPosition(currentPos.x, currentPos.y);
+		break;
+	case dae::MovementComponent::MovementState::down:
+		currentPos = m_pGameObject->GetWorldPosition();
+		currentPos.y += (m_Speed * deltaTime);
+		m_pGameObject->SetPosition(currentPos.x, currentPos.y);
+		break;
+	case dae::MovementComponent::MovementState::left:
+		currentPos = m_pGameObject->GetWorldPosition();
+		currentPos.x -= (m_Speed * deltaTime);
+		currentPos.y = currentPos.y;
+		m_pGameObject->SetPosition(currentPos.x, currentPos.y);
+		break;
+	case dae::MovementComponent::MovementState::right:
+		currentPos = m_pGameObject->GetWorldPosition();
+		currentPos.x += (m_Speed * deltaTime);
+		currentPos.y = currentPos.y;
+		m_pGameObject->SetPosition(currentPos.x, currentPos.y);
+		break;
+	case dae::MovementComponent::MovementState::idle:
+		break;
+	default:
+		break;
+	}
+
 }
 void dae::MovementComponent::FixedUpdate(float deltaTime)
 {
@@ -44,14 +77,16 @@ bool dae::MovementComponent::MoveUp()
 			if (pColliding->IsPointInCollider(glm::vec2(m_pCollisionBox->GetPosition().x + m_pCollisionBox->GetSize().x / 2,
 				m_pCollisionBox->GetPosition().y)))
 			{
-				glm::vec3 currentPos = m_pGameObject->GetWorldPosition();
-				currentPos.y -= m_Speed;
-				m_pGameObject->SetPosition(currentPos.x, currentPos.y);
+				//glm::vec3 currentPos = m_pGameObject->GetWorldPosition();
+				//currentPos.y -= m_Speed;
+				//m_pGameObject->SetPosition(currentPos.x, currentPos.y);
+				m_CurrentMoveState = MovementState::up;
 				m_pLastLadder = pColliding;
 				return true;
 			}
 		}
 	}
+	m_CurrentMoveState = MovementState::idle;
 	return false;
 }
 bool dae::MovementComponent::MoveDown()
@@ -65,14 +100,16 @@ bool dae::MovementComponent::MoveDown()
 			if (pColliding->IsPointInCollider(glm::vec2(m_pCollisionBox->GetPosition().x + m_pCollisionBox->GetSize().x / 2,
 				m_pCollisionBox->GetPosition().y + m_pCollisionBox->GetSize().y)))
 			{
-				glm::vec3 currentPos = m_pGameObject->GetWorldPosition();
-				currentPos.y += m_Speed;
-				m_pGameObject->SetPosition(currentPos.x, currentPos.y);
+				//glm::vec3 currentPos = m_pGameObject->GetWorldPosition();
+				//currentPos.y += m_Speed;
+				//m_pGameObject->SetPosition(currentPos.x, currentPos.y);
+				m_CurrentMoveState = MovementState::down;
 				m_pLastLadder = pColliding;
 				return true;
 			}
 		}
 	}
+	m_CurrentMoveState = MovementState::idle;
 	return false;
 }
 bool dae::MovementComponent::MoveLeft()
@@ -88,13 +125,15 @@ bool dae::MovementComponent::MoveLeft()
 				m_pCollisionBox->GetPosition().y + m_pCollisionBox->GetSize().y)))
 			{
 				glm::vec3 currentPos = m_pGameObject->GetWorldPosition();
-				currentPos.x -= m_Speed;
+				//currentPos.x -= m_Speed;
 				currentPos.y = pColliding->GetPosition().y - m_pCollisionBox->GetSize().y + m_FloorOffset;
 				m_pGameObject->SetPosition(currentPos.x, currentPos.y);
+				m_CurrentMoveState = MovementState::left;
 				return true;
 			}
 		}
 	}
+	m_CurrentMoveState = MovementState::idle;
 	return false;
 }
 bool dae::MovementComponent::MoveRight()
@@ -110,14 +149,15 @@ bool dae::MovementComponent::MoveRight()
 				m_pCollisionBox->GetPosition().y + m_pCollisionBox->GetSize().y)))
 			{
 				glm::vec3 currentPos = m_pGameObject->GetWorldPosition();
-				currentPos.x += m_Speed;
+				//currentPos.x += m_Speed;
 				currentPos.y = pColliding->GetPosition().y - m_pCollisionBox->GetSize().y + m_FloorOffset;
 				m_pGameObject->SetPosition(currentPos.x, currentPos.y);
+				m_CurrentMoveState = MovementState::right;
 				return true;
 			}
 		}
 	}
-
+	m_CurrentMoveState = MovementState::idle;
 	return false;
 }
 
@@ -160,4 +200,8 @@ bool dae::MovementComponent::TouchingLadder()
 dae::CollisionBox* dae::MovementComponent::GetLastLadder()
 {
 	return m_pLastLadder;
+}
+void dae::MovementComponent::Idle()
+{
+	m_CurrentMoveState = MovementState::idle;
 }

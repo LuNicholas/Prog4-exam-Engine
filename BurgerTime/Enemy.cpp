@@ -42,7 +42,7 @@ void dae::Enemy::Init(dae::AnimationManager* animComp, glm::vec2 spawnPoint, flo
 
 	m_pMovementComp = m_pGameObject->AddComponent<MovementComponent>();
 	m_pMovementComp->SetMovementBox(collider);
-	m_pMovementComp->SetSpeed(0.5f);
+	m_pMovementComp->SetSpeed(75.f);
 
 	m_pAnimationComp = animComp;
 
@@ -57,7 +57,10 @@ void dae::Enemy::Update(float deltaTime)
 {
 
 	if (m_Paused)
+	{
+		m_pMovementComp->Idle();
 		return;
+	}
 
 	if (!m_IsActive)
 	{
@@ -75,6 +78,7 @@ void dae::Enemy::Update(float deltaTime)
 	}
 	if (m_IsDead)
 	{
+		m_pMovementComp->Idle();
 		m_SpawnTimer += deltaTime;
 		if (m_SpawnTimer >= m_DeathTime)
 		{
@@ -94,6 +98,7 @@ void dae::Enemy::Update(float deltaTime)
 	}
 	if (m_IsStunnned)
 	{
+		m_pMovementComp->Idle();
 		m_pAnimationComp->SetActiveAnimation("stunned");
 		m_CurrentStunTime += deltaTime;
 		if (m_CurrentStunTime >= m_StunTime)
@@ -165,15 +170,6 @@ void dae::Enemy::Update(float deltaTime)
 			m_Players.at(0)->Kill();
 		}
 	}
-
-	////check collision with player
-	//for (auto& player : m_Players)
-	//{
-	//	if (player->GetGameObject()->GetComponent<CollisionBox>()->IsOverlappingWith(pCollider))
-	//	{
-	//		player->Kill();
-	//	}
-	//}
 
 	if (m_OnLadder)
 	{

@@ -16,6 +16,7 @@ public:
 
 	void Init();
 	void AddIngredient(dae::Ingredient* ingredient);
+	bool IsPlateDone()const;
 
 	void Update(float deltaTime);
 	void FixedUpdate(float deltaTime);

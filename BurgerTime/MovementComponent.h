@@ -7,6 +7,16 @@ namespace dae
 
 	class MovementComponent final : public Component
 	{
+		enum class MovementState
+		{
+			up,
+			down,
+			left,
+			right,
+			idle,
+		};
+
+
 		friend class GameObject;
 	public:
 		~MovementComponent();
@@ -22,6 +32,7 @@ namespace dae
 		bool MoveDown();
 		bool MoveLeft();
 		bool MoveRight();
+		void Idle();
 
 		bool OnPlatform();
 		bool TouchingLadder();
@@ -37,5 +48,7 @@ namespace dae
 		CollisionBox* m_pCollisionBox;
 
 		CollisionBox* m_pLastLadder;
+
+		MovementState m_CurrentMoveState;
 	};
 }

@@ -41,6 +41,7 @@ int main(int, char* [])
 
 	dae::SceneManager::GetInstance().CreateScene("mainMenu");
 	dae::SceneManager::GetInstance().CreateScene("level1");
+	dae::SceneManager::GetInstance().CreateScene("level2");
 
 
 	auto buttonManager = MainMenu();
@@ -98,7 +99,6 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	///PLAYER 1
 	//new peter pepper
 	auto peterPepperGo = std::make_shared<dae::GameObject>();
-	//dae::SceneManager::GetInstance().GetScene("level1").Add(peterPepperGo);
 
 	PeterPepper* peterComp = peterPepperGo->AddComponent<PeterPepper>();
 	peterComp->Init(glm::vec2(300, 540), 5);
@@ -213,9 +213,6 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	scene.Add(fpsGo);
 
 
-
-
-
 	//SOUND
 
 #if _DEBUG
@@ -239,58 +236,47 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	levelReader.AddLevel("../Data/level1.txt", level);
 	scene.Add(level);
 
-	//ingredients
-	{
-		//first burger
-		{
-			//add burgers
-			auto topBun0Go = std::make_shared<dae::GameObject>();
-			topBun0Go->SetPosition(50, 210);
-			dae::Ingredient* topBun0Comp = topBun0Go->AddComponent<dae::Ingredient>();
-			topBun0Comp->Init("bun.png");
-			scene.Add(topBun0Go);
 
-			auto salad0Go = std::make_shared<dae::GameObject>();
-			salad0Go->SetPosition(50, 290);
-			dae::Ingredient* salad0Comp = salad0Go->AddComponent<dae::Ingredient>();
-			salad0Comp->Init("salad.png");
-			scene.Add(salad0Go);
+	//add burgers
+	auto topBun0Go = std::make_shared<dae::GameObject>();
+	topBun0Go->SetPosition(50, 210);
+	dae::Ingredient* topBun0Comp = topBun0Go->AddComponent<dae::Ingredient>();
+	topBun0Comp->Init("bun.png");
+	scene.Add(topBun0Go);
 
-			auto patty0Go = std::make_shared<dae::GameObject>();
-			patty0Go->SetPosition(50, 430);
-			dae::Ingredient* patty0Comp = patty0Go->AddComponent<dae::Ingredient>();
-			patty0Comp->Init("patty.png");
-			scene.Add(patty0Go);
+	auto salad0Go = std::make_shared<dae::GameObject>();
+	salad0Go->SetPosition(50, 290);
+	dae::Ingredient* salad0Comp = salad0Go->AddComponent<dae::Ingredient>();
+	salad0Comp->Init("salad.png");
+	scene.Add(salad0Go);
 
-			auto botBun0Go = std::make_shared<dae::GameObject>();
-			botBun0Go->SetPosition(50, 530);
-			dae::Ingredient* botBun0Comp = botBun0Go->AddComponent<dae::Ingredient>();
-			botBun0Comp->Init("bun_Bottom.png");
-			scene.Add(botBun0Go);
+	auto patty0Go = std::make_shared<dae::GameObject>();
+	patty0Go->SetPosition(50, 430);
+	dae::Ingredient* patty0Comp = patty0Go->AddComponent<dae::Ingredient>();
+	patty0Comp->Init("patty.png");
+	scene.Add(patty0Go);
 
-			//ADDING TESTPLATE
-			auto plate0Go = std::make_shared<dae::GameObject>();
-			Plate* plate0Comp = plate0Go->AddComponent<Plate>();
-			plate0Comp->Init();
-			plate0Comp->AddIngredient(topBun0Comp);
-			plate0Comp->AddIngredient(salad0Comp);
-			plate0Comp->AddIngredient(patty0Comp);
-			plate0Comp->AddIngredient(botBun0Comp);
-			plate0Go->SetPosition(38, 695);
-			scene.Add(plate0Go);
+	auto botBun0Go = std::make_shared<dae::GameObject>();
+	botBun0Go->SetPosition(50, 530);
+	dae::Ingredient* botBun0Comp = botBun0Go->AddComponent<dae::Ingredient>();
+	botBun0Comp->Init("bun_Bottom.png");
+	scene.Add(botBun0Go);
 
-			topBun0Comp->addObserver(players.at(0)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
-			salad0Comp->addObserver(players.at(0)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
-			patty0Comp->addObserver(players.at(0)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
-			botBun0Comp->addObserver(players.at(0)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
+	//ADDING TESTPLATE
+	auto plate0Go = std::make_shared<dae::GameObject>();
+	Plate* plate0Comp = plate0Go->AddComponent<Plate>();
+	plate0Comp->Init();
+	plate0Comp->AddIngredient(topBun0Comp);
+	plate0Comp->AddIngredient(salad0Comp);
+	plate0Comp->AddIngredient(patty0Comp);
+	plate0Comp->AddIngredient(botBun0Comp);
+	plate0Go->SetPosition(38, 695);
+	scene.Add(plate0Go);
 
-			//gamestate where to set requirements for next stage
-			//add the all the plates to the gamestate and check if theyre all finished
-			//if theyre all finished go to next scene
-
-		}
-	}
-
+	topBun0Comp->addObserver(players.at(0)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
+	salad0Comp->addObserver(players.at(0)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
+	patty0Comp->addObserver(players.at(0)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
+	botBun0Comp->addObserver(players.at(0)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
 
 
 
@@ -320,9 +306,14 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	GameManager* gameManagerComp = gameManagerGo->AddComponent<GameManager>();
 	players.at(1)->GetComponent<PeterPepper>()->addObserver(gameManagerComp);
 	players.at(0)->GetComponent<PeterPepper>()->addObserver(gameManagerComp);
-	gameManagerComp->AddEnemy(enemy);
-	scene.Add(gameManagerGo);
 
+	//adding enemies
+	gameManagerComp->AddEnemy(enemy);
+
+	//adding ingredients
+	gameManagerComp->AddPlate(plate0Comp);
+
+	scene.Add(gameManagerGo);
 
 
 	for (auto& player : players)

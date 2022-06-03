@@ -5,8 +5,8 @@
 namespace dae
 {
 	class Enemy;
-	class Ingredient;
 }
+	class Plate;
 
 class GameManager : public dae::Component, public dae::Observer
 {
@@ -16,6 +16,8 @@ public:
 	~GameManager();
 
 	void AddEnemy(dae::Enemy* enemy);
+	void AddPlate(Plate* plate);
+
 
 	void Update(float deltaTime);
 	void FixedUpdate(float deltaTime);
@@ -41,6 +43,6 @@ private:
 	int m_PlayerAmount;
 
 	std::vector<dae::Enemy*> m_Enemies;
-	std::vector<dae::Ingredient*> m_Ingredients;
+	std::vector<Plate*> m_Plates;
 };
 

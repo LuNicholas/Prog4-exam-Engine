@@ -29,7 +29,6 @@ void Plate::Update(float deltaTime)
 {
 	if (m_PlateDone)
 	{
-		//std::cout << "Plate DONE \n";
 		return;
 	}
 
@@ -48,4 +47,8 @@ void Plate::FixedUpdate(float deltaTime)
 }
 void Plate::Render() const
 {
+}
+bool Plate::IsPlateDone() const
+{
+	return m_PlateDone;
 }

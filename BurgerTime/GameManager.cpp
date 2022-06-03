@@ -3,6 +3,8 @@
 #include "GameObject.h"
 #include "Enemy.h"
 #include "Events.h"
+#include "Plate.h"
+#include "SceneManager.h"
 
 
 GameManager::GameManager()
@@ -19,19 +21,40 @@ void GameManager::AddEnemy(dae::Enemy* enemy)
 {
 	m_Enemies.push_back(enemy);
 }
+void GameManager::AddPlate(Plate* plate)
+{
+	m_Plates.push_back(plate);
+}
 
 void GameManager::Update(float deltaTime)
 {
-	if (!m_GamePaused)
-		return;
-
-	m_PauseTimer += deltaTime;
-	if (m_PauseTimer >= m_PauseTime)
+	if (m_GamePaused)
 	{
-		m_PauseTimer = 0;
-		Reset();
-		m_GamePaused = false;
+		m_PauseTimer += deltaTime;
+		if (m_PauseTimer >= m_PauseTime)
+		{
+			m_PauseTimer = 0;
+			Reset();
+			m_GamePaused = false;
+		}
 	}
+
+
+	int ingredientOnPlate = 0;
+	for (Plate* plate : m_Plates)
+	{
+		if (!plate->IsPlateDone())
+		{
+			return;
+		}
+		else
+		{
+			ingredientOnPlate++;
+		}
+	}
+	if(ingredientOnPlate == m_Plates.size())
+		dae::SceneManager::GetInstance().NextScene();
+
 
 }
 void GameManager::FixedUpdate(float deltaTime)

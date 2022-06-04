@@ -46,6 +46,9 @@ public:
 	bool GetActive()const;
 	bool GetIsDead()const;
 
+	void SetSpawn(glm::vec2 spawnPoint);
+	void MoveToSpawn();
+
 	~PeterPepper();
 	PeterPepper(const PeterPepper& other) = delete;
 	PeterPepper(PeterPepper&& other) = delete;

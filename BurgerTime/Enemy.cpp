@@ -34,7 +34,7 @@ dae::Enemy::~Enemy()
 {
 }
 
-void dae::Enemy::Init(dae::AnimationManager* animComp, glm::vec2 spawnPoint, float initialSpawnTime)
+void dae::Enemy::Init(EnemyType enemyType, glm::vec2 spawnPoint, float initialSpawnTime)
 {
 	CollisionBox* collider = m_pGameObject->AddComponent<CollisionBox>();
 	collider->SetBox(32, 32);
@@ -44,12 +44,39 @@ void dae::Enemy::Init(dae::AnimationManager* animComp, glm::vec2 spawnPoint, flo
 	m_pMovementComp->SetMovementBox(collider);
 	m_pMovementComp->SetSpeed(75.f);
 
-	m_pAnimationComp = animComp;
 
 	m_pGameObject->SetPosition(-1000, -1000);
 	m_SpawnPoint = spawnPoint;
 
 	m_InitialSpawnTime = initialSpawnTime;
+
+
+	m_pAnimationComp = m_pGameObject->AddComponent<dae::AnimationManager>();
+
+
+	switch (enemyType)
+	{
+	case dae::EnemyType::bean:
+		m_pAnimationComp->AddAnimation("Bean_Up.png", "up", 64, 32, 2, 1, 0.5f);
+		m_pAnimationComp->AddAnimation("Bean_Down.png", "down", 64, 32, 2, 1, 0.5f);
+		m_pAnimationComp->AddAnimation("Bean_Left.png", "left", 64, 32, 2, 1, 0.5f);
+		m_pAnimationComp->AddAnimation("Bean_Right.png", "right", 64, 32, 2, 1, 0.5f);
+		m_pAnimationComp->AddAnimation("Bean_Death.png", "death", 128, 32, 4, 1, 0.5f);
+		m_pAnimationComp->AddAnimation("Bean_Stunned.png", "stunned", 64, 32, 2, 1, 0.25f);
+		m_pAnimationComp->SetActiveAnimation("down");
+		break;
+	case dae::EnemyType::egg:
+		break;
+	case dae::EnemyType::Pickle:
+		break;
+	default:
+		break;
+	}
+
+
+
+
+
 }
 
 

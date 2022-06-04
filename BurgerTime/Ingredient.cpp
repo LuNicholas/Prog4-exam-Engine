@@ -11,7 +11,7 @@
 dae::Ingredient::Ingredient()
 	:m_IsDropping(true)
 	, m_CurrentFloor(nullptr)
-	, m_DroppingSpeed(80)
+	, m_DroppingSpeed(150)
 	, m_BoxWidth(19)
 	, m_BoxHeight(20)
 	, m_NrOfBoxes(5)

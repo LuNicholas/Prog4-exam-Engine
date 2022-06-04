@@ -31,6 +31,7 @@
 
 std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters();
 void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players);
+void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players);
 ButtonManager* MainMenu();
 
 int main(int, char* [])
@@ -52,10 +53,12 @@ int main(int, char* [])
 		, std::move(std::make_unique<NextScene>(buttonManager, players.at(0)->GetComponent<PeterPepper>(), players.at(1)->GetComponent<PeterPepper>())), 0);
 
 	Level1(players);
+	Level2(players);
 
 
 	dae::SceneManager::GetInstance().SetActiveScene("mainMenu");
 	//dae::SceneManager::GetInstance().SetActiveScene("level1");
+	//dae::SceneManager::GetInstance().SetActiveScene("level2");
 
 	engine.Run();
 
@@ -142,9 +145,8 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 
 
 	//////////////////////
-	//second playert
+	//second player
 	auto sallySaltGo = std::make_shared<dae::GameObject>();
-	//dae::SceneManager::GetInstance().GetScene("level1").Add(sallySaltGo);
 	PeterPepper* sallyComp = sallySaltGo->AddComponent<PeterPepper>();
 	sallyComp->Init(glm::vec2(350, 540), 5);
 	playerGOs.push_back(sallySaltGo);
@@ -234,6 +236,7 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	LevelReader levelReader;
 	auto level = std::make_shared<dae::GameObject>();
 	levelReader.AddLevel("../Data/level1.txt", level);
+	level->SetPosition(-1000, -1000);
 	scene.Add(level);
 
 
@@ -283,17 +286,7 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	//enemy test
 	auto enemyGO = std::make_shared<dae::GameObject>();
 	dae::Enemy* enemy = enemyGO->AddComponent<dae::Enemy>();
-
-	dae::AnimationManager* BeanAnimationComp = enemyGO->AddComponent<dae::AnimationManager>();
-	BeanAnimationComp->AddAnimation("Bean_Up.png", "up", 64, 32, 2, 1, 0.5f);
-	BeanAnimationComp->AddAnimation("Bean_Down.png", "down", 64, 32, 2, 1, 0.5f);
-	BeanAnimationComp->AddAnimation("Bean_Left.png", "left", 64, 32, 2, 1, 0.5f);
-	BeanAnimationComp->AddAnimation("Bean_Right.png", "right", 64, 32, 2, 1, 0.5f);
-	BeanAnimationComp->AddAnimation("Bean_Death.png", "death", 128, 32, 4, 1, 0.5f);
-	BeanAnimationComp->AddAnimation("Bean_Stunned.png", "stunned", 64, 32, 2, 1, 0.25f);
-	BeanAnimationComp->SetActiveAnimation("down");
-
-	enemy->Init(BeanAnimationComp, glm::vec2(0, 540), 2.f);
+	enemy->Init(dae::EnemyType::bean, glm::vec2(0, 540), 2.f);
 	enemy->AddPlayer(players.at(0)->GetComponent<PeterPepper>());
 	enemy->AddPlayer(players.at(1)->GetComponent<PeterPepper>());
 	scene.Add(enemyGO);
@@ -313,6 +306,12 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	//adding ingredients
 	gameManagerComp->AddPlate(plate0Comp);
 
+	//adding level
+	gameManagerComp->SetLevel(level);
+
+	//adding player
+	gameManagerComp->AddPlayer(players.at(0), glm::vec2(300, 540));
+
 	scene.Add(gameManagerGo);
 
 
@@ -323,4 +322,50 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 
 }
 
+void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players)
+{
+	auto& scene = dae::SceneManager::GetInstance().GetScene("level2");
+	auto& input = dae::InputManager::GetInstance();
 
+	auto levelGO = std::make_shared<dae::GameObject>();
+	dae::Texture2DComponent* levelTexture = levelGO->AddComponent<dae::Texture2DComponent>();
+	levelTexture->SetTexture("level2.png");
+	levelTexture->SetPosition(0, 700 - 600);
+	scene.Add(levelGO);
+
+	LevelReader levelReader;
+	auto level = std::make_shared<dae::GameObject>();
+	levelReader.AddLevel("../Data/level2.txt", level);
+	level->SetPosition(-1000, -1000);
+	scene.Add(level);
+
+
+	//players.at(0)->SetPosition(298, 493);
+
+
+
+	auto gameManagerGo = std::make_shared<dae::GameObject>();
+	GameManager* gameManagerComp = gameManagerGo->AddComponent<GameManager>();
+	//players.at(1)->GetComponent<PeterPepper>()->addObserver(gameManagerComp);
+	players.at(0)->GetComponent<PeterPepper>()->addObserver(gameManagerComp);
+
+	//adding enemies
+	//gameManagerComp->AddEnemy(enemy);
+
+	//adding ingredients
+	//gameManagerComp->AddPlate(plate0Comp);
+
+	//adding level
+	gameManagerComp->SetLevel(level);
+
+	//adding player
+	gameManagerComp->AddPlayer(players.at(0), glm::vec2(298, 493));
+
+	scene.Add(gameManagerGo);
+
+
+	for (auto& player : players)
+	{
+		scene.Add(player);
+	}
+}

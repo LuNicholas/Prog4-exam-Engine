@@ -17,7 +17,8 @@ public:
 
 	void AddEnemy(dae::Enemy* enemy);
 	void AddPlate(Plate* plate);
-
+	void SetLevel(std::shared_ptr<dae::GameObject>& level);
+	void AddPlayer(std::shared_ptr<dae::GameObject>& player, glm::vec2 playerSpawn);
 
 	void Update(float deltaTime);
 	void FixedUpdate(float deltaTime);
@@ -37,12 +38,18 @@ private:
 	void FullReset();
 
 	bool m_GamePaused;
-	float m_PauseTime = 2.f;
-	float m_PauseTimer = 0;
+	float m_PauseTime;
+	float m_PauseTimer;
 
 	int m_PlayerAmount;
 
 	std::vector<dae::Enemy*> m_Enemies;
 	std::vector<Plate*> m_Plates;
+	std::shared_ptr<dae::GameObject> m_pLevel;
+	std::vector<std::shared_ptr<dae::GameObject>> m_pPlayers;
+	std::vector<glm::vec2> m_SpawnPoints;
+
+	bool m_NextLevel;
+	bool m_DoOnce;
 };
 

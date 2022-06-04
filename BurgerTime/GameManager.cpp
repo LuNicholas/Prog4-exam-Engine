@@ -5,11 +5,18 @@
 #include "Events.h"
 #include "Plate.h"
 #include "SceneManager.h"
+#include "GameObject.h"
+#include "PeterPepper.h"
 
 
 GameManager::GameManager()
 	:m_GamePaused(false)
 	, m_PlayerAmount(0)
+	, m_DoOnce(false)
+	, m_pLevel(nullptr)
+	, m_NextLevel(false)
+	, m_PauseTime(2.0f)
+	, m_PauseTimer(0.f)
 {
 }
 GameManager::~GameManager()
@@ -25,9 +32,35 @@ void GameManager::AddPlate(Plate* plate)
 {
 	m_Plates.push_back(plate);
 }
+void GameManager::SetLevel(std::shared_ptr<dae::GameObject>& level)
+{
+	m_pLevel = level;
+}
+void GameManager::AddPlayer(std::shared_ptr<dae::GameObject>& player, glm::vec2 playerSpawn)
+{
+	m_pPlayers.push_back(player);
+	m_SpawnPoints.push_back(playerSpawn);
+}
+
 
 void GameManager::Update(float deltaTime)
 {
+
+	if (!m_DoOnce)
+	{
+		m_DoOnce = true;
+		m_pLevel->SetPosition(0, 0);
+
+		for (size_t i = 0; i < m_pPlayers.size(); i++)
+		{
+			glm::vec2 spawnPoint = m_SpawnPoints.at(i);
+			m_pPlayers.at(i)->GetComponent<PeterPepper>()->SetSpawn(glm::vec2(spawnPoint.x, spawnPoint.y));
+			m_pPlayers.at(i)->SetPosition(spawnPoint.x, spawnPoint.y);
+		}
+	}
+
+
+
 	if (m_GamePaused)
 	{
 		m_PauseTimer += deltaTime;
@@ -36,6 +69,14 @@ void GameManager::Update(float deltaTime)
 			m_PauseTimer = 0;
 			Reset();
 			m_GamePaused = false;
+
+
+			if (m_NextLevel)//GO TO NEXT LEVEL
+			{
+				m_pLevel->SetPosition(-1000, -1000);
+				dae::SceneManager::GetInstance().NextScene();
+				FullReset();
+			}
 		}
 	}
 
@@ -52,8 +93,11 @@ void GameManager::Update(float deltaTime)
 			ingredientOnPlate++;
 		}
 	}
-	if(ingredientOnPlate == m_Plates.size())
-		dae::SceneManager::GetInstance().NextScene();
+	if (ingredientOnPlate == m_Plates.size())
+	{
+		m_NextLevel = true;
+		m_GamePaused = true;
+	}
 
 
 }
@@ -80,7 +124,12 @@ void GameManager::Reset()
 }
 void GameManager::FullReset()
 {
+	m_DoOnce = false;
+	m_PauseTimer = 0;
+
 	//RESET ENEMIES 
+
+	//reset imgrediemts
 }
 
 void GameManager::onNotify(const dae::GameObject& go, const Event& event)

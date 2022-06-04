@@ -208,6 +208,7 @@ void PeterPepper::Kill()
 		return;
 
 	m_pAnimationComp->SetActiveAnimation("death");
+	m_pMovementComp->Idle();
 	if (m_pHealth->DealDamage(1) >= 0)
 	{
 		m_IsDead = true;
@@ -246,4 +247,12 @@ bool PeterPepper::GetActive() const
 bool PeterPepper::GetIsDead() const
 {
 	return m_IsDead;
+}
+void PeterPepper::SetSpawn(glm::vec2 spawnPoint)
+{
+	m_SpawnPos = spawnPoint;
+}
+void PeterPepper::MoveToSpawn()
+{
+	m_pGameObject->SetPosition(m_SpawnPos.x, m_SpawnPos.y);
 }

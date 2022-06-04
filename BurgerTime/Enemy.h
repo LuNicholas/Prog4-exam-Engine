@@ -17,6 +17,13 @@ namespace dae
 		Right
 	};
 
+	enum class EnemyType
+	{
+		bean,
+		egg,
+		Pickle,
+	};
+
 	class Enemy final : public Component
 	{
 		friend class GameObject;
@@ -27,7 +34,7 @@ namespace dae
 		void FixedUpdate(float deltaTime);
 		void Render() const;
 
-		void Init(dae::AnimationManager* animComp, glm::vec2 spawnPoint, float initialSpawnTime);
+		void Init(EnemyType enemyType, glm::vec2 spawnPoint, float initialSpawnTime);
 		void AddPlayer(PeterPepper* player);
 		void Pause();
 		void Reset();

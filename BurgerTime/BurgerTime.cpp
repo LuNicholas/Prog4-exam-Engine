@@ -32,6 +32,7 @@
 std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters();
 void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players);
 void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players);
+void Level3(std::vector<std::shared_ptr<dae::GameObject>>& players);
 ButtonManager* MainMenu();
 
 int main(int, char* [])
@@ -41,8 +42,9 @@ int main(int, char* [])
 	dae::ResourceManager::GetInstance().Init("../Data/");///////COMMENTED SHIT IN MINIGIN THISH THISH 
 
 	dae::SceneManager::GetInstance().CreateScene("mainMenu");
-	//dae::SceneManager::GetInstance().CreateScene("level1");
+	dae::SceneManager::GetInstance().CreateScene("level1");
 	dae::SceneManager::GetInstance().CreateScene("level2");
+	dae::SceneManager::GetInstance().CreateScene("level3");
 
 
 	auto players = CreateCharacters();
@@ -54,6 +56,7 @@ int main(int, char* [])
 
 	Level1(players);
 	Level2(players);
+	Level3(players);
 
 
 	dae::SceneManager::GetInstance().SetActiveScene("mainMenu");
@@ -192,7 +195,14 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	auto& scene = dae::SceneManager::GetInstance().GetScene("level1");
 	auto& input = dae::InputManager::GetInstance();
 
+	//fps game object
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
+	auto fpsGo = std::make_shared<dae::GameObject>();
+	dae::FpsComponent* fpsComponent = fpsGo->AddComponent<dae::FpsComponent>();
+	fpsComponent->SetPosition(10, 10);
+	fpsComponent->SetFont(font);
+	scene.Add(fpsGo);
+
 
 	//levelsprite
 	auto levelGO = std::make_shared<dae::GameObject>();
@@ -201,12 +211,6 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	levelTexture->SetPosition(0, 700 - 600);
 	scene.Add(levelGO);
 
-	//fps game object
-	auto fpsGo = std::make_shared<dae::GameObject>();
-	dae::FpsComponent* fpsComponent = fpsGo->AddComponent<dae::FpsComponent>();
-	fpsComponent->SetPosition(10, 10);
-	fpsComponent->SetFont(font);
-	scene.Add(fpsGo);
 
 
 	//SOUND
@@ -293,11 +297,22 @@ void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	auto& scene = dae::SceneManager::GetInstance().GetScene("level2");
 	auto& input = dae::InputManager::GetInstance();
 
+	//fps game object
+	auto fpsGo = std::make_shared<dae::GameObject>();
+	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
+	dae::FpsComponent* fpsComponent = fpsGo->AddComponent<dae::FpsComponent>();
+	fpsComponent->SetPosition(10, 10);
+	fpsComponent->SetFont(font);
+	scene.Add(fpsGo);
+
+	//level
 	auto levelGO = std::make_shared<dae::GameObject>();
 	dae::Texture2DComponent* levelTexture = levelGO->AddComponent<dae::Texture2DComponent>();
 	levelTexture->SetTexture("Level/level2.png");
 	levelTexture->SetPosition(0, 700 - 600);
 	scene.Add(levelGO);
+
+
 
 	LevelReader levelReader;
 	auto level = std::make_shared<dae::GameObject>();
@@ -345,6 +360,77 @@ void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	//adding player
 	gameManagerComp->AddPlayer(players.at(0), glm::vec2(298, 493));
 	gameManagerComp->AddPlayer(players.at(1), glm::vec2(310, 493));
+
+	scene.Add(gameManagerGo);
+
+
+	for (auto& player : players)
+	{
+		scene.Add(player);
+	}
+}
+
+void Level3(std::vector<std::shared_ptr<dae::GameObject>>& players)
+{
+	auto& scene = dae::SceneManager::GetInstance().GetScene("level3");
+	auto& input = dae::InputManager::GetInstance();
+
+	//fps game object
+	auto fpsGo = std::make_shared<dae::GameObject>();
+	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
+	dae::FpsComponent* fpsComponent = fpsGo->AddComponent<dae::FpsComponent>();
+	fpsComponent->SetPosition(10, 10);
+	fpsComponent->SetFont(font);
+	scene.Add(fpsGo);
+
+	//LEVEL
+	auto levelGO = std::make_shared<dae::GameObject>();
+	dae::Texture2DComponent* levelTexture = levelGO->AddComponent<dae::Texture2DComponent>();
+	levelTexture->SetTexture("Level/level3.png");
+	levelTexture->SetPosition(0, 700 - 600);
+	scene.Add(levelGO);
+
+	LevelReader levelReader;
+	auto level = std::make_shared<dae::GameObject>();
+	levelReader.AddLevel("../Data/Level/level3.txt", level);
+	level->SetPosition(-2000, -2000);
+	scene.Add(level);
+
+
+	auto gameManagerGo = std::make_shared<dae::GameObject>();
+	GameManager* gameManagerComp = gameManagerGo->AddComponent<GameManager>();
+	players.at(0)->GetComponent<PeterPepper>()->addObserver(gameManagerComp);
+	players.at(1)->GetComponent<PeterPepper>()->addObserver(gameManagerComp);
+
+
+	//adding level to gameManager
+	gameManagerComp->SetLevel(level);
+
+
+
+	auto ingredients = levelReader.GetIngredients();
+	for (auto ingredient : ingredients)
+	{
+		scene.Add(ingredient);
+		ingredient->GetComponent<dae::Ingredient>()->addObserver(players.at(0)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
+		ingredient->GetComponent<dae::Ingredient>()->addObserver(players.at(1)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
+		gameManagerComp->AddIngredient(ingredient->GetComponent<dae::Ingredient>());
+		ingredient->SetPosition(-1000, -1000);
+	}
+
+	//GETTING PLATES
+	auto plates = levelReader.GetPlates();
+	for (auto plate : plates)
+	{
+		scene.Add(plate);
+		gameManagerComp->AddPlate(plate->GetComponent<Plate>());
+		plate->SetPosition(-1000, -1000);
+	}
+
+
+	//adding player
+	gameManagerComp->AddPlayer(players.at(0), glm::vec2(298, 150));
+	gameManagerComp->AddPlayer(players.at(1), glm::vec2(310, 150));
 
 	scene.Add(gameManagerGo);
 

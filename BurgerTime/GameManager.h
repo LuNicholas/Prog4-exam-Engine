@@ -38,6 +38,7 @@ private:
 	void Pause();
 	void Reset();
 	void FullReset();
+	void ResetPlayers();
 
 	bool m_GamePaused;
 	float m_PauseTime;

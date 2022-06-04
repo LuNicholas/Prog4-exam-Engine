@@ -158,7 +158,9 @@ void GameManager::FullReset()
 	{
 		ingredient->Reset();
 	}
-
+}
+void GameManager::ResetPlayers()
+{
 	for (auto& player : m_pPlayers)
 	{
 		player->GetComponent<PeterPepper>()->Reset();
@@ -189,6 +191,7 @@ void GameManager::onNotify(const dae::GameObject& go, const Event& event)
 		if (m_PlayersDead == m_PlayerAmount)
 		{
 			FullReset();
+			ResetPlayers();
 			m_PlayersDead -= m_PlayerAmount;
 			m_PlayerAmount = 0;
 			dae::SceneManager::GetInstance().SetActiveScene("mainMenu");

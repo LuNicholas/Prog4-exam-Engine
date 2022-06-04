@@ -230,7 +230,7 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	//add level
 	LevelReader levelReader;
 	auto level = std::make_shared<dae::GameObject>();
-	levelReader.AddLevel("../Data/Level/level1.txt", level);
+	levelReader.AddLevel("../Data/Level/level1test.txt", level);
 	level->SetPosition(-1000, -1000);
 	scene.Add(level);
 
@@ -316,7 +316,7 @@ void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players)
 
 	LevelReader levelReader;
 	auto level = std::make_shared<dae::GameObject>();
-	levelReader.AddLevel("../Data/Level/level2.txt", level);
+	levelReader.AddLevel("../Data/Level/level2test.txt", level);
 	level->SetPosition(-2000, -2000);
 	scene.Add(level);
 
@@ -392,7 +392,7 @@ void Level3(std::vector<std::shared_ptr<dae::GameObject>>& players)
 
 	LevelReader levelReader;
 	auto level = std::make_shared<dae::GameObject>();
-	levelReader.AddLevel("../Data/Level/level3.txt", level);
+	levelReader.AddLevel("../Data/Level/level3test.txt", level);
 	level->SetPosition(-2000, -2000);
 	scene.Add(level);
 

@@ -393,7 +393,6 @@ void dae::Enemy::KillEnemy()
 }
 void dae::Enemy::SetStunned()
 {
-	//m_pAnimationComp->SetActiveAnimation("stunned");
 	m_IsStunnned = true;
 }
 bool dae::Enemy::GetIsDead()

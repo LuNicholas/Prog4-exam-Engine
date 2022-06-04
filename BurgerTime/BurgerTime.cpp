@@ -104,7 +104,7 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	auto peterPepperGo = std::make_shared<dae::GameObject>();
 
 	PeterPepper* peterComp = peterPepperGo->AddComponent<PeterPepper>();
-	peterComp->Init(glm::vec2(300, 540), 5);
+	peterComp->Init(glm::vec2(300, 540), 1, 5);
 	playerGOs.push_back(peterPepperGo);
 
 	//pepper
@@ -130,7 +130,7 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	UiPeter->SetFollowParent(false);
 	dae::PlayerUiComponent* peterUiComp = UiPeter->AddComponent<dae::PlayerUiComponent>();
 	peterUiComp->SetFont(font);
-	peterUiComp->SetLives(4);
+	//peterUiComp->SetLives(4);
 	peterUiComp->SetLives(peterComp->GetHealth()->GetHealth());
 	peterUiComp->SetPosition(450, 10);
 
@@ -148,7 +148,7 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	//second player
 	auto sallySaltGo = std::make_shared<dae::GameObject>();
 	PeterPepper* sallyComp = sallySaltGo->AddComponent<PeterPepper>();
-	sallyComp->Init(glm::vec2(350, 540), 5);
+	sallyComp->Init(glm::vec2(350, 540), 1, 5);
 	playerGOs.push_back(sallySaltGo);
 
 
@@ -242,27 +242,23 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 
 	//add burgers
 	auto topBun0Go = std::make_shared<dae::GameObject>();
-	topBun0Go->SetPosition(50, 210);
 	dae::Ingredient* topBun0Comp = topBun0Go->AddComponent<dae::Ingredient>();
-	topBun0Comp->Init("bun.png");
+	topBun0Comp->Init("bun.png", glm::vec2(50, 218));
 	scene.Add(topBun0Go);
 
 	auto salad0Go = std::make_shared<dae::GameObject>();
-	salad0Go->SetPosition(50, 290);
 	dae::Ingredient* salad0Comp = salad0Go->AddComponent<dae::Ingredient>();
-	salad0Comp->Init("salad.png");
+	salad0Comp->Init("salad.png", glm::vec2(50,315));
 	scene.Add(salad0Go);
 
 	auto patty0Go = std::make_shared<dae::GameObject>();
-	patty0Go->SetPosition(50, 430);
 	dae::Ingredient* patty0Comp = patty0Go->AddComponent<dae::Ingredient>();
-	patty0Comp->Init("patty.png");
+	patty0Comp->Init("patty.png", glm::vec2(50, 460));
 	scene.Add(patty0Go);
 
 	auto botBun0Go = std::make_shared<dae::GameObject>();
-	botBun0Go->SetPosition(50, 530);
 	dae::Ingredient* botBun0Comp = botBun0Go->AddComponent<dae::Ingredient>();
-	botBun0Comp->Init("bun_Bottom.png");
+	botBun0Comp->Init("bun_Bottom.png", glm::vec2(50, 555));
 	scene.Add(botBun0Go);
 
 	//ADDING TESTPLATE
@@ -302,6 +298,12 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 
 	//adding enemies
 	gameManagerComp->AddEnemy(enemy);
+
+	//adding ingredients
+	gameManagerComp->AddIngredient(topBun0Comp);
+	gameManagerComp->AddIngredient(salad0Comp);
+	gameManagerComp->AddIngredient(patty0Comp);
+	gameManagerComp->AddIngredient(botBun0Comp);
 
 	//adding ingredients
 	gameManagerComp->AddPlate(plate0Comp);

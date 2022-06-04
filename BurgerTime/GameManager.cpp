@@ -7,6 +7,7 @@
 #include "SceneManager.h"
 #include "GameObject.h"
 #include "PeterPepper.h"
+#include "Ingredient.h"
 
 
 GameManager::GameManager()
@@ -27,6 +28,10 @@ GameManager::~GameManager()
 void GameManager::AddEnemy(dae::Enemy* enemy)
 {
 	m_Enemies.push_back(enemy);
+}
+void GameManager::AddIngredient(dae::Ingredient* ingredient)
+{
+	m_Ingredients.push_back(ingredient);
 }
 void GameManager::AddPlate(Plate* plate)
 {
@@ -56,6 +61,11 @@ void GameManager::Update(float deltaTime)
 			glm::vec2 spawnPoint = m_SpawnPoints.at(i);
 			m_pPlayers.at(i)->GetComponent<PeterPepper>()->SetSpawn(glm::vec2(spawnPoint.x, spawnPoint.y));
 			m_pPlayers.at(i)->SetPosition(spawnPoint.x, spawnPoint.y);
+		}
+
+		for (dae::Ingredient* ingredient : m_Ingredients)
+		{
+			ingredient->SetlleStartPlatform();
 		}
 	}
 
@@ -128,8 +138,16 @@ void GameManager::FullReset()
 	m_PauseTimer = 0;
 
 	//RESET ENEMIES 
+	for (dae::Enemy* enemy : m_Enemies)
+	{
+		enemy->Reset();
+	}
 
 	//reset imgrediemts
+	for (dae::Ingredient* ingredient : m_Ingredients)
+	{
+		ingredient->Reset();
+	}
 }
 
 void GameManager::onNotify(const dae::GameObject& go, const Event& event)
@@ -150,6 +168,17 @@ void GameManager::onNotify(const dae::GameObject& go, const Event& event)
 		m_PlayerAmount++;
 		break;
 	}
-
+	case Event::playerDead:
+	{
+		m_PlayersDead++;
+		if (m_PlayersDead == m_PlayerAmount)
+		{
+			FullReset();
+			m_PlayersDead -= m_PlayerAmount;
+			m_PlayerAmount = 0;
+			dae::SceneManager::GetInstance().SetActiveScene("mainMenu");
+		}
+		break;
+	}
 	}
 }

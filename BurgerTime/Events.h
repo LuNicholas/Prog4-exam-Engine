@@ -4,6 +4,7 @@
 enum Event
 {
 	PlayerHit,
+	playerDead,
 	BunDropped,
 	HotDogKilled,
 	PepperUse,

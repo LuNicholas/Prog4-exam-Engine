@@ -5,6 +5,7 @@
 namespace dae
 {
 	class Enemy;
+	class Ingredient;
 }
 	class Plate;
 
@@ -16,6 +17,7 @@ public:
 	~GameManager();
 
 	void AddEnemy(dae::Enemy* enemy);
+	void AddIngredient(dae::Ingredient* ingredient);
 	void AddPlate(Plate* plate);
 	void SetLevel(std::shared_ptr<dae::GameObject>& level);
 	void AddPlayer(std::shared_ptr<dae::GameObject>& player, glm::vec2 playerSpawn);
@@ -42,8 +44,10 @@ private:
 	float m_PauseTimer;
 
 	int m_PlayerAmount;
+	int m_PlayersDead;
 
 	std::vector<dae::Enemy*> m_Enemies;
+	std::vector<dae::Ingredient*> m_Ingredients;
 	std::vector<Plate*> m_Plates;
 	std::shared_ptr<dae::GameObject> m_pLevel;
 	std::vector<std::shared_ptr<dae::GameObject>> m_pPlayers;

@@ -17,9 +17,11 @@ namespace dae
 		void FixedUpdate(float deltaTime);
 		void Render() const;
 
-		void Init(const std::string& textureFileName);
+		void Init(const std::string& textureFileName, glm::vec2 spawnPos);
 
 		bool IsOnPlate();
+		void Reset();
+		void SetlleStartPlatform();
 
 		Ingredient(const Ingredient& other) = delete;
 		Ingredient(Ingredient&& other) = delete;
@@ -30,6 +32,8 @@ namespace dae
 		Ingredient();
 		std::vector<std::pair<bool, CollisionBox*>> m_CollionBoxes;
 		CollisionBox* m_pBigCollisionBox;
+
+		glm::vec2 m_SpawnPos;
 
 		float m_BoxWidth;
 		float m_BoxHeight;
@@ -44,12 +48,13 @@ namespace dae
 
 		bool m_EnemyOnTop;
 		int m_ExtraDrops;
-		//std::vector<GameObject*> m_EnemiesOnTop;
 		int m_EnemiesOnTop;
 
 		std::shared_ptr<Texture2D> m_Texture{};
 
-		void resetIngredient();
+		void AllignIngredient();
+
+
 	};
 
 }

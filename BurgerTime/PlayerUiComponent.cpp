@@ -50,8 +50,8 @@ void dae::PlayerUiComponent::Render() const
 void dae::PlayerUiComponent::SetPosition(float x, float y)
 {
 	m_pHpText->SetPosition(x, y);
-	m_pPepperText->SetPosition(x-50, y);
-	m_pScoreText->SetPosition(x-150, y);
+	m_pPepperText->SetPosition(x - 50, y);
+	m_pScoreText->SetPosition(x - 150, y);
 }
 
 void dae::PlayerUiComponent::SetFont(std::shared_ptr<Font> font)
@@ -90,6 +90,15 @@ void dae::PlayerUiComponent::onNotify(const dae::GameObject& go, const Event& ev
 		if (peterPepper != nullptr)
 			SetLives(peterPepper->GetHealth()->GetHealth());
 		break;
+	}
+	case Event::playerDead:
+	{
+		PeterPepper* peterPepper = go.GetComponent<PeterPepper>();
+		if (peterPepper != nullptr)
+			SetLives(peterPepper->GetHealth()->GetHealth());
+
+		m_score = 0;
+		m_pScoreText->SetText(std::to_string(m_score));
 	}
 	case Event::BunDropped:
 	{

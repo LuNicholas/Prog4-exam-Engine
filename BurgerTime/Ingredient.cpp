@@ -9,9 +9,9 @@
 #include "Enemy.h"
 
 dae::Ingredient::Ingredient()
-	:m_IsDropping(true)
+	:m_IsDropping(false)
 	, m_CurrentFloor(nullptr)
-	, m_DroppingSpeed(150)
+	, m_DroppingSpeed(250)
 	, m_BoxWidth(19)
 	, m_BoxHeight(20)
 	, m_NrOfBoxes(5)
@@ -22,14 +22,18 @@ dae::Ingredient::Ingredient()
 	, m_EnemyOnTop(false)
 	, m_ExtraDrops(0)
 	, m_EnemiesOnTop(0)
+	, m_SpawnPos(0, 0)
 {
 }
 dae::Ingredient::~Ingredient()
 {
 }
 
-void dae::Ingredient::Init(const std::string& textureFileName)
+void dae::Ingredient::Init(const std::string& textureFileName, glm::vec2 spawnPos)
 {
+	m_SpawnPos = spawnPos;
+	m_pGameObject->SetPosition(spawnPos.x, spawnPos.y);
+
 	glm::vec2 thisPos = m_Transform.GetPosition();
 
 	for (size_t i = 0; i < m_NrOfBoxes; i++)//ADD TEXTURE
@@ -45,19 +49,51 @@ void dae::Ingredient::Init(const std::string& textureFileName)
 	m_pBigCollisionBox->SetBox(m_BoxWidth * m_NrOfBoxes, m_BoxHeight);
 	m_pBigCollisionBox->SetTag("bun");
 
-	std::vector<CollisionBox*> colliders = m_pBigCollisionBox->GetCollidingWith();
-	for (CollisionBox* box : colliders)
-	{
-		if (box->GetTag() == "floor")
-		{
-			m_CurrentFloor = box;
-		}
-	}
 	m_Texture = ResourceManager::GetInstance().LoadTexture(textureFileName);
 }
 
 
 void dae::Ingredient::Update(float deltaTime)
+{
+	if (m_OnPlate)
+		return;
+	
+
+	int nrCollidedBoxes = 0;
+	for (std::pair<bool, CollisionBox*>& bunBox : m_CollionBoxes)
+	{
+		if (bunBox.first == false)
+		{
+			std::vector<CollisionBox*> colliders = bunBox.second->GetCollidingWith();
+			for (CollisionBox* box : colliders)
+			{
+				if (box->GetTag() == "player")
+				{
+					//set those boxes to have been collided
+					if (bunBox.second->IsPointInCollider(box->GetPosition() + glm::vec3(box->GetSize().x / 2, box->GetSize().y, 0)))//check if middle point of player collides
+					{
+						bunBox.first = true;
+						bunBox.second->SetPosition(bunBox.second->GetPosition().x, bunBox.second->GetPosition().y + m_WalkedOnOffset);
+						nrCollidedBoxes++;
+					}
+				}
+			}
+		}
+		else
+		{
+			nrCollidedBoxes++;
+		}
+	}
+
+	//if all have been collided drop till colliding with floor
+	if (nrCollidedBoxes == m_CollionBoxes.size() && !m_IsDropping)
+	{
+		m_IsDropping = true;
+		Notify(*m_pGameObject, Event::BunDropped);
+	}
+
+}
+void dae::Ingredient::FixedUpdate(float deltaTime)
 {
 	if (m_OnPlate)
 		return;
@@ -78,7 +114,7 @@ void dae::Ingredient::Update(float deltaTime)
 					m_IsDropping = false;
 					m_CurrentFloor = box;
 
-					resetIngredient();
+					AllignIngredient();
 					if (m_EnemyOnTop)
 					{
 						if (m_ExtraDrops < m_EnemiesOnTop)
@@ -108,7 +144,7 @@ void dae::Ingredient::Update(float deltaTime)
 				else if (box->GetGameObject()->GetComponent<Ingredient>()->m_IsDropping == false)
 				{
 					box->GetGameObject()->GetComponent<Ingredient>()->m_IsDropping = true;
-					box->GetGameObject()->GetComponent<Ingredient>()->resetIngredient();
+					box->GetGameObject()->GetComponent<Ingredient>()->AllignIngredient();
 					Notify(*m_pGameObject, Event::BunDropped);
 				}
 
@@ -133,7 +169,6 @@ void dae::Ingredient::Update(float deltaTime)
 					{
 						box->GetGameObject()->GetComponent<Enemy>()->KillEnemy();
 						Notify(*m_pGameObject, Event::HotDogKilled);
-						//box->GetGameObject()->SetPosition(boxPos.x, boxPos.y + (m_DroppingSpeed * deltaTime));
 						m_EnemyOnTop = true;
 						m_EnemiesOnTop++;
 					}
@@ -143,44 +178,6 @@ void dae::Ingredient::Update(float deltaTime)
 		}
 		return;
 	}
-
-
-	int nrCollidedBoxes = 0;
-	for (std::pair<bool, CollisionBox*>& bunBox : m_CollionBoxes)
-	{
-		if (bunBox.first == false)
-		{
-			std::vector<CollisionBox*> colliders = bunBox.second->GetCollidingWith();
-			for (CollisionBox* box : colliders)
-			{
-				if (box->GetTag() == "player")
-				{
-					//set those boxes to have been collided
-					if (bunBox.second->IsPointInCollider(box->GetPosition() + glm::vec3(box->GetSize().x / 2, box->GetSize().y, 0)))//check if middle point of player collides
-					{
-						bunBox.first = true;
-						bunBox.second->SetPosition(bunBox.second->GetPosition().x, bunBox.second->GetPosition().y + m_WalkedOnOffset);
-						nrCollidedBoxes++;
-					}
-				}
-			}
-		}
-		else
-		{
-			nrCollidedBoxes++;
-		}
-	}
-
-	//if all have been collided drop till colliding with floor
-	if (nrCollidedBoxes == m_CollionBoxes.size())
-	{
-		m_IsDropping = true;
-		Notify(*m_pGameObject, Event::BunDropped);
-	}
-
-}
-void dae::Ingredient::FixedUpdate(float deltaTime)
-{
 }
 void dae::Ingredient::Render() const
 {
@@ -191,7 +188,7 @@ void dae::Ingredient::Render() const
 
 }
 
-void dae::Ingredient::resetIngredient()
+void dae::Ingredient::AllignIngredient()
 {
 	for (std::pair<bool, CollisionBox*>& bunBox : m_CollionBoxes)
 	{
@@ -210,4 +207,37 @@ void dae::Ingredient::resetIngredient()
 bool dae::Ingredient::IsOnPlate()
 {
 	return m_OnPlate;
+}
+void dae::Ingredient::Reset()
+{
+	m_pGameObject->SetPosition(m_SpawnPos.x, m_SpawnPos.y);
+	glm::vec2 thisPos = m_pGameObject->GetWorldPosition();
+
+	m_OnPlate = false;
+	m_CurrentFloor = nullptr;
+	m_EnemyOnTop = false;
+	m_ExtraDrops = 0;
+
+	//for (std::pair<bool, CollisionBox*>& bunBox : m_CollionBoxes)
+	for (size_t i = 0; i < m_CollionBoxes.size(); i++)
+	{
+		m_CollionBoxes.at(i).first = false;
+		m_CollionBoxes.at(i).second->SetPosition(thisPos.x + i * m_BoxWidth, thisPos.y);
+	}
+	m_pBigCollisionBox->SetPosition(thisPos.x, thisPos.y);
+
+
+	
+}
+void dae::Ingredient::SetlleStartPlatform()
+{
+	std::vector<CollisionBox*> colliders = m_pBigCollisionBox->GetCollidingWith();
+	for (CollisionBox* box : colliders)
+	{
+		if (box->GetTag() == "floor")
+		{
+			m_CurrentFloor = box;
+			m_IsDropping = false;
+		}
+	}
 }

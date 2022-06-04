@@ -8,6 +8,7 @@
 #include "Events.h"
 #include "PlayerUiComponent.h"
 #include "Texture2DComponent.h"
+#include "SceneManager.h"
 
 PeterPepper::PeterPepper()
 	:m_MoveSpeed(100)
@@ -20,15 +21,17 @@ PeterPepper::PeterPepper()
 	, m_Peppers(5)
 	, m_IsActive(false)
 	, m_IsDead(false)
+	, m_pHealth(nullptr)
+	, m_Health(0)
 {
-	m_pHealth = new dae::Health(4);
 }
 PeterPepper::~PeterPepper()
 {
-	delete m_pHealth;
+	if(m_pHealth)
+		delete m_pHealth;
 }
 
-void PeterPepper::Init(const glm::vec2& spawnPos, int peppers)
+void PeterPepper::Init(const glm::vec2& spawnPos, int health, int peppers)
 {
 	m_pCollisionBox = m_pGameObject->AddComponent<dae::CollisionBox>();
 	m_pCollisionBox->SetBox(m_WidthPlayer, m_HeightPlayer);
@@ -53,6 +56,9 @@ void PeterPepper::Init(const glm::vec2& spawnPos, int peppers)
 	m_pGameObject->SetPosition(spawnPos.x, spawnPos.y);
 
 	m_Peppers = peppers;
+
+	m_Health = health;
+	m_pHealth = new dae::Health(health);
 }
 
 void PeterPepper::Update(float deltaTime)
@@ -218,6 +224,10 @@ void PeterPepper::Kill()
 	{
 		//todo
 		//BIG RESET
+		m_IsDead = false;
+		Notify(*m_pGameObject, Event::playerDead);
+		m_Peppers = 5;
+		m_pHealth->SetHealth(m_Health);
 	}
 }
 

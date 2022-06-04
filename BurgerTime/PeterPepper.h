@@ -32,6 +32,7 @@ public:
 
 	void Pepper();
 	void Kill();
+	void Reset();
 
 	void MoveLeft();
 	void MoveRight();
@@ -44,7 +45,7 @@ public:
 	int GetPeppers() const;
 	void SetActive(bool activity);
 	bool GetActive()const;
-	bool GetIsDead()const;
+	bool IsDead()const;
 
 	void SetSpawn(glm::vec2 spawnPoint);
 	void MoveToSpawn();
@@ -73,7 +74,9 @@ private:
 	float m_MoveSpeed;
 	LastLookDir m_LastLookingDirection;
 
+	bool m_GotHit;
 	bool m_IsDead;
+
 	float m_PauseTime = 2.f;
 	float m_PauseTimer = 0;
 

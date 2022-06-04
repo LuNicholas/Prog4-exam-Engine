@@ -45,8 +45,8 @@ int main(int, char* [])
 	dae::SceneManager::GetInstance().CreateScene("level2");
 
 
-	auto buttonManager = MainMenu();
 	auto players = CreateCharacters();
+	auto buttonManager = MainMenu();
 
 
 	dae::InputManager::GetInstance().AddCommand(dae::ControllerButton::ButtonX, dae::ButtonActivateState::OnButtonDown
@@ -57,8 +57,6 @@ int main(int, char* [])
 
 
 	dae::SceneManager::GetInstance().SetActiveScene("mainMenu");
-	//dae::SceneManager::GetInstance().SetActiveScene("level1");
-	//dae::SceneManager::GetInstance().SetActiveScene("level2");
 
 	engine.Run();
 
@@ -130,7 +128,6 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	UiPeter->SetFollowParent(false);
 	dae::PlayerUiComponent* peterUiComp = UiPeter->AddComponent<dae::PlayerUiComponent>();
 	peterUiComp->SetFont(font);
-	//peterUiComp->SetLives(4);
 	peterUiComp->SetLives(peterComp->GetHealth()->GetHealth());
 	peterUiComp->SetPosition(450, 10);
 
@@ -141,10 +138,9 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	dae::Texture2DComponent* pepperTexture = UiPeter->AddComponent<dae::Texture2DComponent>();
 	pepperTexture->SetTexture("PeterPepper/Peter_Pepper.png");
 	pepperTexture->SetPosition(380, 18);
-	peterComp->addObserver(peterUiComp);
 
 
-	//////////////////////
+	
 	//second player
 	auto sallySaltGo = std::make_shared<dae::GameObject>();
 	PeterPepper* sallyComp = sallySaltGo->AddComponent<PeterPepper>();
@@ -174,9 +170,9 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	UiSally->SetFollowParent(false);
 	dae::PlayerUiComponent* sallyUiComp = UiSally->AddComponent<dae::PlayerUiComponent>();
 	sallyUiComp->SetFont(font);
-	sallyUiComp->SetLives(4);
 	sallyUiComp->SetLives(sallyComp->GetHealth()->GetHealth());
 	sallyUiComp->SetPosition(450, 40);
+	sallyUiComp->SetScoreVisible(false);
 
 	dae::Texture2DComponent* livesTextureSally = UiSally->AddComponent<dae::Texture2DComponent>();
 	livesTextureSally->SetTexture("PeterPepper/Peter_Lives.png");
@@ -185,7 +181,6 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	dae::Texture2DComponent* pepperTextureSally = UiSally->AddComponent<dae::Texture2DComponent>();
 	pepperTextureSally->SetTexture("PeterPepper/Peter_Pepper.png");
 	pepperTextureSally->SetPosition(380, 48);
-	sallyComp->addObserver(sallyUiComp);
 
 
 
@@ -206,7 +201,6 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	levelTexture->SetPosition(0, 700 - 600);
 	scene.Add(levelGO);
 
-
 	//fps game object
 	auto fpsGo = std::make_shared<dae::GameObject>();
 	dae::FpsComponent* fpsComponent = fpsGo->AddComponent<dae::FpsComponent>();
@@ -216,20 +210,17 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 
 
 	//SOUND
-
 #if _DEBUG
 	SoundServiceLocator::RegisterSoundSystem(new LoggingSoundSystem(new SDLSoundSystem()));
 #else
 	SoundServiceLocator::RegisterSoundSystem(new SDLSoundSystem());
 #endif // _DEBUG
-
-
-
 	SoundServiceLocator::GetSoundSystem().RegisterSound(0, "../Data/meow1.wav");
 	std::unique_ptr<PlaySound> playMeow = std::make_unique<PlaySound>(0);
 	input.AddCommand(dae::ControllerButton::ButtonB, dae::ButtonActivateState::OnButtonRelease, std::move(playMeow), 0);
 
-	std::cout << "\n\n Button B :PLAY SOUND\n";
+
+
 
 
 	//add level
@@ -241,8 +232,8 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 
 	auto gameManagerGo = std::make_shared<dae::GameObject>();
 	GameManager* gameManagerComp = gameManagerGo->AddComponent<GameManager>();
-	players.at(1)->GetComponent<PeterPepper>()->addObserver(gameManagerComp);
 	players.at(0)->GetComponent<PeterPepper>()->addObserver(gameManagerComp);
+	players.at(1)->GetComponent<PeterPepper>()->addObserver(gameManagerComp);
 
 
 	
@@ -285,6 +276,7 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	gameManagerComp->SetLevel(level);
 	//adding player
 	gameManagerComp->AddPlayer(players.at(0), glm::vec2(300, 540));
+	gameManagerComp->AddPlayer(players.at(1), glm::vec2(325, 540));
 
 	scene.Add(gameManagerGo);
 
@@ -315,8 +307,8 @@ void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players)
 
 	auto gameManagerGo = std::make_shared<dae::GameObject>();
 	GameManager* gameManagerComp = gameManagerGo->AddComponent<GameManager>();
-	//players.at(1)->GetComponent<PeterPepper>()->addObserver(gameManagerComp);
 	players.at(0)->GetComponent<PeterPepper>()->addObserver(gameManagerComp);
+	players.at(1)->GetComponent<PeterPepper>()->addObserver(gameManagerComp);
 
 
 
@@ -330,7 +322,7 @@ void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	{
 		scene.Add(ingredient);
 		ingredient->GetComponent<dae::Ingredient>()->addObserver(players.at(0)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
-		//ingredient->GetComponent<dae::Ingredient>()->addObserver(players.at(1)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
+		ingredient->GetComponent<dae::Ingredient>()->addObserver(players.at(1)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
 		gameManagerComp->AddIngredient(ingredient->GetComponent<dae::Ingredient>());
 		ingredient->SetPosition(-1000, -1000);
 	}
@@ -352,6 +344,7 @@ void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players)
 
 	//adding player
 	gameManagerComp->AddPlayer(players.at(0), glm::vec2(298, 493));
+	gameManagerComp->AddPlayer(players.at(1), glm::vec2(310, 493));
 
 	scene.Add(gameManagerGo);
 

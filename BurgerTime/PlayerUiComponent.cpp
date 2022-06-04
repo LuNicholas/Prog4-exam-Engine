@@ -5,6 +5,7 @@
 
 dae::PlayerUiComponent::PlayerUiComponent()
 	:m_Visible(true)
+	, m_ScoreVisible(true)
 {
 	m_pHpText = new dae::TextComponent();
 	m_pHpText->SetText("4");
@@ -44,7 +45,8 @@ void dae::PlayerUiComponent::Render() const
 
 	m_pHpText->Render();
 	m_pPepperText->Render();
-	m_pScoreText->Render();
+	if(m_ScoreVisible)
+		m_pScoreText->Render();
 }
 
 void dae::PlayerUiComponent::SetPosition(float x, float y)
@@ -64,7 +66,6 @@ void dae::PlayerUiComponent::SetFont(std::shared_ptr<Font> font)
 void dae::PlayerUiComponent::SetLives(int lives)
 {
 	m_pHpText->SetText(std::to_string(lives));
-
 }
 void dae::PlayerUiComponent::SetPeppers(int pepperAmount)
 {
@@ -84,23 +85,6 @@ void dae::PlayerUiComponent::onNotify(const dae::GameObject& go, const Event& ev
 
 	switch (event)
 	{
-	case Event::PlayerHit:
-	{
-		PeterPepper* peterPepper = go.GetComponent<PeterPepper>();
-		if (peterPepper != nullptr)
-			SetLives(peterPepper->GetHealth()->GetHealth());
-		break;
-	}
-	case Event::playerDead:
-	{
-		PeterPepper* peterPepper = go.GetComponent<PeterPepper>();
-		if (peterPepper != nullptr)
-			SetLives(peterPepper->GetHealth()->GetHealth());
-
-		m_score = 0;
-		m_pScoreText->SetText(std::to_string(m_score));
-		break;
-	}
 	case Event::BunDropped:
 	{
 		AddScore(50);
@@ -111,14 +95,14 @@ void dae::PlayerUiComponent::onNotify(const dae::GameObject& go, const Event& ev
 		AddScore(100);
 		break;
 	}
-	case Event::PepperUse:
-	{
-
-		SetPeppers(go.GetComponent<PeterPepper>()->GetPeppers());
-	}
 	}
 }
 void dae::PlayerUiComponent::SetVisible(bool visibility)
 {
 	m_Visible = visibility;
+}
+
+void dae::PlayerUiComponent::SetScoreVisible(bool visibility)
+{
+	m_ScoreVisible = visibility;
 }

@@ -20,9 +20,10 @@ PeterPepper::PeterPepper()
 	, m_LastLookingDirection(LastLookDir::Right)
 	, m_Peppers(5)
 	, m_IsActive(false)
-	, m_IsDead(false)
+	, m_GotHit(false)
 	, m_pHealth(nullptr)
 	, m_Health(0)
+	, m_IsDead(false)
 {
 }
 PeterPepper::~PeterPepper()
@@ -53,7 +54,7 @@ void PeterPepper::Init(const glm::vec2& spawnPos, int health, int peppers)
 	m_pAnimationComp->SetActiveAnimation("idleForward");
 
 	m_SpawnPos = spawnPos;
-	m_pGameObject->SetPosition(spawnPos.x, spawnPos.y);
+	m_pGameObject->SetPosition(-1000, -1000);
 
 	m_Peppers = peppers;
 
@@ -66,7 +67,7 @@ void PeterPepper::Update(float deltaTime)
 	if (!m_IsActive)
 		return;
 
-	if (!m_IsDead)
+	if (!m_GotHit || m_IsDead)
 		return;
 
 	m_PauseTimer += deltaTime;
@@ -74,7 +75,7 @@ void PeterPepper::Update(float deltaTime)
 	{
 		m_PauseTimer = 0;
 		Notify(*m_pGameObject, Event::PlayerReset);
-		m_IsDead = false;
+		m_GotHit = false;
 		m_pGameObject->SetPosition(m_SpawnPos.x, m_SpawnPos.y);
 		m_pAnimationComp->SetActiveAnimation("idleForward");
 	}
@@ -104,7 +105,7 @@ void PeterPepper::MoveLeft()
 {
 	if (!m_IsActive)
 		return;
-	if (m_IsDead)
+	if (m_GotHit)
 		return;
 
 	if (m_pMovementComp->MoveLeft())
@@ -117,7 +118,7 @@ void PeterPepper::MoveRight()
 {
 	if (!m_IsActive)
 		return;
-	if (m_IsDead)
+	if (m_GotHit)
 		return;
 
 	if (m_pMovementComp->MoveRight())
@@ -130,7 +131,7 @@ void PeterPepper::MoveUp()
 {
 	if (!m_IsActive)
 		return;
-	if (m_IsDead)
+	if (m_GotHit)
 		return;
 
 	if (m_pMovementComp->MoveUp())
@@ -143,7 +144,7 @@ void PeterPepper::MoveDown()
 {
 	if (!m_IsActive)
 		return;
-	if (m_IsDead)
+	if (m_GotHit)
 		return;
 
 	if (m_pMovementComp->MoveDown())
@@ -156,7 +157,7 @@ void PeterPepper::IdleForward()
 {
 	if (!m_IsActive)
 		return;
-	if (m_IsDead)
+	if (m_GotHit)
 		return;
 
 	m_pAnimationComp->SetActiveAnimation("idleForward");
@@ -167,7 +168,7 @@ void PeterPepper::IdleUp()
 	if (!m_IsActive)
 		return;
 
-	if (m_IsDead)
+	if (m_GotHit)
 		return;
 
 	m_pAnimationComp->SetActiveAnimation("idleUp");
@@ -179,7 +180,7 @@ void PeterPepper::Pepper()
 	if (!m_IsActive)
 		return;
 
-	if (m_IsDead)
+	if (m_GotHit)
 		return;
 
 	if (m_pGameObject->GetChildAt(0)->GetComponent<dae::Pepper>()->OnCooldown())
@@ -189,6 +190,7 @@ void PeterPepper::Pepper()
 		return;
 
 	m_Peppers--;
+	m_pGameObject->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>()->SetPeppers(m_Peppers);
 	switch (m_LastLookingDirection)
 	{
 	case PeterPepper::LastLookDir::Up:
@@ -210,24 +212,27 @@ void PeterPepper::Pepper()
 
 void PeterPepper::Kill()
 {
-	if (m_IsDead)
+	if (m_GotHit)
 		return;
 
 	m_pAnimationComp->SetActiveAnimation("death");
 	m_pMovementComp->Idle();
 	if (m_pHealth->DealDamage(1) >= 0)
 	{
-		m_IsDead = true;
+		m_GotHit = true;
 		Notify(*m_pGameObject, Event::PlayerHit);
+		m_pGameObject->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>()->SetLives(m_pHealth->GetHealth());
+
+
 	}
 	else
 	{
 		//todo
-		//BIG RESET
-		m_IsDead = false;
+		//BIG RESET WHEN NEEDED PUT THIS IN FUNCTION AND CALL IT 
+		//JUST NOTIFY SO GAMEMANAGER KNOW AND LET GAMEMANAGER CALL THE RESET IF ALL PLAYERS DEAD
+		m_GotHit = true;
+		m_IsDead = true;
 		Notify(*m_pGameObject, Event::playerDead);
-		m_Peppers = 5;
-		m_pHealth->SetHealth(m_Health);
 	}
 }
 
@@ -254,9 +259,9 @@ bool PeterPepper::GetActive() const
 {
 	return m_IsActive;
 }
-bool PeterPepper::GetIsDead() const
+bool PeterPepper::IsDead() const
 {
-	return m_IsDead;
+	return (m_GotHit || m_IsDead);
 }
 void PeterPepper::SetSpawn(glm::vec2 spawnPoint)
 {
@@ -265,4 +270,18 @@ void PeterPepper::SetSpawn(glm::vec2 spawnPoint)
 void PeterPepper::MoveToSpawn()
 {
 	m_pGameObject->SetPosition(m_SpawnPos.x, m_SpawnPos.y);
+}
+
+void PeterPepper::Reset()
+{
+	m_GotHit = false;
+	m_IsDead = false;
+	m_Peppers = 5;
+	m_pHealth->SetHealth(m_Health);
+
+	dae::PlayerUiComponent* ui = m_pGameObject->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>();
+	ui->SetLives(m_Health);
+	ui->SetPeppers(m_Peppers);
+
+	m_pAnimationComp->SetActiveAnimation("idleForward");
 }

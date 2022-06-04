@@ -18,6 +18,7 @@ GameManager::GameManager()
 	, m_NextLevel(false)
 	, m_PauseTime(2.0f)
 	, m_PauseTimer(0.f)
+	, m_PlayersDead(0)
 {
 }
 GameManager::~GameManager()
@@ -59,8 +60,11 @@ void GameManager::Update(float deltaTime)
 		for (size_t i = 0; i < m_pPlayers.size(); i++)
 		{
 			glm::vec2 spawnPoint = m_SpawnPoints.at(i);
-			m_pPlayers.at(i)->GetComponent<PeterPepper>()->SetSpawn(glm::vec2(spawnPoint.x, spawnPoint.y));
-			m_pPlayers.at(i)->SetPosition(spawnPoint.x, spawnPoint.y);
+			if (m_pPlayers.at(i)->GetComponent<PeterPepper>()->GetActive())
+			{
+				m_pPlayers.at(i)->GetComponent<PeterPepper>()->SetSpawn(glm::vec2(spawnPoint.x, spawnPoint.y));
+				m_pPlayers.at(i)->SetPosition(spawnPoint.x, spawnPoint.y);
+			}
 		}
 
 		for (dae::Ingredient* ingredient : m_Ingredients)
@@ -153,6 +157,11 @@ void GameManager::FullReset()
 	for (dae::Ingredient* ingredient : m_Ingredients)
 	{
 		ingredient->Reset();
+	}
+
+	for (auto& player : m_pPlayers)
+	{
+		player->GetComponent<PeterPepper>()->Reset();
 	}
 }
 

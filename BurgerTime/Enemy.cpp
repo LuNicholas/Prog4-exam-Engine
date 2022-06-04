@@ -151,8 +151,8 @@ void dae::Enemy::Update(float deltaTime)
 	if (m_Players.at(1)->GetActive() == true)
 	{
 		//get closest of the 2 players
-		bool isPlayer1Dead = m_Players.front()->GetGameObject()->GetComponent<PeterPepper>()->GetIsDead();
-		bool isPlayer2Dead = m_Players.at(1)->GetGameObject()->GetComponent<PeterPepper>()->GetIsDead();
+		bool isPlayer1Dead = m_Players.front()->GetGameObject()->GetComponent<PeterPepper>()->IsDead();
+		bool isPlayer2Dead = m_Players.at(1)->GetGameObject()->GetComponent<PeterPepper>()->IsDead();
 
 		if (!isPlayer1Dead && !isPlayer2Dead)
 		{

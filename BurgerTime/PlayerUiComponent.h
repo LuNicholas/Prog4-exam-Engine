@@ -17,8 +17,10 @@ namespace dae
 		void SetPosition(float x, float y);
 		void SetFont(std::shared_ptr<Font> font);
 		void SetLives(int lives);
+		void SetPeppers(int pepperAmount);
 		
 		void SetVisible(bool visibility);
+		void SetScoreVisible(bool visibility);
 
 		void AddScore(int score);
 
@@ -31,9 +33,7 @@ namespace dae
 
 	private:
 		void onNotify(const dae::GameObject& go, const Event& event) override;
-		PlayerUiComponent();
-
-		void SetPeppers(int pepperAmount);
+		PlayerUiComponent();		
 
 		dae::TextComponent* m_pHpText;
 		dae::TextComponent* m_pPepperText;
@@ -41,6 +41,7 @@ namespace dae
 		int m_score = 0;
 
 		bool m_Visible;
+		bool m_ScoreVisible;
 	};
 
 }

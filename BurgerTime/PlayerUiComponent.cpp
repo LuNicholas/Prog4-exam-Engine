@@ -99,6 +99,7 @@ void dae::PlayerUiComponent::onNotify(const dae::GameObject& go, const Event& ev
 
 		m_score = 0;
 		m_pScoreText->SetText(std::to_string(m_score));
+		break;
 	}
 	case Event::BunDropped:
 	{

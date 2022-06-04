@@ -107,6 +107,7 @@ void GameManager::Update(float deltaTime)
 	{
 		m_NextLevel = true;
 		m_GamePaused = true;
+		Pause();
 	}
 
 

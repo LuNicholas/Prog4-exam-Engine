@@ -14,7 +14,7 @@ public:
 
 	friend class dae::GameObject;
 
-	void Init();
+	void Init(glm::vec2 pos);
 	void AddIngredient(dae::Ingredient* ingredient);
 	bool IsPlateDone()const;
 

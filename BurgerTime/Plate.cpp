@@ -14,8 +14,9 @@ Plate::~Plate()
 {
 }
 
-void Plate::Init()
+void Plate::Init(glm::vec2 pos)
 {
+	m_pGameObject->SetPosition(pos.x, pos.y);
 	m_pCollider = m_pGameObject->AddComponent<dae::CollisionBox>();
 	m_pCollider->SetTag("plate");
 	m_pCollider->SetBox(100, 10);

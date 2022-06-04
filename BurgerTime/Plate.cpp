@@ -57,4 +57,5 @@ bool Plate::IsPlateDone() const
 void Plate::Reset()
 {
 	m_pGameObject->SetPosition(m_SpawnPos.x, m_SpawnPos.y);
+	m_PlateDone = false;
 }

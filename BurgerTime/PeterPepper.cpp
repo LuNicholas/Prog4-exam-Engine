@@ -222,14 +222,9 @@ void PeterPepper::Kill()
 		m_GotHit = true;
 		Notify(*m_pGameObject, Event::PlayerHit);
 		m_pGameObject->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>()->SetLives(m_pHealth->GetHealth());
-
-
 	}
 	else
 	{
-		//todo
-		//BIG RESET WHEN NEEDED PUT THIS IN FUNCTION AND CALL IT 
-		//JUST NOTIFY SO GAMEMANAGER KNOW AND LET GAMEMANAGER CALL THE RESET IF ALL PLAYERS DEAD
 		m_GotHit = true;
 		m_IsDead = true;
 		Notify(*m_pGameObject, Event::playerDead);

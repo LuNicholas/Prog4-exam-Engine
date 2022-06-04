@@ -5,6 +5,7 @@
 #include "Events.h"
 #include "Plate.h"
 #include "SceneManager.h"
+#include "Scene.h"
 #include "GameObject.h"
 #include "PeterPepper.h"
 #include "Ingredient.h"
@@ -93,8 +94,16 @@ void GameManager::Update(float deltaTime)
 			if (m_NextLevel)//GO TO NEXT LEVEL
 			{
 				m_pLevel->SetPosition(-1000, -1000);
-				dae::SceneManager::GetInstance().NextScene();
+				if (dae::SceneManager::GetInstance().GetCurrentScene().GetSceneName() == "level3")
+				{
+					dae::SceneManager::GetInstance().SetActiveScene("level1");
+				}
+				else
+				{
+					dae::SceneManager::GetInstance().NextScene();
+				}
 				FullReset();
+				MoveLevel();
 			}
 		}
 	}
@@ -144,10 +153,11 @@ void GameManager::Reset()
 }
 void GameManager::FullReset()
 {
+	m_NextLevel = false;
 	m_DoOnce = false;
 	m_PauseTimer = 0;
 
-	//RESET ENEMIES 
+	//reset enemies 
 	for (dae::Enemy* enemy : m_Enemies)
 	{
 		enemy->Reset();
@@ -157,6 +167,13 @@ void GameManager::FullReset()
 	for (dae::Ingredient* ingredient : m_Ingredients)
 	{
 		ingredient->Reset();
+		ingredient->SetlleStartPlatform();
+	}
+
+	//reset plates
+	for (Plate* plate: m_Plates)
+	{
+		plate->Reset();
 	}
 }
 void GameManager::ResetPlayers()
@@ -165,6 +182,27 @@ void GameManager::ResetPlayers()
 	{
 		player->GetComponent<PeterPepper>()->Reset();
 	}
+}
+void GameManager::MoveLevel()
+{
+	for (dae::Enemy* enemy : m_Enemies)
+	{
+		enemy->GetGameObject()->SetPosition(-1000,-1000);
+	}
+
+	//reset imgrediemts
+	for (dae::Ingredient* ingredient : m_Ingredients)
+	{
+		ingredient->GetGameObject()->SetPosition(-1000, -1000);
+	}
+
+	//reset plates
+	for (Plate* plate : m_Plates)
+	{
+		plate->GetGameObject()->SetPosition(-1000, -1000);
+	}
+
+	m_pLevel->SetPosition(-1000, -1000);
 }
 
 void GameManager::onNotify(const dae::GameObject& go, const Event& event)

@@ -57,12 +57,12 @@ void dae::Enemy::Init(EnemyType enemyType, glm::vec2 spawnPoint, float initialSp
 	switch (enemyType)
 	{
 	case dae::EnemyType::bean:
-		m_pAnimationComp->AddAnimation("Bean_Up.png", "up", 64, 32, 2, 1, 0.5f);
-		m_pAnimationComp->AddAnimation("Bean_Down.png", "down", 64, 32, 2, 1, 0.5f);
-		m_pAnimationComp->AddAnimation("Bean_Left.png", "left", 64, 32, 2, 1, 0.5f);
-		m_pAnimationComp->AddAnimation("Bean_Right.png", "right", 64, 32, 2, 1, 0.5f);
-		m_pAnimationComp->AddAnimation("Bean_Death.png", "death", 128, 32, 4, 1, 0.5f);
-		m_pAnimationComp->AddAnimation("Bean_Stunned.png", "stunned", 64, 32, 2, 1, 0.25f);
+		m_pAnimationComp->AddAnimation("Enemies/Bean/Bean_Up.png", "up", 64, 32, 2, 1, 0.5f);
+		m_pAnimationComp->AddAnimation("Enemies/Bean/Bean_Down.png", "down", 64, 32, 2, 1, 0.5f);
+		m_pAnimationComp->AddAnimation("Enemies/Bean/Bean_Left.png", "left", 64, 32, 2, 1, 0.5f);
+		m_pAnimationComp->AddAnimation("Enemies/Bean/Bean_Right.png", "right", 64, 32, 2, 1, 0.5f);
+		m_pAnimationComp->AddAnimation("Enemies/Bean/Bean_Death.png", "death", 128, 32, 4, 1, 0.5f);
+		m_pAnimationComp->AddAnimation("Enemies/Bean/Bean_Stunned.png", "stunned", 64, 32, 2, 1, 0.25f);
 		m_pAnimationComp->SetActiveAnimation("down");
 		break;
 	case dae::EnemyType::egg:

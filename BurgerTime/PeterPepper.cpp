@@ -43,13 +43,13 @@ void PeterPepper::Init(const glm::vec2& spawnPos, int health, int peppers)
 
 
 	m_pAnimationComp = m_pGameObject->AddComponent<dae::AnimationManager>();
-	m_pAnimationComp->AddAnimation("Peter_Up.png", "up", 96, 32, 3, 1, 0.5f);
-	m_pAnimationComp->AddAnimation("Peter_Forward.png", "forward", 96, 32, 3, 1, 0.5f);
-	m_pAnimationComp->AddAnimation("Peter_Left.png", "left", 96, 32, 3, 1, 0.5f);
-	m_pAnimationComp->AddAnimation("Peter_Right.png", "right", 96, 32, 3, 1, 0.5f);
-	m_pAnimationComp->AddAnimation("forward_Idle.png", "idleForward", 32, 32, 1, 1, -1);
-	m_pAnimationComp->AddAnimation("up_Idle.png", "idleUp", 32, 32, 1, 1, -1);
-	m_pAnimationComp->AddAnimation("Peter_Death.png", "death", 192, 32, 6, 1, 0.25);
+	m_pAnimationComp->AddAnimation("PeterPepper/Peter_Up.png", "up", 96, 32, 3, 1, 0.5f);
+	m_pAnimationComp->AddAnimation("PeterPepper/Peter_Forward.png", "forward", 96, 32, 3, 1, 0.5f);
+	m_pAnimationComp->AddAnimation("PeterPepper/Peter_Left.png", "left", 96, 32, 3, 1, 0.5f);
+	m_pAnimationComp->AddAnimation("PeterPepper/Peter_Right.png", "right", 96, 32, 3, 1, 0.5f);
+	m_pAnimationComp->AddAnimation("PeterPepper/forward_Idle.png", "idleForward", 32, 32, 1, 1, -1);
+	m_pAnimationComp->AddAnimation("PeterPepper/up_Idle.png", "idleUp", 32, 32, 1, 1, -1);
+	m_pAnimationComp->AddAnimation("PeterPepper/Peter_Death.png", "death", 192, 32, 6, 1, 0.25);
 	m_pAnimationComp->SetActiveAnimation("idleForward");
 
 	m_SpawnPos = spawnPos;

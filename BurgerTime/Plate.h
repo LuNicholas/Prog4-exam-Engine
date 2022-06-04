@@ -22,6 +22,8 @@ public:
 	void FixedUpdate(float deltaTime);
 	void Render() const;
 
+	void Reset();
+
 	~Plate();
 	Plate(const Plate& other) = delete;
 	Plate(Plate&& other) = delete;
@@ -30,6 +32,8 @@ public:
 
 private:
 	Plate();
+
+	glm::vec2 m_SpawnPos;
 
 	dae::CollisionBox* m_pCollider;
 	std::vector<dae::Ingredient*> m_Ingredients;

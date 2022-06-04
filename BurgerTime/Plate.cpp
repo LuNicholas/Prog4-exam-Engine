@@ -16,6 +16,7 @@ Plate::~Plate()
 
 void Plate::Init(glm::vec2 pos)
 {
+	m_SpawnPos = pos;
 	m_pGameObject->SetPosition(pos.x, pos.y);
 	m_pCollider = m_pGameObject->AddComponent<dae::CollisionBox>();
 	m_pCollider->SetTag("plate");
@@ -52,4 +53,8 @@ void Plate::Render() const
 bool Plate::IsPlateDone() const
 {
 	return m_PlateDone;
+}
+void Plate::Reset()
+{
+	m_pGameObject->SetPosition(m_SpawnPos.x, m_SpawnPos.y);
 }

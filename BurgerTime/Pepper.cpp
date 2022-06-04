@@ -24,7 +24,7 @@ void dae::Pepper::Init()
 	m_pCollisionBox->SetBox(32, 32);
 
 	m_pAnimationComp = m_pGameObject->AddComponent<AnimationManager>();
-	m_pAnimationComp->AddAnimation("Pepper_Right.png", "right", 128, 32, 4, 1, 0.25f);
+	m_pAnimationComp->AddAnimation("PeterPepper/Pepper_Right.png", "right", 128, 32, 4, 1, 0.25f);
 	m_pAnimationComp->SetActiveAnimation("right");
 }
 

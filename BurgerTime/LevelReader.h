@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip> 
+#include "Ingredient.h"
 
 namespace dae
 {
@@ -11,14 +12,6 @@ namespace dae
 
 class LevelReader
 {
-	enum class IngredientType
-	{
-		topBun,
-		salad,
-		patty,
-		botBun,
-	};
-
 public:
 	LevelReader();
 	~LevelReader();
@@ -36,7 +29,7 @@ private:
 	void ReadFloor(std::shared_ptr<dae::GameObject>& go);
 	void ReadLadder(std::shared_ptr<dae::GameObject>& go);
 
-	void ReadIngredient(IngredientType type);
+	void ReadIngredient(dae::Ingredient::IngredientType type);
 	void ReadPlate();
 
 

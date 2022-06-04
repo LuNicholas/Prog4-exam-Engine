@@ -29,7 +29,7 @@ dae::Ingredient::~Ingredient()
 {
 }
 
-void dae::Ingredient::Init(const std::string& textureFileName, glm::vec2 spawnPos)
+void dae::Ingredient::Init(IngredientType type, glm::vec2 spawnPos)
 {
 	m_SpawnPos = spawnPos;
 	m_pGameObject->SetPosition(spawnPos.x, spawnPos.y);
@@ -49,7 +49,24 @@ void dae::Ingredient::Init(const std::string& textureFileName, glm::vec2 spawnPo
 	m_pBigCollisionBox->SetBox(m_BoxWidth * m_NrOfBoxes, m_BoxHeight);
 	m_pBigCollisionBox->SetTag("bun");
 
-	m_Texture = ResourceManager::GetInstance().LoadTexture(textureFileName);
+	switch (type)
+	{
+	case dae::Ingredient::IngredientType::topBun:
+		m_Texture = ResourceManager::GetInstance().LoadTexture("Ingredients/bun.png");
+		break;
+	case dae::Ingredient::IngredientType::salad:
+		m_Texture = ResourceManager::GetInstance().LoadTexture("Ingredients/salad.png");
+		break;
+	case dae::Ingredient::IngredientType::patty:
+		m_Texture = ResourceManager::GetInstance().LoadTexture("Ingredients/patty.png");
+		break;
+	case dae::Ingredient::IngredientType::botBun:
+		m_Texture = ResourceManager::GetInstance().LoadTexture("Ingredients/bun_Bottom.png");
+		break;
+	default:
+		break;
+	}
+	
 }
 
 

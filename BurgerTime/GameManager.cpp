@@ -65,7 +65,12 @@ void GameManager::Update(float deltaTime)
 
 		for (dae::Ingredient* ingredient : m_Ingredients)
 		{
+			ingredient->Reset();
 			ingredient->SetlleStartPlatform();
+		}
+		for (Plate* plate : m_Plates)
+		{
+			plate->Reset();
 		}
 	}
 

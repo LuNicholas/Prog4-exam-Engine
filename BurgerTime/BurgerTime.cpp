@@ -135,11 +135,11 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	peterUiComp->SetPosition(450, 10);
 
 	dae::Texture2DComponent* livesTexture = UiPeter->AddComponent<dae::Texture2DComponent>();
-	livesTexture->SetTexture("Peter_Lives.png");
+	livesTexture->SetTexture("PeterPepper/Peter_Lives.png");
 	livesTexture->SetPosition(435, 18);
 
 	dae::Texture2DComponent* pepperTexture = UiPeter->AddComponent<dae::Texture2DComponent>();
-	pepperTexture->SetTexture("Peter_Pepper.png");
+	pepperTexture->SetTexture("PeterPepper/Peter_Pepper.png");
 	pepperTexture->SetPosition(380, 18);
 	peterComp->addObserver(peterUiComp);
 
@@ -179,11 +179,11 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	sallyUiComp->SetPosition(450, 40);
 
 	dae::Texture2DComponent* livesTextureSally = UiSally->AddComponent<dae::Texture2DComponent>();
-	livesTextureSally->SetTexture("Peter_Lives.png");
+	livesTextureSally->SetTexture("PeterPepper/Peter_Lives.png");
 	livesTextureSally->SetPosition(435, 48);
 
 	dae::Texture2DComponent* pepperTextureSally = UiSally->AddComponent<dae::Texture2DComponent>();
-	pepperTextureSally->SetTexture("Peter_Pepper.png");
+	pepperTextureSally->SetTexture("PeterPepper/Peter_Pepper.png");
 	pepperTextureSally->SetPosition(380, 48);
 	sallyComp->addObserver(sallyUiComp);
 
@@ -202,7 +202,7 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	//levelsprite
 	auto levelGO = std::make_shared<dae::GameObject>();
 	dae::Texture2DComponent* levelTexture = levelGO->AddComponent<dae::Texture2DComponent>();
-	levelTexture->SetTexture("level1.png");
+	levelTexture->SetTexture("Level/level1.png");
 	levelTexture->SetPosition(0, 700 - 600);
 	scene.Add(levelGO);
 
@@ -235,7 +235,7 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	//add level
 	LevelReader levelReader;
 	auto level = std::make_shared<dae::GameObject>();
-	levelReader.AddLevel("../Data/level1.txt", level);
+	levelReader.AddLevel("../Data/Level/level1.txt", level);
 	level->SetPosition(-1000, -1000);
 	scene.Add(level);
 
@@ -254,6 +254,7 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 		ingredient->GetComponent<dae::Ingredient>()->addObserver(players.at(0)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
 		//ingredient->GetComponent<dae::Ingredient>()->addObserver(players.at(1)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
 		gameManagerComp->AddIngredient(ingredient->GetComponent<dae::Ingredient>());
+		ingredient->SetPosition(-1000, -1000);
 	}
 
 	//GETTING PLATES
@@ -262,6 +263,7 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	{
 		scene.Add(plate);
 		gameManagerComp->AddPlate(plate->GetComponent<Plate>());
+		plate->SetPosition(-1000, -1000);
 	}
 
 
@@ -301,14 +303,14 @@ void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players)
 
 	auto levelGO = std::make_shared<dae::GameObject>();
 	dae::Texture2DComponent* levelTexture = levelGO->AddComponent<dae::Texture2DComponent>();
-	levelTexture->SetTexture("level2.png");
+	levelTexture->SetTexture("Level/level2.png");
 	levelTexture->SetPosition(0, 700 - 600);
 	scene.Add(levelGO);
 
 	LevelReader levelReader;
 	auto level = std::make_shared<dae::GameObject>();
-	levelReader.AddLevel("../Data/level2.txt", level);
-	level->SetPosition(-1000, -1000);
+	levelReader.AddLevel("../Data/Level/level2.txt", level);
+	level->SetPosition(-2000, -2000);
 	scene.Add(level);
 
 	auto gameManagerGo = std::make_shared<dae::GameObject>();
@@ -330,6 +332,7 @@ void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players)
 		ingredient->GetComponent<dae::Ingredient>()->addObserver(players.at(0)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
 		//ingredient->GetComponent<dae::Ingredient>()->addObserver(players.at(1)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
 		gameManagerComp->AddIngredient(ingredient->GetComponent<dae::Ingredient>());
+		ingredient->SetPosition(-1000, -1000);
 	}
 
 	//GETTING PLATES
@@ -338,6 +341,7 @@ void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	{
 		scene.Add(plate);
 		gameManagerComp->AddPlate(plate->GetComponent<Plate>());
+		plate->SetPosition(-1000, -1000);
 	}
 
 

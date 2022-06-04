@@ -11,13 +11,21 @@ namespace dae
 	{
 		friend class GameObject;
 	public:
+		enum class IngredientType
+		{
+			topBun,
+			salad,
+			patty,
+			botBun,
+		};
+
 		~Ingredient();
 
 		void Update(float deltaTime);
 		void FixedUpdate(float deltaTime);
 		void Render() const;
 
-		void Init(const std::string& textureFileName, glm::vec2 spawnPos);
+		void Init(IngredientType type, glm::vec2 spawnPos);
 
 		bool IsOnPlate();
 		void Reset();

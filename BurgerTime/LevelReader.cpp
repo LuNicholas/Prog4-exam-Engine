@@ -2,7 +2,6 @@
 #include "LevelReader.h"
 #include "GameObject.h"
 #include "CollisionBox.h"
-#include "Ingredient.h"
 #include "Plate.h"
 
 LevelReader::LevelReader()
@@ -45,19 +44,19 @@ void LevelReader::AddLevel(const std::string& fileName, std::shared_ptr<dae::Gam
 			}
 			else if (line.at(0) == 'T')
 			{
-				ReadIngredient(IngredientType::topBun);
+				ReadIngredient(dae::Ingredient::IngredientType::topBun);
 			}
 			else if (line.at(0) == 'S')
 			{
-				ReadIngredient(IngredientType::salad);
+				ReadIngredient(dae::Ingredient::IngredientType::salad);
 			}
 			else if (line.at(0) == 'P')
 			{
-				ReadIngredient(IngredientType::patty);
+				ReadIngredient(dae::Ingredient::IngredientType::patty);
 			}
 			else if (line.at(0) == 'B')
 			{
-				ReadIngredient(IngredientType::botBun);
+				ReadIngredient(dae::Ingredient::IngredientType::botBun);
 			}
 			else if (line.at(0) == 'X')
 			{
@@ -116,7 +115,7 @@ void LevelReader::ReadLadder(std::shared_ptr<dae::GameObject>& go)
 	colBox->SetTag("Ladder");
 }
 
-void LevelReader::ReadIngredient(IngredientType type)
+void LevelReader::ReadIngredient(dae::Ingredient::IngredientType type)
 {
 	auto go = std::make_shared<dae::GameObject>();
 	dae::Ingredient* ingredientComp = go->AddComponent<dae::Ingredient>();
@@ -128,24 +127,10 @@ void LevelReader::ReadIngredient(IngredientType type)
 	std::getline(m_Input, numberString, '/');
 	position.y = std::stoi(numberString);
 
-	switch (type)
-	{
-	case LevelReader::IngredientType::topBun:
-		ingredientComp->Init("bun.png", position);
-		break;
-	case LevelReader::IngredientType::salad:
-		ingredientComp->Init("salad.png", position);
-		break;
-	case LevelReader::IngredientType::patty:
-		ingredientComp->Init("patty.png", position);
-		break;
-	case LevelReader::IngredientType::botBun:
-		ingredientComp->Init("bun_Bottom.png", position);
-		break;
-	default:
-		break;
-	}
-	
+
+	ingredientComp->Init(type, position);
+
+
 	m_Plates.back()->GetComponent<Plate>()->AddIngredient(ingredientComp);
 
 	m_Ingredients.push_back(go);

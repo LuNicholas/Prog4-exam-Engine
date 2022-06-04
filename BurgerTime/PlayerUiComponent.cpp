@@ -102,6 +102,11 @@ void dae::PlayerUiComponent::SetVisible(bool visibility)
 	m_Visible = visibility;
 }
 
+void dae::PlayerUiComponent::SetScore(int score)
+{
+	m_score = score;
+	m_pScoreText->SetText(std::to_string(m_score));
+}
 void dae::PlayerUiComponent::SetScoreVisible(bool visibility)
 {
 	m_ScoreVisible = visibility;

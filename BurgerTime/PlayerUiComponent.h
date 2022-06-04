@@ -18,6 +18,7 @@ namespace dae
 		void SetFont(std::shared_ptr<Font> font);
 		void SetLives(int lives);
 		void SetPeppers(int pepperAmount);
+		void SetScore(int score);
 		
 		void SetVisible(bool visibility);
 		void SetScoreVisible(bool visibility);

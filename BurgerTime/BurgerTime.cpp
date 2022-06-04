@@ -41,7 +41,7 @@ int main(int, char* [])
 	dae::ResourceManager::GetInstance().Init("../Data/");///////COMMENTED SHIT IN MINIGIN THISH THISH 
 
 	dae::SceneManager::GetInstance().CreateScene("mainMenu");
-	dae::SceneManager::GetInstance().CreateScene("level1");
+	//dae::SceneManager::GetInstance().CreateScene("level1");
 	dae::SceneManager::GetInstance().CreateScene("level2");
 
 

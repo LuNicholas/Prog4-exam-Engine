@@ -282,6 +282,7 @@ void PeterPepper::Reset()
 	dae::PlayerUiComponent* ui = m_pGameObject->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>();
 	ui->SetLives(m_Health);
 	ui->SetPeppers(m_Peppers);
+	ui->SetScore(0);
 
 	m_pAnimationComp->SetActiveAnimation("idleForward");
 }

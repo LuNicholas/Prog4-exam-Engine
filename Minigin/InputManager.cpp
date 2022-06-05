@@ -28,25 +28,34 @@ bool dae::InputManager::ProcessInput()
 		controller->ProcessInput();
 	}
 
-
 	SDL_Event e;
 	while (SDL_PollEvent(&e))
 	{
-		ImGui_ImplSDL2_ProcessEvent(&e);
 		if (e.type == SDL_QUIT)
 		{
 			return false;
 		}
+
+		if (e.type == SDL_KEYUP)
+		{
+			for (const auto& keyboardCommand : m_KeyboardCommands)
+			{
+				if (keyboardCommand.first.second == KeyboardButtonActivateState::release)
+					if (e.key.keysym.sym == keyboardCommand.first.first)
+						keyboardCommand.second->Execute();
+			}
+		}
+
 		if (e.type == SDL_KEYDOWN)
 		{
-
-		}
-		if (e.type == SDL_MOUSEBUTTONDOWN)
-		{
-
+			for (const auto& keyboardCommand : m_KeyboardCommands)
+			{
+				if (keyboardCommand.first.second == KeyboardButtonActivateState::pressed)
+					if (e.key.keysym.sym == keyboardCommand.first.first)
+						keyboardCommand.second->Execute();
+			}
 		}
 	}
-
 	return true;
 }
 
@@ -81,4 +90,9 @@ void dae::InputManager::AddCommand(const ControllerButton& button, const ButtonA
 		return;
 
 	m_pControllers.at(controllerNr)->AddCommand(button, activateState, std::move(command));
+}
+
+void dae::InputManager::AddCommand(const int& key, const KeyboardButtonActivateState& activateState, std::unique_ptr<Command> command)
+{
+	m_KeyboardCommands.insert(std::make_pair(std::make_pair(key, activateState), std::move(command)));
 }

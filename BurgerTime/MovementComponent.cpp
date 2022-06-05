@@ -30,22 +30,30 @@ void dae::MovementComponent::Update(float deltaTime)
 	switch (m_CurrentMoveState)
 	{
 	case dae::MovementComponent::MovementState::up:
+		if (!MoveUp())
+			break;
 		currentPos = m_pGameObject->GetWorldPosition();
 		currentPos.y -= (m_Speed * deltaTime);
 		m_pGameObject->SetPosition(currentPos.x, currentPos.y);
 		break;
 	case dae::MovementComponent::MovementState::down:
+		if (!MoveDown())
+			break;
 		currentPos = m_pGameObject->GetWorldPosition();
 		currentPos.y += (m_Speed * deltaTime);
 		m_pGameObject->SetPosition(currentPos.x, currentPos.y);
 		break;
 	case dae::MovementComponent::MovementState::left:
+		if (!MoveLeft())
+			break;
 		currentPos = m_pGameObject->GetWorldPosition();
 		currentPos.x -= (m_Speed * deltaTime);
 		currentPos.y = currentPos.y;
 		m_pGameObject->SetPosition(currentPos.x, currentPos.y);
 		break;
 	case dae::MovementComponent::MovementState::right:
+		if (!MoveRight())
+			break;
 		currentPos = m_pGameObject->GetWorldPosition();
 		currentPos.x += (m_Speed * deltaTime);
 		currentPos.y = currentPos.y;
@@ -77,9 +85,6 @@ bool dae::MovementComponent::MoveUp()
 			if (pColliding->IsPointInCollider(glm::vec2(m_pCollisionBox->GetPosition().x + m_pCollisionBox->GetSize().x / 2,
 				m_pCollisionBox->GetPosition().y)))
 			{
-				//glm::vec3 currentPos = m_pGameObject->GetWorldPosition();
-				//currentPos.y -= m_Speed;
-				//m_pGameObject->SetPosition(currentPos.x, currentPos.y);
 				m_CurrentMoveState = MovementState::up;
 				m_pLastLadder = pColliding;
 				return true;
@@ -100,9 +105,6 @@ bool dae::MovementComponent::MoveDown()
 			if (pColliding->IsPointInCollider(glm::vec2(m_pCollisionBox->GetPosition().x + m_pCollisionBox->GetSize().x / 2,
 				m_pCollisionBox->GetPosition().y + m_pCollisionBox->GetSize().y)))
 			{
-				//glm::vec3 currentPos = m_pGameObject->GetWorldPosition();
-				//currentPos.y += m_Speed;
-				//m_pGameObject->SetPosition(currentPos.x, currentPos.y);
 				m_CurrentMoveState = MovementState::down;
 				m_pLastLadder = pColliding;
 				return true;

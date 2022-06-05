@@ -114,7 +114,7 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	pepperGo->SetPosition(-1000, -1000);
 	pepperGo->AddComponent<dae::Pepper>()->Init();
 
-
+	//CONSOLECOMMANDS
 	input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveUp>(peterPepperGo)), 0);
 	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveDown>(peterPepperGo)), 0);
 	input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveLeft>(peterPepperGo)), 0);
@@ -124,6 +124,18 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(peterPepperGo)), 0);
 	input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(peterPepperGo)), 0);
 	input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(peterPepperGo)), 0);
+
+	//KEYBOARDCOMMANDS
+	input.AddCommand(SDLK_w, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveUp>(peterPepperGo)));
+	input.AddCommand(SDLK_s, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveDown>(peterPepperGo)));
+	input.AddCommand(SDLK_a, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveLeft>(peterPepperGo)));
+	input.AddCommand(SDLK_d, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveRight>(peterPepperGo)));
+	input.AddCommand(SDLK_r, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<PepperCommand>(peterPepperGo.get())));
+	input.AddCommand(SDLK_w, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleUp>(peterPepperGo)));
+	input.AddCommand(SDLK_s, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleForward>(peterPepperGo)));
+	input.AddCommand(SDLK_a, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleForward>(peterPepperGo)));
+	input.AddCommand(SDLK_d, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleForward>(peterPepperGo)));
+
 
 
 	//UI

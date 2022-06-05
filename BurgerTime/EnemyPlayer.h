@@ -66,9 +66,12 @@ private:
 
 	glm::vec2 m_SpawnPos;
 
-	bool m_Stunned;
 	bool m_Paused;
 	bool m_IsActive;
+
+	bool m_Stunned;
+	float m_StunTime;
+	float m_StunTimer;
 
 	bool m_Dead;
 	float m_DeathTime;

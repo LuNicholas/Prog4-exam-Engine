@@ -511,7 +511,7 @@ void Level3(std::vector<std::shared_ptr<dae::GameObject>>& players, std::shared_
 
 
 	//add enemy player
-	gameManagerComp->AddEnemyPlayer(enemyPlayer->GetComponent<EnemyPlayer>(), glm::vec2(298, 150));
+	gameManagerComp->AddEnemyPlayer(enemyPlayer->GetComponent<EnemyPlayer>(), glm::vec2(298, 350));
 	enemyPlayer->GetComponent<EnemyPlayer>()->addObserver(gameManagerComp);
 
 	//adding player

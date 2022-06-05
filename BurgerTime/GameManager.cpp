@@ -113,7 +113,7 @@ void GameManager::Update(float deltaTime)
 
 			if (m_NextLevel)//GO TO NEXT LEVEL
 			{
-				m_pLevel->SetPosition(-1000, -1000);
+				//m_pLevel->SetPosition(-1000, -1000);
 				if (dae::SceneManager::GetInstance().GetCurrentScene().GetSceneName() == "level3")
 				{
 					dae::SceneManager::GetInstance().SetActiveScene("level1");
@@ -176,7 +176,6 @@ void GameManager::Reset()
 		m_pEnemyPlayer->GetGameObject()->SetPosition(m_EnemyPlayerSpawn.x, m_EnemyPlayerSpawn.y);
 		m_pEnemyPlayer->SetPaused(false);
 	}
-
 }
 void GameManager::FullReset()
 {
@@ -189,7 +188,13 @@ void GameManager::FullReset()
 	{
 		enemy->Reset();
 	}
-
+	if (m_VsMode)
+	{
+		m_pEnemyPlayer->GetGameObject()->SetPosition(m_EnemyPlayerSpawn.x, m_EnemyPlayerSpawn.y);
+		m_pEnemyPlayer->SetPaused(false);
+		m_pEnemyPlayer->SetActive(false);
+		m_VsMode = false;
+	}
 	//reset imgrediemts
 	for (dae::Ingredient* ingredient : m_Ingredients)
 	{
@@ -212,10 +217,12 @@ void GameManager::ResetPlayers()
 }
 void GameManager::MoveLevel()
 {
-	for (dae::Enemy* enemy : m_Enemies)
-	{
-		enemy->GetGameObject()->SetPosition(-1000, -1000);
-	}
+	m_pLevel->SetPosition(-1000, -1000);
+
+	//for (dae::Enemy* enemy : m_Enemies)
+	//{
+	//	enemy->GetGameObject()->SetPosition(-1000, -1000);
+	//}
 
 	//reset imgrediemts
 	for (dae::Ingredient* ingredient : m_Ingredients)
@@ -228,8 +235,6 @@ void GameManager::MoveLevel()
 	{
 		plate->GetGameObject()->SetPosition(-1000, -1000);
 	}
-
-	m_pLevel->SetPosition(-1000, -1000);
 }
 
 void GameManager::onNotify(const dae::GameObject& go, const Event& event)
@@ -259,12 +264,11 @@ void GameManager::onNotify(const dae::GameObject& go, const Event& event)
 		m_PlayersDead++;
 		if (m_PlayersDead == m_PlayerAmount)
 		{
-			MoveLevel();
-			FullReset();
 			ResetPlayers();
+			FullReset();
+			MoveLevel();
 			m_PlayersDead -= m_PlayerAmount;
 			m_PlayerAmount = 0;
-			m_VsMode = false;
 			dae::SceneManager::GetInstance().SetActiveScene("highscore");
 		}
 		break;

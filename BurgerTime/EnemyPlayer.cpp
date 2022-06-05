@@ -18,6 +18,8 @@ EnemyPlayer::EnemyPlayer()
 	, m_SpawnPos(-1000, -1000)
 	, m_MoveSpeed(85)
 	, m_Stunned(false)
+	, m_StunTime(2.f)
+	, m_StunTimer(0)
 	, m_Dead(false)
 	, m_IsActive(false)
 	, m_Paused(false)
@@ -49,7 +51,6 @@ void EnemyPlayer::Init(PeterPepper* player)
 	m_pAnimationComp->AddAnimation("Enemies/Bean/Bean_Stunned.png", "stunned", 64, 32, 2, 1, 0.25f);
 	m_pAnimationComp->SetActiveAnimation("down");
 
-	//m_SpawnPos = spawnPos;
 	m_pGameObject->SetPosition(-1000, -1000);
 
 	m_pPlayer = player;
@@ -70,6 +71,17 @@ void EnemyPlayer::Update(float deltaTime)
 			m_Dead = false;
 			m_pGameObject->SetPosition(m_SpawnPos.x, m_SpawnPos.y);
 		}
+	}
+
+	if (m_Stunned)
+	{
+		m_StunTimer += deltaTime;
+		if (m_StunTimer > m_StunTime)
+		{
+			m_StunTimer = 0;
+			m_Stunned = false;
+		}
+		return;
 	}
 
 	if (m_pCollisionBox->IsOverlappingWith(m_pPlayerCollisionBox))

@@ -4,6 +4,7 @@
 #include "CollisionBox.h"
 #include "AnimationManager.h"
 #include "Enemy.h"
+#include "EnemyPlayer.h"
 
 
 dae::Pepper::Pepper()
@@ -38,6 +39,10 @@ void dae::Pepper::Update(float deltaTime)
 			if (pColliding->GetTag() == "enemy")
 			{
 				pColliding->GetGameObject()->GetComponent<Enemy>()->SetStunned();
+			}
+			else if (pColliding->GetTag() == "enemyPlayer")
+			{
+				pColliding->GetGameObject()->GetComponent<EnemyPlayer>()->SetStunned(true);
 			}
 		}
 

@@ -9,6 +9,7 @@
 #include "PlayerUiComponent.h"
 #include "Texture2DComponent.h"
 #include "SceneManager.h"
+#include "Sound.h"
 
 PeterPepper::PeterPepper()
 	:m_MoveSpeed(100)
@@ -74,7 +75,6 @@ void PeterPepper::Update(float deltaTime)
 	if (m_PauseTimer >= m_PauseTime)
 	{
 		m_PauseTimer = 0;
-		//Notify(*m_pGameObject, Event::PlayerReset);
 		m_GotHit = false;
 		m_pGameObject->SetPosition(m_SpawnPos.x, m_SpawnPos.y);
 		m_pAnimationComp->SetActiveAnimation("idleForward");
@@ -189,6 +189,9 @@ void PeterPepper::Pepper()
 	if (m_Peppers == 0)
 		return;
 
+	SoundServiceLocator::GetSoundSystem().Play(0, 30);
+
+
 	m_Peppers--;
 	m_pGameObject->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>()->SetPeppers(m_Peppers);
 	switch (m_LastLookingDirection)
@@ -215,6 +218,7 @@ void PeterPepper::Kill()
 	if (m_GotHit)
 		return;
 
+	SoundServiceLocator::GetSoundSystem().Play(1, 30);
 	m_pAnimationComp->SetActiveAnimation("death");
 	m_pMovementComp->Idle();
 	if (m_pHealth->DealDamage(1) >= 0)
@@ -238,15 +242,16 @@ void PeterPepper::SetActive(bool activity)
 	if (activity == false)
 	{
 		m_pGameObject->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>()->SetVisible(false);
-		m_pGameObject->GetChildAt(1)->GetComponentAt<dae::Texture2DComponent>(1)->SetVisibility(false);
-		m_pGameObject->GetChildAt(1)->GetComponentAt<dae::Texture2DComponent>(2)->SetVisibility(false);
+		m_pGameObject->GetChildAt(1)->GetComponentAt<dae::Texture2DComponent>(4)->SetVisibility(false);
+		m_pGameObject->GetChildAt(1)->GetComponentAt<dae::Texture2DComponent>(5)->SetVisibility(false);
 		m_pGameObject->SetPosition(-1000, -1000);
 	}
 	else
 	{
 		m_pGameObject->SetPosition(m_SpawnPos.x, m_SpawnPos.y);
-		m_pGameObject->GetChildAt(1)->GetComponentAt<dae::Texture2DComponent>(1)->SetVisibility(true);
-		m_pGameObject->GetChildAt(1)->GetComponentAt<dae::Texture2DComponent>(2)->SetVisibility(true);
+		m_pGameObject->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>()->SetVisible(true);
+		m_pGameObject->GetChildAt(1)->GetComponentAt<dae::Texture2DComponent>(4)->SetVisibility(true);
+		m_pGameObject->GetChildAt(1)->GetComponentAt<dae::Texture2DComponent>(5)->SetVisibility(true);
 		Notify(*m_pGameObject, Event::PlayerActivated);
 	}
 }
@@ -269,6 +274,7 @@ void PeterPepper::MoveToSpawn()
 
 void PeterPepper::Reset()
 {
+	m_IsActive = false;
 	m_GotHit = false;
 	m_IsDead = false;
 	m_Peppers = 5;

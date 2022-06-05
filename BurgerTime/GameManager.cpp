@@ -10,6 +10,7 @@
 #include "PeterPepper.h"
 #include "Ingredient.h"
 #include "EnemyPlayer.h"
+#include "Sound.h"
 
 
 GameManager::GameManager()
@@ -22,6 +23,7 @@ GameManager::GameManager()
 	, m_PauseTimer(0.f)
 	, m_PlayersDead(0)
 	, m_VsMode(false)
+	, m_pEnemyPlayer(nullptr)
 {
 }
 GameManager::~GameManager()
@@ -145,8 +147,9 @@ void GameManager::Update(float deltaTime)
 			ingredientOnPlate++;
 		}
 	}
-	if (ingredientOnPlate == m_Plates.size())
+	if (ingredientOnPlate == m_Plates.size() && !m_NextLevel)
 	{
+		SoundServiceLocator::GetSoundSystem().Play(4, 15);
 		m_NextLevel = true;
 		m_GamePaused = true;
 		Pause();
@@ -184,7 +187,7 @@ void GameManager::Reset()
 void GameManager::FullReset()
 {
 	m_NextLevel = false;
-	//m_DoOnce = false;
+	m_DoOnce = false;
 	m_PauseTimer = 0;
 
 	//reset enemies 

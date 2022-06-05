@@ -6,8 +6,8 @@
 #include <condition_variable>
 
 
-SoundSystem* SoundServiceLocator::m_SoundSystemInstance{};
 NullSound SoundServiceLocator::m_NullSound{};
+SoundSystem* SoundServiceLocator::m_SoundSystemInstance = &m_NullSound;
 
 //Pimpl
 class SDLSoundSystem::SoundSystemImpl
@@ -78,8 +78,17 @@ void SDLSoundSystem::SoundSystemImpl::Play(const soundId soundId, const float vo
 {
 	assert((m_Tail + 1) % m_MaxQueueSize != m_Head);
 
-	m_SoundQueue[m_Tail].id = soundId;
-	m_SoundQueue[m_Tail].volume = volume;
+	SoundInfo newSound{};
+	newSound.id = soundId;
+	newSound.volume = volume;
+
+	//m_SoundQueue[m_Tail].id = soundId;
+	//m_SoundQueue[m_Tail].volume = volume;
+
+	//lock here
+	m_SoundQueue[m_Tail] = newSound;
+	// unlock here
+
 	m_Tail = (m_Tail + 1) % m_MaxQueueSize;
 
 	m_CvUpdate.notify_all();

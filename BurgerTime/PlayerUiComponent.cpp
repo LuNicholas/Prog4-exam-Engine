@@ -6,21 +6,36 @@
 dae::PlayerUiComponent::PlayerUiComponent()
 	:m_Visible(true)
 	, m_ScoreVisible(true)
+	, m_TextPosition(0, 0)
 {
-	m_pHpText = new dae::TextComponent();
-	m_pHpText->SetText("4");
+	//m_pHpText = new dae::TextComponent();
+	//m_pHpText->SetText("4");
 
-	m_pPepperText = new dae::TextComponent();
-	m_pPepperText->SetText("5");
+	//m_pPepperText = new dae::TextComponent();
+	//m_pPepperText->SetText("5");
 
-	m_pScoreText = new dae::TextComponent();
-	m_pScoreText->SetText("0");
+	//m_pScoreText = new dae::TextComponent();
+	//m_pScoreText->SetText("0");
 }
 dae::PlayerUiComponent::~PlayerUiComponent()
 {
-	delete m_pHpText;
-	delete m_pPepperText;
-	delete m_pScoreText;
+	//delete m_pHpText;
+	//delete m_pPepperText;
+	//delete m_pScoreText;
+}
+void dae::PlayerUiComponent::Init(std::shared_ptr<Font> font, int health)
+{
+	m_pHpText = m_pGameObject->AddComponent<dae::TextComponent>();
+	m_pHpText->SetText(std::to_string(health));
+	m_pHpText->SetFont(font);
+
+	m_pPepperText = m_pGameObject->AddComponent<dae::TextComponent>();
+	m_pPepperText->SetText("5");
+	m_pPepperText->SetFont(font);
+
+	m_pScoreText = m_pGameObject->AddComponent<dae::TextComponent>();
+	m_pScoreText->SetText("0");
+	m_pScoreText->SetFont(font);
 }
 
 void dae::PlayerUiComponent::Update(float deltaTime)
@@ -28,9 +43,6 @@ void dae::PlayerUiComponent::Update(float deltaTime)
 	if (!m_Visible)
 		return;
 
-	m_pHpText->Update(deltaTime);
-	m_pPepperText->Update(deltaTime);
-	m_pScoreText->Update(deltaTime);
 }
 void dae::PlayerUiComponent::FixedUpdate(float)
 {
@@ -43,14 +55,15 @@ void dae::PlayerUiComponent::Render() const
 	if (!m_Visible)
 		return;
 
-	m_pHpText->Render();
-	m_pPepperText->Render();
-	if(m_ScoreVisible)
-		m_pScoreText->Render();
+	//m_pHpText->Render();
+	//m_pPepperText->Render();
+	//if(m_ScoreVisible)
+	//	m_pScoreText->Render();
 }
 
-void dae::PlayerUiComponent::SetPosition(float x, float y)
+void dae::PlayerUiComponent::SetPositionUi(float x, float y)
 {
+	m_TextPosition = glm::vec2(x, y);
 	m_pHpText->SetPosition(x, y);
 	m_pPepperText->SetPosition(x - 50, y);
 	m_pScoreText->SetPosition(x - 150, y);
@@ -100,6 +113,21 @@ void dae::PlayerUiComponent::onNotify(const dae::GameObject& go, const Event& ev
 void dae::PlayerUiComponent::SetVisible(bool visibility)
 {
 	m_Visible = visibility;
+	if (visibility)
+	{
+		m_pHpText->SetPosition(m_TextPosition.x, m_TextPosition.y);
+		m_pPepperText->SetPosition(m_TextPosition.x - 50, m_TextPosition.y);
+		if(m_ScoreVisible)
+			m_pScoreText->SetPosition(m_TextPosition.x - 150, m_TextPosition.y);
+		else
+			m_pScoreText->SetPosition(-1000, -1000);
+	}
+	else
+	{
+		m_pHpText->SetPosition(-1000,-1000);
+		m_pPepperText->SetPosition(-1000,-1000);
+		m_pScoreText->SetPosition(-1000,-1000);
+	}
 }
 
 void dae::PlayerUiComponent::SetScore(int score)

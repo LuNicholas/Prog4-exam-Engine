@@ -8,6 +8,7 @@
 #include "Renderer.h"
 #include "Enemy.h"
 #include "EnemyPlayer.h"
+#include "Sound.h"
 
 dae::Ingredient::Ingredient()
 	:m_IsDropping(false)
@@ -107,6 +108,7 @@ void dae::Ingredient::Update(float deltaTime)
 	if (nrCollidedBoxes == m_CollionBoxes.size() && !m_IsDropping)
 	{
 		m_IsDropping = true;
+		SoundServiceLocator::GetSoundSystem().Play(2, 30);
 		Notify(*m_pGameObject, Event::BunDropped);
 	}
 
@@ -182,6 +184,7 @@ void dae::Ingredient::FixedUpdate(float deltaTime)
 					if (m_pBigCollisionBox->IsPointInCollider(glm::vec2(boxPos.x + box->GetSize().x / 2, boxPos.y)))//top of enemy getting hit 
 					{
 						box->GetGameObject()->GetComponent<Enemy>()->KillEnemy();
+						SoundServiceLocator::GetSoundSystem().Play(3, 30);
 					}
 					else//not the top is getting hit so should be on burger
 					{
@@ -203,6 +206,7 @@ void dae::Ingredient::FixedUpdate(float deltaTime)
 					if (m_pBigCollisionBox->IsPointInCollider(glm::vec2(boxPos.x + box->GetSize().x / 2, boxPos.y)))//top of enemy getting hit 
 					{
 						box->GetGameObject()->GetComponent<EnemyPlayer>()->Kill();
+						SoundServiceLocator::GetSoundSystem().Play(3, 30);
 					}
 					else//not the top is getting hit so should be on burger
 					{

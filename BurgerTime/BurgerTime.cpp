@@ -38,18 +38,21 @@ void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players, std::shared_
 void Level3(std::vector<std::shared_ptr<dae::GameObject>>& players, std::shared_ptr<dae::GameObject>& enemyPlayer);
 void Highscore(std::vector<std::shared_ptr<dae::GameObject>>& players);
 ButtonManager* MainMenu();
+void RegisterSounds();
 
 int main(int, char* [])
 {
 	dae::Minigin engine;
 	engine.Initialize();
-	dae::ResourceManager::GetInstance().Init("../Data/");///////COMMENTED SHIT IN MINIGIN THISH THISH 
+	dae::ResourceManager::GetInstance().Init("../Data/");
 
 	dae::SceneManager::GetInstance().CreateScene("mainMenu");
 	dae::SceneManager::GetInstance().CreateScene("level1");
 	dae::SceneManager::GetInstance().CreateScene("level2");
 	dae::SceneManager::GetInstance().CreateScene("level3");
 	dae::SceneManager::GetInstance().CreateScene("highscore");
+
+	RegisterSounds();
 
 
 
@@ -60,13 +63,13 @@ int main(int, char* [])
 
 	dae::InputManager::GetInstance().AddCommand(dae::ControllerButton::ButtonX, dae::ButtonActivateState::OnButtonRelease
 		, std::move(std::make_unique<NextScene>(buttonManager, players.at(0)->GetComponent<PeterPepper>(), players.at(1)->GetComponent<PeterPepper>(), enemy->GetComponent<EnemyPlayer>())), 0);
-	//dae::InputManager::GetInstance().AddCommand(SDL_SCANCODE_KP_ENTER, dae::InputManager::KeyboardButtonActivateState::release
-		//, std::move(std::make_unique<NextScene>(buttonManager, players.at(0)->GetComponent<PeterPepper>(), players.at(1)->GetComponent<PeterPepper>(), enemy->GetComponent<EnemyPlayer>())));
+	dae::InputManager::GetInstance().AddCommand(SDL_SCANCODE_SPACE, dae::InputManager::KeyboardButtonActivateState::pressed
+		, std::move(std::make_unique<NextScene>(buttonManager, players.at(0)->GetComponent<PeterPepper>(), players.at(1)->GetComponent<PeterPepper>(), enemy->GetComponent<EnemyPlayer>())));
 
 	Level1(players, enemy);
 	Level2(players, enemy);
 	Level3(players, enemy);
-	//Highscore(players);
+	Highscore(players);
 
 	dae::SceneManager::GetInstance().SetActiveScene("mainMenu");
 
@@ -74,6 +77,24 @@ int main(int, char* [])
 
 	engine.Cleanup();
 	return 0;
+}
+
+void RegisterSounds()
+{
+
+	//SOUND
+#if _DEBUG
+	SoundServiceLocator::RegisterSoundSystem(new LoggingSoundSystem(new SDLSoundSystem()));
+#else
+	SoundServiceLocator::RegisterSoundSystem(new SDLSoundSystem());
+#endif // _DEBUG
+
+	
+	SoundServiceLocator::GetSoundSystem().RegisterSound(0, "../Data/Sound/attack.wav");
+	SoundServiceLocator::GetSoundSystem().RegisterSound(1, "../Data/Sound/death.wav");
+	SoundServiceLocator::GetSoundSystem().RegisterSound(2, "../Data/Sound/drop.wav");
+	SoundServiceLocator::GetSoundSystem().RegisterSound(3, "../Data/Sound/crush.wav");
+	SoundServiceLocator::GetSoundSystem().RegisterSound(4, "../Data/Sound/complete.wav");
 }
 
 ButtonManager* MainMenu()
@@ -98,6 +119,8 @@ ButtonManager* MainMenu()
 
 	input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<PreviousButton>(buttonManager)), 0);
 	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<NextButton>(buttonManager)), 0);
+	input.AddCommand(SDL_SCANCODE_W, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<PreviousButton>(buttonManager)));
+	input.AddCommand(SDL_SCANCODE_S, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<NextButton>(buttonManager)));
 
 	return buttonManager;
 }
@@ -139,7 +162,7 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	input.AddCommand(SDL_SCANCODE_S, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveDown>(peterPepperGo)));
 	input.AddCommand(SDL_SCANCODE_A, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveLeft>(peterPepperGo)));
 	input.AddCommand(SDL_SCANCODE_D, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveRight>(peterPepperGo)));
-	input.AddCommand(SDL_SCANCODE_R, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<PepperCommand>(peterPepperGo.get())));
+	input.AddCommand(SDL_SCANCODE_SPACE, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<PepperCommand>(peterPepperGo.get())));
 	input.AddCommand(SDL_SCANCODE_W, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleUp>(peterPepperGo)));
 	input.AddCommand(SDL_SCANCODE_S, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleForward>(peterPepperGo)));
 	input.AddCommand(SDL_SCANCODE_A, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleForward>(peterPepperGo)));
@@ -151,9 +174,10 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	auto UiPeter = peterPepperGo->AddChild();
 	UiPeter->SetFollowParent(false);
 	dae::PlayerUiComponent* peterUiComp = UiPeter->AddComponent<dae::PlayerUiComponent>();
-	peterUiComp->SetFont(font);
-	peterUiComp->SetLives(peterComp->GetHealth()->GetHealth());
-	peterUiComp->SetPosition(450, 10);
+	peterUiComp->Init(font, peterComp->GetHealth()->GetHealth());
+	//peterUiComp->SetFont(font);
+	//peterUiComp->SetLives(peterComp->GetHealth()->GetHealth());
+	peterUiComp->SetPositionUi(450, 10);
 
 	dae::Texture2DComponent* livesTexture = UiPeter->AddComponent<dae::Texture2DComponent>();
 	livesTexture->SetTexture("PeterPepper/Peter_Lives.png");
@@ -164,7 +188,7 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	pepperTexture->SetPosition(380, 18);
 
 
-	
+
 	//second player
 	auto sallySaltGo = std::make_shared<dae::GameObject>();
 	PeterPepper* sallyComp = sallySaltGo->AddComponent<PeterPepper>();
@@ -204,9 +228,10 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	auto UiSally = sallySaltGo->AddChild();
 	UiSally->SetFollowParent(false);
 	dae::PlayerUiComponent* sallyUiComp = UiSally->AddComponent<dae::PlayerUiComponent>();
-	sallyUiComp->SetFont(font);
-	sallyUiComp->SetLives(sallyComp->GetHealth()->GetHealth());
-	sallyUiComp->SetPosition(450, 40);
+	sallyUiComp->Init(font, sallyComp->GetHealth()->GetHealth());
+	//sallyUiComp->SetFont(font);
+	//sallyUiComp->SetLives(sallyComp->GetHealth()->GetHealth());
+	sallyUiComp->SetPositionUi(450, 40);
 	sallyUiComp->SetScoreVisible(false);
 
 	dae::Texture2DComponent* livesTextureSally = UiSally->AddComponent<dae::Texture2DComponent>();
@@ -290,19 +315,6 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players, std::shared_
 	scene.Add(levelGO);
 
 
-
-	//SOUND
-#if _DEBUG
-	SoundServiceLocator::RegisterSoundSystem(new LoggingSoundSystem(new SDLSoundSystem()));
-#else
-	SoundServiceLocator::RegisterSoundSystem(new SDLSoundSystem());
-#endif // _DEBUG
-	SoundServiceLocator::GetSoundSystem().RegisterSound(0, "../Data/meow1.wav");
-	std::unique_ptr<PlaySound> playMeow = std::make_unique<PlaySound>(0);
-	input.AddCommand(dae::ControllerButton::ButtonB, dae::ButtonActivateState::OnButtonRelease, std::move(playMeow), 0);
-
-
-
 	//add level
 	LevelReader levelReader;
 	auto level = std::make_shared<dae::GameObject>();
@@ -316,7 +328,7 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players, std::shared_
 	players.at(1)->GetComponent<PeterPepper>()->addObserver(gameManagerComp);
 
 
-	
+
 	//GETTING INGREDIENTS
 	auto ingredients = levelReader.GetIngredients();
 	for (const auto& ingredient : ingredients)
@@ -531,12 +543,16 @@ void Level3(std::vector<std::shared_ptr<dae::GameObject>>& players, std::shared_
 void Highscore(std::vector<std::shared_ptr<dae::GameObject>>& players)
 {
 	auto& scene = dae::SceneManager::GetInstance().GetScene("highscore");
-	auto& input = dae::InputManager::GetInstance();
 
-	//levelsprite
+	auto backgroundGo = std::make_shared<dae::GameObject>();
+	dae::Texture2DComponent* bgComp = backgroundGo->AddComponent<dae::Texture2DComponent>();
+	bgComp->SetTexture("background.png");
+	scene.Add(backgroundGo);
+
+	//hgihscore
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto levelGO = std::make_shared<dae::GameObject>();
-	dae::Highscores* highScores= levelGO->AddComponent<dae::Highscores>();
+	dae::Highscores* highScores = levelGO->AddComponent<dae::Highscores>();
 	highScores->Init(players.at(0), font);
 	scene.Add(levelGO);
 }

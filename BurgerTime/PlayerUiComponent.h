@@ -14,7 +14,9 @@ namespace dae
 		void FixedUpdate(float deltaTime);
 		void Render() const;
 
-		void SetPosition(float x, float y);
+		void Init(std::shared_ptr<Font> font, int health);
+
+		void SetPositionUi(float x, float y);
 		void SetFont(std::shared_ptr<Font> font);
 		void SetLives(int lives);
 		void SetPeppers(int pepperAmount);
@@ -44,6 +46,8 @@ namespace dae
 
 		bool m_Visible;
 		bool m_ScoreVisible;
+
+		glm::vec2 m_TextPosition;
 	};
 
 }

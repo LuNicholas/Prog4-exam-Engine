@@ -68,8 +68,16 @@ void PeterPepper::Update(float deltaTime)
 	if (!m_IsActive)
 		return;
 
-	if (!m_GotHit || m_IsDead)
+	if (!m_GotHit)
 		return;
+
+	if (m_IsDead)
+	{
+		if (m_pHealth->GetHealth() > 0)
+			m_IsDead = false;
+
+		return;
+	}
 
 	m_PauseTimer += deltaTime;
 	if (m_PauseTimer >= m_PauseTime)
@@ -231,6 +239,7 @@ void PeterPepper::Kill()
 	{
 		m_GotHit = true;
 		m_IsDead = true;
+		m_pGameObject->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>()->SetLives(m_pHealth->GetHealth());
 		Notify(*m_pGameObject, Event::playerDead);
 	}
 }

@@ -49,7 +49,7 @@ public:
 class SoundServiceLocator final
 {
 	static NullSound m_NullSound;
-	static SoundSystem* m_SoundSystemInstance;//todo
+	static SoundSystem* m_SoundSystemInstance;
 
 public:
 

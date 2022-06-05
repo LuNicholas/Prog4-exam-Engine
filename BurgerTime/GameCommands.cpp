@@ -8,7 +8,7 @@
 #include "Sound.h"
 #include "AnimationManager.h"
 #include "Events.h"
-#include "SceneManager.h"//todo remove this probs after tests
+#include "SceneManager.h"
 #include "ButtonManager.h"
 #include "Scene.h"
 #include "EnemyPlayer.h"

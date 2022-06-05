@@ -143,8 +143,34 @@ void dae::Ingredient::FixedUpdate(float deltaTime)
 					AllignIngredient();
 					if (m_EnemyOnTop)
 					{
+						if (m_ExtraDrops == 0)
+						{
+							switch (m_EnemiesOnTop)
+							{
+							case 1:
+								Notify(*m_pGameObject, Event::BunDropped1);
+								break;
+							case 2:
+								Notify(*m_pGameObject, Event::BunDropped2);
+								break;
+							case 3:
+								Notify(*m_pGameObject, Event::BunDropped3);
+								break;
+							case 4:
+								Notify(*m_pGameObject, Event::BunDropped4);
+								break;
+							case 5:
+								Notify(*m_pGameObject, Event::BunDropped5);
+								break;
+							case 6:
+								Notify(*m_pGameObject, Event::BunDropped6);
+								break;
+							}
+						}
+
 						if (m_ExtraDrops < m_EnemiesOnTop)
 						{
+
 							m_IsDropping = true;
 							m_EnemyOnTop = false;
 							m_EnemyOnTop = 0;
@@ -195,7 +221,19 @@ void dae::Ingredient::FixedUpdate(float deltaTime)
 					else//not the top is getting hit so should be on burger
 					{
 						box->GetGameObject()->GetComponent<Enemy>()->KillEnemy();
-						Notify(*m_pGameObject, Event::HotDogKilled);
+						switch (box->GetGameObject()->GetComponent<Enemy>()->GetType())
+						{
+						case dae::EnemyType::bean:
+							Notify(*m_pGameObject, Event::BeanKilled);
+							break;
+						case dae::EnemyType::egg:
+							Notify(*m_pGameObject, Event::EggKilled);
+							break;
+						case dae::EnemyType::Pickle:
+							Notify(*m_pGameObject, Event::PickleKilled);
+							break;
+						}
+						
 						m_EnemyOnTop = true;
 						m_EnemiesOnTop++;
 					}
@@ -217,7 +255,7 @@ void dae::Ingredient::FixedUpdate(float deltaTime)
 					else//not the top is getting hit so should be on burger
 					{
 						box->GetGameObject()->GetComponent<EnemyPlayer>()->Kill();
-						Notify(*m_pGameObject, Event::HotDogKilled);
+						Notify(*m_pGameObject, Event::BeanKilled);
 						m_EnemyOnTop = true;
 						m_EnemiesOnTop++;
 					}

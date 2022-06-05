@@ -42,6 +42,7 @@ namespace dae
 		void KillEnemy();
 		void SetStunned();
 		bool GetIsDead();
+		EnemyType GetType();
 		void SetActive(bool active);
 
 	private:
@@ -78,5 +79,7 @@ namespace dae
 		bool m_Paused;
 
 		bool m_IsActive;
+
+		dae::EnemyType m_Type;
 	};
 }

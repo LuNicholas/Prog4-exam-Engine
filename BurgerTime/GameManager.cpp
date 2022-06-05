@@ -66,6 +66,7 @@ void GameManager::Update(float deltaTime)
 	{
 		m_DoOnce = true;
 		m_pLevel->SetPosition(0, 0);
+		m_PlayersDead = 0;
 
 		for (size_t i = 0; i < m_pPlayers.size(); i++)
 		{
@@ -120,12 +121,6 @@ void GameManager::Update(float deltaTime)
 
 			if (m_NextLevel)//GO TO NEXT LEVEL
 			{
-				if (m_pPlayers.at(0)->GetComponent<PeterPepper>()->GetHealth()->GetHealth() == 0)
-					m_pPlayers.at(0)->GetComponent<PeterPepper>()->GetHealth()->SetHealth(1);
-
-				if (m_pPlayers.at(1)->GetComponent<PeterPepper>()->GetHealth()->GetHealth() == 0)
-					m_pPlayers.at(1)->GetComponent<PeterPepper>()->GetHealth()->SetHealth(1);
-
 
 				//m_pLevel->SetPosition(-1000, -1000);
 				if (dae::SceneManager::GetInstance().GetCurrentScene().GetSceneName() == "level3")
@@ -264,7 +259,7 @@ void GameManager::onNotify(const dae::GameObject& go, const Event& event)
 			Pause();
 		}
 
-		if(m_VsMode)
+		if (m_VsMode)
 			m_pEnemyPlayer->SetPaused(true);
 		break;
 	}
@@ -284,6 +279,7 @@ void GameManager::onNotify(const dae::GameObject& go, const Event& event)
 			MoveLevel();
 			m_PlayersDead -= m_PlayerAmount;
 			m_PlayerAmount = 0;
+			m_pLevel->SetPosition(-1000, -1000);
 			dae::SceneManager::GetInstance().SetActiveScene("highscore");
 		}
 		break;

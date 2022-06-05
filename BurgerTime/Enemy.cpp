@@ -55,7 +55,7 @@ void dae::Enemy::Init(EnemyType enemyType, glm::vec2 spawnPoint, float initialSp
 
 	m_pAnimationComp = m_pGameObject->AddComponent<dae::AnimationManager>();
 
-
+	m_Type = enemyType;
 	switch (enemyType)
 	{
 	case dae::EnemyType::bean:
@@ -428,4 +428,8 @@ void dae::Enemy::Reset()
 void dae::Enemy::SetActive(bool active)
 {
 	m_IsActive = active;
+}
+dae::EnemyType dae::Enemy::GetType()
+{
+	return m_Type;
 }

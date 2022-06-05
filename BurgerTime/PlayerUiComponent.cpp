@@ -103,9 +103,49 @@ void dae::PlayerUiComponent::onNotify(const dae::GameObject& go, const Event& ev
 		AddScore(50);
 		break;
 	}
-	case Event::HotDogKilled:
+	case Event::BeanKilled:
 	{
 		AddScore(100);
+		break;
+	}
+	case Event::PickleKilled:
+	{
+		AddScore(200);
+		break;
+	}
+	case Event::EggKilled:
+	{
+		AddScore(300);
+		break;
+	}
+	case Event::BunDropped1:
+	{
+		AddScore(500);
+		break;
+	}
+	case Event::BunDropped2:
+	{
+		AddScore(1000);
+		break;
+	}
+	case Event::BunDropped3:
+	{
+		AddScore(2000);
+		break;
+	}
+	case Event::BunDropped4:
+	{
+		AddScore(4000);
+		break;
+	}
+	case Event::BunDropped5:
+	{
+		AddScore(8000);
+		break;
+	}
+	case Event::BunDropped6:
+	{
+		AddScore(16000);
 		break;
 	}
 	}

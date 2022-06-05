@@ -178,7 +178,10 @@ void EnemyPlayer::IdleUp()
 void EnemyPlayer::SetActive(bool active)
 {
 	m_IsActive = active;
-	Notify(*m_pGameObject, Event::enemyPlayerActivated);
+	if (active == true)
+	{
+		Notify(*m_pGameObject, Event::enemyPlayerActivated);
+	}
 }
 bool EnemyPlayer::GetIsActive() const
 {

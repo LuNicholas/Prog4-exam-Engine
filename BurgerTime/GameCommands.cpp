@@ -156,17 +156,20 @@ void NextScene::Execute()
 		{
 			m_pPlayer1->SetActive(true);
 			m_pPlayer2->SetActive(false);
+			m_pEnemy->SetActive(false);
 			break;
 		}
 		case 1:
 		{
 			m_pPlayer1->SetActive(true);
 			m_pPlayer2->SetActive(true);
+			m_pEnemy->SetActive(false);
 			break;
 		}
 		case 2:
 		{
 			m_pPlayer1->SetActive(true);
+			m_pPlayer2->SetActive(false);
 			m_pEnemy->SetActive(true);
 			break;
 		}

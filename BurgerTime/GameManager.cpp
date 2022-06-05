@@ -80,6 +80,10 @@ void GameManager::Update(float deltaTime)
 			m_pEnemyPlayer->GetGameObject()->SetPosition(m_EnemyPlayerSpawn.x, m_EnemyPlayerSpawn.y);
 			m_pEnemyPlayer->SetSpawn(m_EnemyPlayerSpawn);
 		}
+		else
+		{
+			m_pEnemyPlayer->GetGameObject()->SetPosition(-1000, -1000);
+		}
 
 		for (dae::Enemy* enemy : m_Enemies)
 		{
@@ -180,7 +184,7 @@ void GameManager::Reset()
 void GameManager::FullReset()
 {
 	m_NextLevel = false;
-	m_DoOnce = false;
+	//m_DoOnce = false;
 	m_PauseTimer = 0;
 
 	//reset enemies 
@@ -192,7 +196,6 @@ void GameManager::FullReset()
 	{
 		m_pEnemyPlayer->GetGameObject()->SetPosition(m_EnemyPlayerSpawn.x, m_EnemyPlayerSpawn.y);
 		m_pEnemyPlayer->SetPaused(false);
-		m_pEnemyPlayer->SetActive(false);
 		m_VsMode = false;
 	}
 	//reset imgrediemts
@@ -256,6 +259,7 @@ void GameManager::onNotify(const dae::GameObject& go, const Event& event)
 	}
 	case Event::PlayerActivated:
 	{
+		m_DoOnce = false;
 		m_PlayerAmount++;
 		break;
 	}
@@ -276,6 +280,11 @@ void GameManager::onNotify(const dae::GameObject& go, const Event& event)
 	case Event::enemyPlayerActivated:
 	{
 		m_VsMode = true;
+		m_DoOnce = false;
+		for (auto& enemy : m_Enemies)
+		{
+			enemy->SetActive(false);
+		}
 		break;
 	}
 	}

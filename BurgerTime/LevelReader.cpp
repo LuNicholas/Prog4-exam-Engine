@@ -12,11 +12,11 @@ LevelReader::~LevelReader()
 {
 
 }
-std::vector<std::shared_ptr<dae::GameObject>>& LevelReader::GetIngredients()
+std::vector<std::shared_ptr<dae::GameObject>> LevelReader::GetIngredients()
 {
 	return m_Ingredients;
 }
-std::vector<std::shared_ptr<dae::GameObject>>& LevelReader::GetPlates()
+std::vector<std::shared_ptr<dae::GameObject>> LevelReader::GetPlates()
 {
 	return m_Plates;
 }

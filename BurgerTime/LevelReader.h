@@ -17,8 +17,8 @@ public:
 	~LevelReader();
 
 	void AddLevel(const std::string& fileName, std::shared_ptr<dae::GameObject>& go);
-	std::vector<std::shared_ptr<dae::GameObject>>& GetIngredients();
-	std::vector<std::shared_ptr<dae::GameObject>>& GetPlates();
+	std::vector<std::shared_ptr<dae::GameObject>> GetIngredients();
+	std::vector<std::shared_ptr<dae::GameObject>> GetPlates();
 
 private:
 	std::ifstream m_Input;

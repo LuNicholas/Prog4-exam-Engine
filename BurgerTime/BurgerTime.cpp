@@ -28,12 +28,14 @@
 #include "ButtonManager.h"
 #include "LevelReader.h"
 #include "Highscores.h"
+#include "EnemyPlayer.h"
 
 
 std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters();
-void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players);
-void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players);
-void Level3(std::vector<std::shared_ptr<dae::GameObject>>& players);
+std::shared_ptr<dae::GameObject> CreateEnemyPlayer(PeterPepper* player1);
+void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players, std::shared_ptr<dae::GameObject>& enemyPlayer);
+void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players, std::shared_ptr<dae::GameObject>& enemyPlayer);
+void Level3(std::vector<std::shared_ptr<dae::GameObject>>& players, std::shared_ptr<dae::GameObject>& enemyPlayer);
 void Highscore(std::vector<std::shared_ptr<dae::GameObject>>& players);
 ButtonManager* MainMenu();
 
@@ -52,16 +54,19 @@ int main(int, char* [])
 
 
 	auto players = CreateCharacters();
+	auto enemy = CreateEnemyPlayer(players.front()->GetComponent<PeterPepper>());
 	auto buttonManager = MainMenu();
 
 
-	dae::InputManager::GetInstance().AddCommand(dae::ControllerButton::ButtonX, dae::ButtonActivateState::OnButtonDown
-		, std::move(std::make_unique<NextScene>(buttonManager, players.at(0)->GetComponent<PeterPepper>(), players.at(1)->GetComponent<PeterPepper>())), 0);
+	dae::InputManager::GetInstance().AddCommand(dae::ControllerButton::ButtonX, dae::ButtonActivateState::OnButtonRelease
+		, std::move(std::make_unique<NextScene>(buttonManager, players.at(0)->GetComponent<PeterPepper>(), players.at(1)->GetComponent<PeterPepper>(), enemy->GetComponent<EnemyPlayer>())), 0);
+	//dae::InputManager::GetInstance().AddCommand(SDL_SCANCODE_KP_ENTER, dae::InputManager::KeyboardButtonActivateState::release
+		//, std::move(std::make_unique<NextScene>(buttonManager, players.at(0)->GetComponent<PeterPepper>(), players.at(1)->GetComponent<PeterPepper>(), enemy->GetComponent<EnemyPlayer>())));
 
-	Level1(players);
-	Level2(players);
-	Level3(players);
-	Highscore(players);
+	Level1(players, enemy);
+	Level2(players, enemy);
+	Level3(players, enemy);
+	//Highscore(players);
 
 	dae::SceneManager::GetInstance().SetActiveScene("mainMenu");
 
@@ -183,6 +188,17 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(sallySaltGo)), 1);
 	input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(sallySaltGo)), 1);
 
+	//KEYBOARDCOMMANDS
+	input.AddCommand(SDL_SCANCODE_UP, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveUp>(sallySaltGo)));
+	input.AddCommand(SDL_SCANCODE_DOWN, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveDown>(sallySaltGo)));
+	input.AddCommand(SDL_SCANCODE_LEFT, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveLeft>(sallySaltGo)));
+	input.AddCommand(SDL_SCANCODE_RIGHT, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveRight>(sallySaltGo)));
+	input.AddCommand(SDL_SCANCODE_0, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<PepperCommand>(sallySaltGo.get())));
+	input.AddCommand(SDL_SCANCODE_UP, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleUp>(sallySaltGo)));
+	input.AddCommand(SDL_SCANCODE_DOWN, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleForward>(sallySaltGo)));
+	input.AddCommand(SDL_SCANCODE_LEFT, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleForward>(sallySaltGo)));
+	input.AddCommand(SDL_SCANCODE_RIGHT, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleForward>(sallySaltGo)));
+
 
 	//UI
 	auto UiSally = sallySaltGo->AddChild();
@@ -203,10 +219,56 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 	return playerGOs;
 }
 
-void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
+std::shared_ptr<dae::GameObject> CreateEnemyPlayer(PeterPepper* player1)
+{
+	auto& input = dae::InputManager::GetInstance();
+
+	auto enemyGo = std::make_shared<dae::GameObject>();
+	EnemyPlayer* enemyPlayerComp = enemyGo->AddComponent<EnemyPlayer>();
+	enemyPlayerComp->Init(player1);
+	enemyGo->SetPosition(-1000, -1000);
+
+
+	input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveUp>(enemyGo)), 1);
+	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveDown>(enemyGo)), 1);
+	input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveLeft>(enemyGo)), 1);
+	input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::IsPressed, std::move(std::make_unique<MoveRight>(enemyGo)), 1);
+	input.AddCommand(dae::ControllerButton::DpadUp, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleUp>(enemyGo)), 1);
+	input.AddCommand(dae::ControllerButton::DpadDown, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(enemyGo)), 1);
+	input.AddCommand(dae::ControllerButton::DpadLeft, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(enemyGo)), 1);
+	input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(enemyGo)), 1);
+
+	//KEYBOARDCOMMANDS
+	input.AddCommand(SDL_SCANCODE_UP, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveUp>(enemyGo)));
+	input.AddCommand(SDL_SCANCODE_DOWN, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveDown>(enemyGo)));
+	input.AddCommand(SDL_SCANCODE_LEFT, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveLeft>(enemyGo)));
+	input.AddCommand(SDL_SCANCODE_RIGHT, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveRight>(enemyGo)));
+	input.AddCommand(SDL_SCANCODE_UP, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleUp>(enemyGo)));
+	input.AddCommand(SDL_SCANCODE_DOWN, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleForward>(enemyGo)));
+	input.AddCommand(SDL_SCANCODE_LEFT, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleForward>(enemyGo)));
+	input.AddCommand(SDL_SCANCODE_RIGHT, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleForward>(enemyGo)));
+
+
+
+	return enemyGo;
+}
+
+void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players, std::shared_ptr<dae::GameObject>& enemyPlayer)
 {
 	auto& scene = dae::SceneManager::GetInstance().GetScene("level1");
 	auto& input = dae::InputManager::GetInstance();
@@ -257,7 +319,7 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	
 	//GETTING INGREDIENTS
 	auto ingredients = levelReader.GetIngredients();
-	for (auto ingredient : ingredients)
+	for (const auto& ingredient : ingredients)
 	{
 		scene.Add(ingredient);
 		ingredient->GetComponent<dae::Ingredient>()->addObserver(players.at(0)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
@@ -267,7 +329,7 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 
 	//GETTING PLATES
 	auto plates = levelReader.GetPlates();
-	for (auto plate : plates)
+	for (const auto& plate : plates)
 	{
 		scene.Add(plate);
 		gameManagerComp->AddPlate(plate->GetComponent<Plate>());
@@ -289,6 +351,10 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 
 	//adding enemies
 	gameManagerComp->AddEnemy(enemy);
+	//add enemy player
+	gameManagerComp->AddEnemyPlayer(enemyPlayer->GetComponent<EnemyPlayer>(), glm::vec2(300, 150));
+	enemyPlayer->GetComponent<EnemyPlayer>()->addObserver(gameManagerComp);
+
 	//adding level
 	gameManagerComp->SetLevel(level);
 	//adding player
@@ -302,10 +368,10 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	{
 		scene.Add(player);
 	}
-
+	scene.Add(enemyPlayer);
 }
 
-void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players)
+void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players, std::shared_ptr<dae::GameObject>& enemyPlayer)
 {
 	auto& scene = dae::SceneManager::GetInstance().GetScene("level2");
 	auto& input = dae::InputManager::GetInstance();
@@ -346,7 +412,7 @@ void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players)
 
 
 	auto ingredients = levelReader.GetIngredients();
-	for (auto ingredient : ingredients)
+	for (const auto& ingredient : ingredients)
 	{
 		scene.Add(ingredient);
 		ingredient->GetComponent<dae::Ingredient>()->addObserver(players.at(0)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
@@ -357,7 +423,7 @@ void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players)
 
 	//GETTING PLATES
 	auto plates = levelReader.GetPlates();
-	for (auto plate : plates)
+	for (const auto& plate : plates)
 	{
 		scene.Add(plate);
 		gameManagerComp->AddPlate(plate->GetComponent<Plate>());
@@ -367,7 +433,9 @@ void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players)
 
 	//adding enemies
 	//gameManagerComp->AddEnemy(enemy);
-
+	//add enemy player
+	gameManagerComp->AddEnemyPlayer(enemyPlayer->GetComponent<EnemyPlayer>(), glm::vec2(298, 150));
+	enemyPlayer->GetComponent<EnemyPlayer>()->addObserver(gameManagerComp);
 
 
 	//adding player
@@ -381,9 +449,10 @@ void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	{
 		scene.Add(player);
 	}
+	scene.Add(enemyPlayer);
 }
 
-void Level3(std::vector<std::shared_ptr<dae::GameObject>>& players)
+void Level3(std::vector<std::shared_ptr<dae::GameObject>>& players, std::shared_ptr<dae::GameObject>& enemyPlayer)
 {
 	auto& scene = dae::SceneManager::GetInstance().GetScene("level3");
 	auto& input = dae::InputManager::GetInstance();
@@ -422,7 +491,7 @@ void Level3(std::vector<std::shared_ptr<dae::GameObject>>& players)
 
 
 	auto ingredients = levelReader.GetIngredients();
-	for (auto ingredient : ingredients)
+	for (const auto& ingredient : ingredients)
 	{
 		scene.Add(ingredient);
 		ingredient->GetComponent<dae::Ingredient>()->addObserver(players.at(0)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
@@ -433,13 +502,17 @@ void Level3(std::vector<std::shared_ptr<dae::GameObject>>& players)
 
 	//GETTING PLATES
 	auto plates = levelReader.GetPlates();
-	for (auto plate : plates)
+	for (auto& plate : plates)
 	{
 		scene.Add(plate);
 		gameManagerComp->AddPlate(plate->GetComponent<Plate>());
 		plate->SetPosition(-1000, -1000);
 	}
 
+
+	//add enemy player
+	gameManagerComp->AddEnemyPlayer(enemyPlayer->GetComponent<EnemyPlayer>(), glm::vec2(298, 150));
+	enemyPlayer->GetComponent<EnemyPlayer>()->addObserver(gameManagerComp);
 
 	//adding player
 	gameManagerComp->AddPlayer(players.at(0), glm::vec2(298, 150));
@@ -452,6 +525,7 @@ void Level3(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	{
 		scene.Add(player);
 	}
+	scene.Add(enemyPlayer);
 }
 
 void Highscore(std::vector<std::shared_ptr<dae::GameObject>>& players)

@@ -99,17 +99,19 @@ private:
 
 class PeterPepper;
 class ButtonManager;
+class EnemyPlayer;
 class NextScene : public Command
 {
 
 public:
-	explicit NextScene(ButtonManager* buttonManager, PeterPepper* player1, PeterPepper* player2);
+	explicit NextScene(ButtonManager* buttonManager, PeterPepper* player1, PeterPepper* player2, EnemyPlayer* enemy);
 	void Execute() override;
 
 private:
 	ButtonManager* m_pButtonManager;
 	PeterPepper* m_pPlayer1;
 	PeterPepper* m_pPlayer2;
+	EnemyPlayer* m_pEnemy;
 };
 
 

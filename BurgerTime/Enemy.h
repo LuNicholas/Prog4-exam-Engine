@@ -42,6 +42,7 @@ namespace dae
 		void KillEnemy();
 		void SetStunned();
 		bool GetIsDead();
+		void SetActive(bool active);
 
 	private:
 		Enemy();
@@ -68,10 +69,12 @@ namespace dae
 
 		glm::vec2 m_SpawnPoint;
 		float m_InitialSpawnTime;
-		bool m_IsActive;
+		bool m_OnInitialSpawn;
 		float m_SpawnTimer;
 		float m_DeathTime;
 		float m_DissapearTime;
 		bool m_Paused;
+
+		bool m_IsActive;
 	};
 }

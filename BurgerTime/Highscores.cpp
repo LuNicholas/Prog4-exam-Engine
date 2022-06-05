@@ -7,6 +7,7 @@ dae::Highscores::Highscores()
 	:m_FileName("../Data/Highscores.txt")
 	, m_DoOnce(false)
 	, m_PlayerScore(-1)
+	, m_PlayerScoreText(nullptr)
 {
 
 }
@@ -61,47 +62,47 @@ void dae::Highscores::Init(std::shared_ptr<dae::GameObject>& player, std::shared
 
 void dae::Highscores::Update(float deltaTime)
 {
-	for (const auto& text : m_HighscoresText)
-	{
-		text->Update(deltaTime);
-	}
+	//for (const auto& text : m_HighscoresText)
+	//{
+	//	text->Update(deltaTime);
+	//}
 
 
-	//check if player score is different
-	int playerScore = m_PlayerGo->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>()->GetScore();
+	////check if player score is different
+	//int playerScore = m_PlayerGo->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>()->GetScore();
 
-	if (m_PlayerScore != playerScore)
-	{
-		m_PlayerScore = playerScore;
-		m_PlayerScoreText->SetText(std::to_string(playerScore));
+	//if (m_PlayerScore != playerScore)
+	//{
+	//	m_PlayerScore = playerScore;
+	//	m_PlayerScoreText->SetText(std::to_string(playerScore));
 
-		for (int& score : m_Highscores)
-		{
-			if (playerScore > score)
-			{
-				score = playerScore;
-				break;
-			}
-		}
+	//	for (int& score : m_Highscores)
+	//	{
+	//		if (playerScore > score)
+	//		{
+	//			score = playerScore;
+	//			break;
+	//		}
+	//	}
 
-		for (size_t i = 0; i < m_HighscoresText.size(); i++)
-		{
-			m_HighscoresText.at(i)->SetText(std::to_string(m_Highscores.at(i)));
-		}
-
-
-		std::ofstream output(m_FileName, std::ios::trunc);
-
-		for (int& score : m_Highscores)
-		{
-			output << score;
-			output << '\n';
-		}
+	//	for (size_t i = 0; i < m_HighscoresText.size(); i++)
+	//	{
+	//		m_HighscoresText.at(i)->SetText(std::to_string(m_Highscores.at(i)));
+	//	}
 
 
-		m_PlayerGo->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>()->SetScore(0);
-		m_PlayerScore = 0;
-	}
+	//	std::ofstream output(m_FileName, std::ios::trunc);
+
+	//	for (int& score : m_Highscores)
+	//	{
+	//		output << score;
+	//		output << '\n';
+	//	}
+
+
+	//	m_PlayerGo->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>()->SetScore(0);
+	//	m_PlayerScore = 0;
+	//}
 }
 void dae::Highscores::FixedUpdate(float deltaTime)
 {

@@ -9,6 +9,7 @@
 #include "GameObject.h"
 #include "PeterPepper.h"
 #include "Ingredient.h"
+#include "EnemyPlayer.h"
 
 
 GameManager::GameManager()
@@ -20,6 +21,7 @@ GameManager::GameManager()
 	, m_PauseTime(2.0f)
 	, m_PauseTimer(0.f)
 	, m_PlayersDead(0)
+	, m_VsMode(false)
 {
 }
 GameManager::~GameManager()
@@ -43,10 +45,15 @@ void GameManager::SetLevel(std::shared_ptr<dae::GameObject>& level)
 {
 	m_pLevel = level;
 }
-void GameManager::AddPlayer(std::shared_ptr<dae::GameObject>& player, glm::vec2 playerSpawn)
+void GameManager::AddPlayer(std::shared_ptr<dae::GameObject>& player, const glm::vec2& playerSpawn)
 {
 	m_pPlayers.push_back(player);
 	m_SpawnPoints.push_back(playerSpawn);
+}
+void GameManager::AddEnemyPlayer(EnemyPlayer* enemyPlayer, const glm::vec2& playerSpawn)
+{
+	m_pEnemyPlayer = enemyPlayer;
+	m_EnemyPlayerSpawn = playerSpawn;
 }
 
 
@@ -68,6 +75,19 @@ void GameManager::Update(float deltaTime)
 			}
 		}
 
+		if (m_VsMode)
+		{
+			m_pEnemyPlayer->GetGameObject()->SetPosition(m_EnemyPlayerSpawn.x, m_EnemyPlayerSpawn.y);
+			m_pEnemyPlayer->SetSpawn(m_EnemyPlayerSpawn);
+		}
+
+		for (dae::Enemy* enemy : m_Enemies)
+		{
+			if (m_VsMode)
+				enemy->SetActive(false);
+			else
+				enemy->SetActive(true);
+		}
 		for (dae::Ingredient* ingredient : m_Ingredients)
 		{
 			ingredient->Reset();
@@ -150,6 +170,13 @@ void GameManager::Reset()
 	{
 		enemy->Reset();
 	}
+
+	if (m_VsMode)
+	{
+		m_pEnemyPlayer->GetGameObject()->SetPosition(m_EnemyPlayerSpawn.x, m_EnemyPlayerSpawn.y);
+		m_pEnemyPlayer->SetPaused(false);
+	}
+
 }
 void GameManager::FullReset()
 {
@@ -171,7 +198,7 @@ void GameManager::FullReset()
 	}
 
 	//reset plates
-	for (Plate* plate: m_Plates)
+	for (Plate* plate : m_Plates)
 	{
 		plate->Reset();
 	}
@@ -187,7 +214,7 @@ void GameManager::MoveLevel()
 {
 	for (dae::Enemy* enemy : m_Enemies)
 	{
-		enemy->GetGameObject()->SetPosition(-1000,-1000);
+		enemy->GetGameObject()->SetPosition(-1000, -1000);
 	}
 
 	//reset imgrediemts
@@ -207,6 +234,8 @@ void GameManager::MoveLevel()
 
 void GameManager::onNotify(const dae::GameObject& go, const Event& event)
 {
+
+
 	switch (event)
 	{
 	case Event::PlayerHit:
@@ -216,6 +245,8 @@ void GameManager::onNotify(const dae::GameObject& go, const Event& event)
 			m_GamePaused = true;
 			Pause();
 		}
+
+		m_pEnemyPlayer->SetPaused(true);
 		break;
 	}
 	case Event::PlayerActivated:
@@ -228,12 +259,19 @@ void GameManager::onNotify(const dae::GameObject& go, const Event& event)
 		m_PlayersDead++;
 		if (m_PlayersDead == m_PlayerAmount)
 		{
+			MoveLevel();
 			FullReset();
 			ResetPlayers();
 			m_PlayersDead -= m_PlayerAmount;
 			m_PlayerAmount = 0;
+			m_VsMode = false;
 			dae::SceneManager::GetInstance().SetActiveScene("highscore");
 		}
+		break;
+	}
+	case Event::enemyPlayerActivated:
+	{
+		m_VsMode = true;
 		break;
 	}
 	}

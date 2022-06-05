@@ -7,6 +7,7 @@
 #include "ResourceManager.h"
 #include "Renderer.h"
 #include "Enemy.h"
+#include "EnemyPlayer.h"
 
 dae::Ingredient::Ingredient()
 	:m_IsDropping(false)
@@ -191,6 +192,26 @@ void dae::Ingredient::FixedUpdate(float deltaTime)
 					}
 				}
 
+			}
+			else if (box->GetTag() == "enemyPlayer")
+			{
+				if (!box->GetGameObject()->GetComponent<EnemyPlayer>()->GetIsDead())
+				{
+
+					glm::vec3 boxPos = box->GetPosition();
+
+					if (m_pBigCollisionBox->IsPointInCollider(glm::vec2(boxPos.x + box->GetSize().x / 2, boxPos.y)))//top of enemy getting hit 
+					{
+						box->GetGameObject()->GetComponent<EnemyPlayer>()->Kill();
+					}
+					else//not the top is getting hit so should be on burger
+					{
+						box->GetGameObject()->GetComponent<EnemyPlayer>()->Kill();
+						Notify(*m_pGameObject, Event::HotDogKilled);
+						m_EnemyOnTop = true;
+						m_EnemiesOnTop++;
+					}
+				}
 			}
 		}
 		return;

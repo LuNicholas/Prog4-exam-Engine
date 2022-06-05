@@ -11,6 +11,8 @@
 #include "SceneManager.h"//todo remove this probs after tests
 #include "ButtonManager.h"
 #include "Scene.h"
+#include "EnemyPlayer.h"
+#include "MovementComponent.h"
 
 
 //pepperCOmmand
@@ -42,7 +44,11 @@ MoveLeft::MoveLeft(std::shared_ptr<dae::GameObject> actor)
 }
 void MoveLeft::Execute()
 {
-	m_actor->GetComponent<PeterPepper>()->MoveLeft();
+	PeterPepper* peter = m_actor->GetComponent<PeterPepper>();
+	if (peter != nullptr)
+		peter->MoveLeft();
+	else
+		m_actor->GetComponent<EnemyPlayer>()->MoveLeft();
 }
 
 //MoveRight Command
@@ -53,7 +59,11 @@ MoveRight::MoveRight(std::shared_ptr<dae::GameObject> actor)
 }
 void MoveRight::Execute()
 {
-	m_actor->GetComponent<PeterPepper>()->MoveRight();
+	PeterPepper* peter = m_actor->GetComponent<PeterPepper>();
+	if (peter != nullptr)
+		peter->MoveRight();
+	else
+		m_actor->GetComponent<EnemyPlayer>()->MoveRight();
 }
 
 MoveUp::MoveUp(std::shared_ptr<dae::GameObject> actor)
@@ -63,7 +73,11 @@ MoveUp::MoveUp(std::shared_ptr<dae::GameObject> actor)
 }
 void MoveUp::Execute()
 {
-	m_actor->GetComponent<PeterPepper>()->MoveUp();
+	PeterPepper* peter = m_actor->GetComponent<PeterPepper>();
+	if (peter != nullptr)
+		peter->MoveUp();
+	else
+		m_actor->GetComponent<EnemyPlayer>()->MoveUp();
 }
 MoveDown::MoveDown(std::shared_ptr<dae::GameObject> actor)
 	:m_actor(actor)
@@ -72,7 +86,11 @@ MoveDown::MoveDown(std::shared_ptr<dae::GameObject> actor)
 }
 void MoveDown::Execute()
 {
-	m_actor->GetComponent<PeterPepper>()->MoveDown();
+	PeterPepper* peter = m_actor->GetComponent<PeterPepper>();
+	if (peter != nullptr)
+		peter->MoveDown();
+	else
+		m_actor->GetComponent<EnemyPlayer>()->MoveDown();
 }
 
 IdleForward::IdleForward(std::shared_ptr<dae::GameObject> actor)
@@ -82,7 +100,12 @@ IdleForward::IdleForward(std::shared_ptr<dae::GameObject> actor)
 }
 void IdleForward::Execute()
 {
-	m_actor->GetComponent<PeterPepper>()->IdleForward();
+	PeterPepper* peter = m_actor->GetComponent<PeterPepper>();
+	if (peter != nullptr)
+		peter->IdleForward();
+	else
+		m_actor->GetComponent<EnemyPlayer>()->IdleForward();
+
 }
 IdleUp::IdleUp(std::shared_ptr<dae::GameObject> actor)
 	:m_actor(actor)
@@ -91,7 +114,11 @@ IdleUp::IdleUp(std::shared_ptr<dae::GameObject> actor)
 }
 void IdleUp::Execute()
 {
-	m_actor->GetComponent<PeterPepper>()->IdleUp();
+	PeterPepper* peter = m_actor->GetComponent<PeterPepper>();
+	if (peter != nullptr)
+		peter->IdleUp();
+	else
+		m_actor->GetComponent<EnemyPlayer>()->IdleForward();
 }
 
 
@@ -109,10 +136,11 @@ void PlaySound::Execute()
 
 
 
-NextScene::NextScene(ButtonManager* buttonManager, PeterPepper* player1, PeterPepper* player2)
+NextScene::NextScene(ButtonManager* buttonManager, PeterPepper* player1, PeterPepper* player2, EnemyPlayer* enemy)
 	:m_pButtonManager(buttonManager)
 	, m_pPlayer1(player1)
 	, m_pPlayer2(player2)
+	, m_pEnemy(enemy)
 {
 
 }
@@ -138,7 +166,8 @@ void NextScene::Execute()
 		}
 		case 2:
 		{
-			//m_pPlayer2->GetGameObject()->GetComponent<dae::CollisionBox>()->SetTag()
+			m_pPlayer1->SetActive(true);
+			m_pEnemy->SetActive(true);
 			break;
 		}
 		}

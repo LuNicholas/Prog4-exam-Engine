@@ -20,12 +20,13 @@ dae::Enemy::Enemy()
 	, m_IsStunnned(false)
 	, m_StunTime(1.5f)
 	, m_CurrentStunTime(0)
-	, m_IsActive(false)
+	, m_OnInitialSpawn(false)
 	, m_DeathTime(6.f)
 	, m_Paused(false)
 	, m_InitialSpawnTime(0)
 	, m_SpawnTimer(0)
 	, m_DissapearTime(1.0f)
+	, m_IsActive(false)
 {
 
 
@@ -66,22 +67,33 @@ void dae::Enemy::Init(EnemyType enemyType, glm::vec2 spawnPoint, float initialSp
 		m_pAnimationComp->SetActiveAnimation("down");
 		break;
 	case dae::EnemyType::egg:
+		m_pAnimationComp->AddAnimation("Enemies/Egg/Egg_Up.png", "up", 64, 32, 2, 1, 0.5f);
+		m_pAnimationComp->AddAnimation("Enemies/Egg/Egg_Down.png", "down", 64, 32, 2, 1, 0.5f);
+		m_pAnimationComp->AddAnimation("Enemies/Egg/Egg_Left.png", "left", 64, 32, 2, 1, 0.5f);
+		m_pAnimationComp->AddAnimation("Enemies/Egg/Egg_Right.png", "right", 64, 32, 2, 1, 0.5f);
+		m_pAnimationComp->AddAnimation("Enemies/Egg/Egg_Death.png", "death", 128, 32, 4, 1, 0.5f);
+		m_pAnimationComp->AddAnimation("Enemies/Egg/Egg_Stunned.png", "stunned", 64, 32, 2, 1, 0.25f);
+		m_pAnimationComp->SetActiveAnimation("down");
 		break;
 	case dae::EnemyType::Pickle:
+		m_pAnimationComp->AddAnimation("Enemies/Pickle/Pickle_Up.png", "up", 64, 32, 2, 1, 0.5f);
+		m_pAnimationComp->AddAnimation("Enemies/Pickle/Pickle_Down.png", "down", 64, 32, 2, 1, 0.5f);
+		m_pAnimationComp->AddAnimation("Enemies/Pickle/Pickle_Left.png", "left", 64, 32, 2, 1, 0.5f);
+		m_pAnimationComp->AddAnimation("Enemies/Pickle/Pickle_Right.png", "right", 64, 32, 2, 1, 0.5f);
+		m_pAnimationComp->AddAnimation("Enemies/Pickle/Pickle_Death.png", "death", 128, 32, 4, 1, 0.5f);
+		m_pAnimationComp->AddAnimation("Enemies/Pickle/Pickle_Stunned.png", "stunned", 64, 32, 2, 1, 0.25f);
+		m_pAnimationComp->SetActiveAnimation("down");
 		break;
 	default:
 		break;
 	}
-
-
-
-
-
 }
 
 
 void dae::Enemy::Update(float deltaTime)
 {
+	if (!m_IsActive)
+		return;
 
 	if (m_Paused)
 	{
@@ -89,12 +101,12 @@ void dae::Enemy::Update(float deltaTime)
 		return;
 	}
 
-	if (!m_IsActive)
+	if (!m_OnInitialSpawn)
 	{
 		m_SpawnTimer += deltaTime;
 		if (m_SpawnTimer >= m_InitialSpawnTime)
 		{
-			m_IsActive = true;
+			m_OnInitialSpawn = true;
 			m_SpawnTimer = 0;
 			m_pGameObject->SetPosition(m_SpawnPoint.x, m_SpawnPoint.y);
 		}
@@ -407,8 +419,12 @@ void dae::Enemy::Pause()
 void dae::Enemy::Reset()
 {
 	m_Paused = false;
-	m_IsActive = false;
+	m_OnInitialSpawn = false;
 	m_IsDead = false;
 	m_SpawnTimer = 0;
 	m_pGameObject->SetPosition(-1000, -1000);
+}
+void dae::Enemy::SetActive(bool active)
+{
+	m_IsActive = active;
 }

@@ -74,7 +74,7 @@ void PeterPepper::Update(float deltaTime)
 	if (m_PauseTimer >= m_PauseTime)
 	{
 		m_PauseTimer = 0;
-		Notify(*m_pGameObject, Event::PlayerReset);
+		//Notify(*m_pGameObject, Event::PlayerReset);
 		m_GotHit = false;
 		m_pGameObject->SetPosition(m_SpawnPos.x, m_SpawnPos.y);
 		m_pAnimationComp->SetActiveAnimation("idleForward");

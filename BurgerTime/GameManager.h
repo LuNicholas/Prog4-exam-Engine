@@ -1,6 +1,7 @@
 #pragma once
 #include "Component.h"
 #include "Observer.h"
+#include "Events.h"
 
 namespace dae
 {
@@ -8,6 +9,7 @@ namespace dae
 	class Ingredient;
 }
 	class Plate;
+	class EnemyPlayer;
 
 class GameManager final : public dae::Component, public dae::Observer
 {
@@ -20,7 +22,8 @@ public:
 	void AddIngredient(dae::Ingredient* ingredient);
 	void AddPlate(Plate* plate);
 	void SetLevel(std::shared_ptr<dae::GameObject>& level);
-	void AddPlayer(std::shared_ptr<dae::GameObject>& player, glm::vec2 playerSpawn);
+	void AddPlayer(std::shared_ptr<dae::GameObject>& player, const glm::vec2& playerSpawn);
+	void AddEnemyPlayer(EnemyPlayer* enemyPlayer, const glm::vec2& playerSpawn);
 
 	void Update(float deltaTime);
 	void FixedUpdate(float deltaTime);
@@ -55,7 +58,11 @@ private:
 	std::vector<std::shared_ptr<dae::GameObject>> m_pPlayers;
 	std::vector<glm::vec2> m_SpawnPoints;
 
+	EnemyPlayer* m_pEnemyPlayer;
+	glm::vec2 m_EnemyPlayerSpawn;
+
 	bool m_NextLevel;
 	bool m_DoOnce;
+	bool m_VsMode;
 };
 

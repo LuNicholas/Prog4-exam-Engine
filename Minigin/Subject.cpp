@@ -1,7 +1,6 @@
 #include "MiniginPCH.h"
 #include "Subject.h"
 #include "observer.h"
-//#include "Events.h"
 
 
 dae::Subject::Subject()

@@ -9,40 +9,40 @@ dae::Highscores::Highscores()
 	, m_PlayerScore(-1)
 {
 
-	m_HighscoresText.push_back(new dae::TextComponent());
-	m_HighscoresText.push_back(new dae::TextComponent());
-	m_HighscoresText.push_back(new dae::TextComponent());
-	m_HighscoresText.push_back(new dae::TextComponent());
-	m_HighscoresText.push_back(new dae::TextComponent());
-
-	glm::vec2 pos(314, 100);
-	for (auto& text : m_HighscoresText)
-	{
-		SetPosition(pos.x, pos.y);
-		pos.y += 25;
-		text->SetText("0");
-	}
-
-	m_PlayerScoreText = new dae::TextComponent();
-	m_PlayerScoreText->SetPosition(pos.x, pos.y + 100);
-	m_PlayerScoreText->SetText("0");
 }
 dae::Highscores::~Highscores()
 {
-	for (auto& text : m_HighscoresText)
-		delete text;
-
 	delete m_PlayerScoreText;
 }
 
 void dae::Highscores::Init(std::shared_ptr<dae::GameObject>& player, std::shared_ptr<dae::Font> font)
 {
+
+
+	for (size_t i = 0; i < 5; i++)
+	{
+		m_HighscoresText.push_back(m_pGameObject->AddComponent<dae::TextComponent>());
+	}
+
+	m_PlayerScoreText = m_pGameObject->AddComponent<dae::TextComponent>();
+
+
+	glm::vec2 pos(300, 100);
+	for (auto& text : m_HighscoresText)
+	{
+		text->SetPosition(pos.x, pos.y);
+		pos.y += 35;
+		text->SetText("0");
+		text->SetFont(font);
+	}
+	m_PlayerScoreText->SetPosition(pos.x, pos.y + 100);
+	m_PlayerScoreText->SetText("0");
+	m_PlayerScoreText->SetFont(font);
+
+
 	m_PlayerGo = player;
 
-	for (auto& text : m_HighscoresText)
-		text->SetFont(font);
 
-	m_PlayerScoreText->SetFont(font);
 
 	std::ifstream input;
 	input.open(m_FileName, std::ios::in | std::ios::binary);
@@ -108,15 +108,15 @@ void dae::Highscores::FixedUpdate(float deltaTime)
 }
 void dae::Highscores::Render() const
 {
-	glm::vec2 pos(314, 100);
+	//glm::vec2 pos(314, 100);
 
-	for (const auto& text : m_HighscoresText)
-	{
-		text->SetPosition(pos.x, pos.y);
-		pos.y += 35;
-		text->Render();
-	}
+	//for (const auto& text : m_HighscoresText)
+	//{
+	//	text->SetPosition(pos.x, pos.y);
+	//	pos.y += 35;
+	//	text->Render();
+	//}
 
-	m_PlayerScoreText->SetPosition(pos.x, pos.y + 100);
-	m_PlayerScoreText->Render();
+	//m_PlayerScoreText->SetPosition(pos.x, pos.y + 100);
+	//m_PlayerScoreText->Render();
 }

@@ -241,8 +241,6 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 
 
 
-
-
 	//add level
 	LevelReader levelReader;
 	auto level = std::make_shared<dae::GameObject>();
@@ -263,7 +261,6 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	{
 		scene.Add(ingredient);
 		ingredient->GetComponent<dae::Ingredient>()->addObserver(players.at(0)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
-		//ingredient->GetComponent<dae::Ingredient>()->addObserver(players.at(1)->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>());
 		gameManagerComp->AddIngredient(ingredient->GetComponent<dae::Ingredient>());
 		ingredient->SetPosition(-1000, -1000);
 	}

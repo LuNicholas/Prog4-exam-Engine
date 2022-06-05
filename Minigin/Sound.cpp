@@ -60,6 +60,7 @@ SDLSoundSystem::SoundSystemImpl::SoundSystemImpl()
 					{
 						return (m_Head != m_Tail) || !m_IsActiveThread;
 					});
+				lk.unlock();
 				Update();
 			}
 		});
@@ -76,7 +77,6 @@ SDLSoundSystem::SoundSystemImpl::~SoundSystemImpl()
 
 void SDLSoundSystem::SoundSystemImpl::Play(const soundId soundId, const float volume)
 {
-	assert((m_Tail + 1) % m_MaxQueueSize != m_Head);
 
 	SoundInfo newSound{};
 	newSound.id = soundId;
@@ -85,11 +85,15 @@ void SDLSoundSystem::SoundSystemImpl::Play(const soundId soundId, const float vo
 	//m_SoundQueue[m_Tail].id = soundId;
 	//m_SoundQueue[m_Tail].volume = volume;
 
-	//lock here
-	m_SoundQueue[m_Tail] = newSound;
-	// unlock here
-
-	m_Tail = (m_Tail + 1) % m_MaxQueueSize;
+	//lock 
+	
+	{
+		std::scoped_lock scopedLock(m_MutexUpdate);
+		assert((m_Tail + 1) % m_MaxQueueSize != m_Head);
+		m_SoundQueue[m_Tail] = newSound;
+		m_Tail = (m_Tail + 1) % m_MaxQueueSize;
+		// unlock here
+	}
 
 	m_CvUpdate.notify_all();
 }
@@ -103,13 +107,17 @@ void SDLSoundSystem::SoundSystemImpl::RegisterSound(const soundId soundId, const
 }
 void SDLSoundSystem::SoundSystemImpl::Update()
 {
-	if (m_Head == m_Tail)
-		return;
+	Mix_Chunk* pCurrentChunk;
 
-	Mix_Chunk* pCurrentChunk = m_SoundBank[m_SoundQueue[m_Head].id];
+	{
+		std::scoped_lock scopedLock(m_MutexUpdate);
+		pCurrentChunk = m_SoundBank[m_SoundQueue[m_Head].id];
+		m_Head = (m_Head + 1) % m_MaxQueueSize;
+	}
+
 	Mix_VolumeChunk(pCurrentChunk, m_SoundQueue[m_Head].volume);
 	Mix_PlayChannel(-1, pCurrentChunk, 0);
-	m_Head = (m_Head + 1) % m_MaxQueueSize;
+
 }
 
 //SDL soundsystem

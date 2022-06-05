@@ -28,6 +28,7 @@ dae::Enemy::Enemy()
 	, m_SpawnTimer(0)
 	, m_DissapearTime(1.0f)
 	, m_IsActive(false)
+	, m_Type()
 {
 
 

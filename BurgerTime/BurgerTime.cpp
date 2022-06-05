@@ -137,7 +137,7 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	auto peterPepperGo = std::make_shared<dae::GameObject>();
 
 	PeterPepper* peterComp = peterPepperGo->AddComponent<PeterPepper>();
-	peterComp->Init(glm::vec2(300, 540), 1, 5);
+	peterComp->Init(glm::vec2(300, 540), 3, 5);
 	playerGOs.push_back(peterPepperGo);
 
 	//pepper
@@ -190,7 +190,7 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	//second player
 	auto sallySaltGo = std::make_shared<dae::GameObject>();
 	PeterPepper* sallyComp = sallySaltGo->AddComponent<PeterPepper>();
-	sallyComp->Init(glm::vec2(350, 540), 1, 5);
+	sallyComp->Init(glm::vec2(350, 540), 3, 5);
 	playerGOs.push_back(sallySaltGo);
 
 
@@ -301,7 +301,7 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players, std::shared_
 	//add level
 	LevelReader levelReader;
 	auto level = std::make_shared<dae::GameObject>();
-	levelReader.AddLevel("../Data/Level/level1test.txt", level);
+	levelReader.AddLevel("../Data/Level/level1.txt", level);
 	level->SetPosition(-1000, -1000);
 	scene.Add(level);
 

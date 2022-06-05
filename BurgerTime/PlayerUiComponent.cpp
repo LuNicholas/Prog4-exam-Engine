@@ -7,6 +7,9 @@ dae::PlayerUiComponent::PlayerUiComponent()
 	:m_Visible(true)
 	, m_ScoreVisible(true)
 	, m_TextPosition(0, 0)
+	, m_pScoreText(nullptr)
+	, m_pPepperText(nullptr)
+	, m_pHpText(nullptr)
 {
 	//m_pHpText = new dae::TextComponent();
 	//m_pHpText->SetText("4");

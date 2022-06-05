@@ -16,6 +16,8 @@ namespace dae
 			topBun,
 			salad,
 			patty,
+			tomato,
+			cheese,
 			botBun,
 		};
 

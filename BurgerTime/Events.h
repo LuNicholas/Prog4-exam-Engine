@@ -7,8 +7,9 @@ enum Event
 	playerDead,
 	BunDropped,
 	HotDogKilled,
+	EggKilled,
+	PickleKilled,
 	PepperUse,
-	//PlayerReset,
 	PlayerActivated,
 	enemyPlayerActivated,
 };

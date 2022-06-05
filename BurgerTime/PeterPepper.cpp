@@ -12,7 +12,7 @@
 #include "Sound.h"
 
 PeterPepper::PeterPepper()
-	:m_MoveSpeed(100)
+	:m_MoveSpeed(110)
 	, m_WidthPlayer(32)
 	, m_HeightPlayer(32)
 	, m_pCollisionBox(nullptr)
@@ -221,7 +221,7 @@ void PeterPepper::Kill()
 	SoundServiceLocator::GetSoundSystem().Play(1, 30);
 	m_pAnimationComp->SetActiveAnimation("death");
 	m_pMovementComp->Idle();
-	if (m_pHealth->DealDamage(1) >= 0)
+	if (m_pHealth->DealDamage(1) > 0)
 	{
 		m_GotHit = true;
 		Notify(*m_pGameObject, Event::PlayerHit);

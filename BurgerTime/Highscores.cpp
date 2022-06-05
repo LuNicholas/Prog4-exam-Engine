@@ -61,12 +61,6 @@ void dae::Highscores::Init(std::shared_ptr<dae::GameObject>& player, std::shared
 
 void dae::Highscores::Update(float deltaTime)
 {
-	for (const auto& text : m_HighscoresText)
-	{
-		text->Update(deltaTime);
-	}
-
-
 	//check if player score is different
 	int playerScore = m_PlayerGo->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>()->GetScore();
 
@@ -79,8 +73,9 @@ void dae::Highscores::Update(float deltaTime)
 		{
 			if (playerScore > score)
 			{
+				int temp = score;
 				score = playerScore;
-				break;
+				playerScore = temp;
 			}
 		}
 
@@ -114,7 +109,6 @@ void dae::Highscores::Render() const
 	{
 		text->SetPosition(pos.x, pos.y);
 		pos.y += 35;
-		text->Render();
 	}
 
 	m_PlayerScoreText->SetPosition(pos.x, pos.y + 100);

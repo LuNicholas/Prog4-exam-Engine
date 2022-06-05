@@ -118,7 +118,7 @@ void dae::PlayerUiComponent::SetVisible(bool visibility)
 		m_pHpText->SetPosition(m_TextPosition.x, m_TextPosition.y);
 		m_pPepperText->SetPosition(m_TextPosition.x - 50, m_TextPosition.y);
 		if(m_ScoreVisible)
-			m_pScoreText->SetPosition(m_TextPosition.x - 150, m_TextPosition.y);
+			m_pScoreText->SetPosition(m_TextPosition.x - 250, m_TextPosition.y);
 		else
 			m_pScoreText->SetPosition(-1000, -1000);
 	}

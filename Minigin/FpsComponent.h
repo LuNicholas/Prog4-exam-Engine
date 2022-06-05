@@ -13,8 +13,7 @@ namespace dae
 		void FixedUpdate(float deltaTime);
 		void Render() const;
 
-		void SetPosition(float x, float y);
-		void SetFont(std::shared_ptr<Font> font);
+		void Init(std::shared_ptr<Font> font);
 
 
 		~FpsComponent();

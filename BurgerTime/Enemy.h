@@ -47,6 +47,8 @@ namespace dae
 	private:
 		Enemy();
 
+		int m_Speed;
+
 		bool m_IsDead;
 
 		bool m_IsStunnned;

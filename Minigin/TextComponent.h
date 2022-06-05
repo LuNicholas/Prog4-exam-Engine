@@ -12,7 +12,6 @@ namespace dae
 	{
 	public:
 		friend class GameObject;
-		friend class FpsComponent;
 
 		void Update(float deltaTime);
 		void FixedUpdate(float deltaTime);

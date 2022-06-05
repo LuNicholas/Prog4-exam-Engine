@@ -65,6 +65,12 @@ void dae::Ingredient::Init(IngredientType type, glm::vec2 spawnPos)
 	case dae::Ingredient::IngredientType::botBun:
 		m_Texture = ResourceManager::GetInstance().LoadTexture("Ingredients/bun_Bottom.png");
 		break;
+	case dae::Ingredient::IngredientType::cheese:
+		m_Texture = ResourceManager::GetInstance().LoadTexture("Ingredients/cheese.png");
+		break;
+	case dae::Ingredient::IngredientType::tomato:
+		m_Texture = ResourceManager::GetInstance().LoadTexture("Ingredients/tomato.png");
+		break;
 	default:
 		break;
 	}

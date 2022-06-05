@@ -58,6 +58,14 @@ void LevelReader::AddLevel(const std::string& fileName, std::shared_ptr<dae::Gam
 			{
 				ReadIngredient(dae::Ingredient::IngredientType::botBun);
 			}
+			else if (line.at(0) == 'C')
+			{
+				ReadIngredient(dae::Ingredient::IngredientType::cheese);
+			}
+			else if (line.at(0) == 'O')
+			{
+				ReadIngredient(dae::Ingredient::IngredientType::tomato);
+			}
 			else if (line.at(0) == 'X')
 			{
 				ReadPlate();

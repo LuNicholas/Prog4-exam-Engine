@@ -81,6 +81,7 @@ void GameManager::Update(float deltaTime)
 		{
 			m_pEnemyPlayer->GetGameObject()->SetPosition(m_EnemyPlayerSpawn.x, m_EnemyPlayerSpawn.y);
 			m_pEnemyPlayer->SetSpawn(m_EnemyPlayerSpawn);
+			m_pEnemyPlayer->SetPaused(false);
 		}
 		else
 		{
@@ -119,6 +120,13 @@ void GameManager::Update(float deltaTime)
 
 			if (m_NextLevel)//GO TO NEXT LEVEL
 			{
+				if (m_pPlayers.at(0)->GetComponent<PeterPepper>()->GetHealth()->GetHealth() == 0)
+					m_pPlayers.at(0)->GetComponent<PeterPepper>()->GetHealth()->SetHealth(1);
+
+				if (m_pPlayers.at(1)->GetComponent<PeterPepper>()->GetHealth()->GetHealth() == 0)
+					m_pPlayers.at(1)->GetComponent<PeterPepper>()->GetHealth()->SetHealth(1);
+
+
 				//m_pLevel->SetPosition(-1000, -1000);
 				if (dae::SceneManager::GetInstance().GetCurrentScene().GetSceneName() == "level3")
 				{
@@ -187,7 +195,6 @@ void GameManager::Reset()
 void GameManager::FullReset()
 {
 	m_NextLevel = false;
-	m_DoOnce = false;
 	m_PauseTimer = 0;
 
 	//reset enemies 
@@ -257,7 +264,8 @@ void GameManager::onNotify(const dae::GameObject& go, const Event& event)
 			Pause();
 		}
 
-		m_pEnemyPlayer->SetPaused(true);
+		if(m_VsMode)
+			m_pEnemyPlayer->SetPaused(true);
 		break;
 	}
 	case Event::PlayerActivated:

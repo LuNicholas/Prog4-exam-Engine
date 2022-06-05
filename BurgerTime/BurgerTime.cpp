@@ -63,7 +63,7 @@ int main(int, char* [])
 
 	dae::InputManager::GetInstance().AddCommand(dae::ControllerButton::ButtonX, dae::ButtonActivateState::OnButtonRelease
 		, std::move(std::make_unique<NextScene>(buttonManager, players.at(0)->GetComponent<PeterPepper>(), players.at(1)->GetComponent<PeterPepper>(), enemy->GetComponent<EnemyPlayer>())), 0);
-	dae::InputManager::GetInstance().AddCommand(SDL_SCANCODE_SPACE, dae::InputManager::KeyboardButtonActivateState::pressed
+	dae::InputManager::GetInstance().AddCommand(SDL_SCANCODE_R, dae::InputManager::KeyboardButtonActivateState::pressed
 		, std::move(std::make_unique<NextScene>(buttonManager, players.at(0)->GetComponent<PeterPepper>(), players.at(1)->GetComponent<PeterPepper>(), enemy->GetComponent<EnemyPlayer>())));
 
 	Level1(players, enemy);
@@ -137,7 +137,7 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	auto peterPepperGo = std::make_shared<dae::GameObject>();
 
 	PeterPepper* peterComp = peterPepperGo->AddComponent<PeterPepper>();
-	peterComp->Init(glm::vec2(300, 540), 1, 5);
+	peterComp->Init(glm::vec2(300, 540), 3, 50);
 	playerGOs.push_back(peterPepperGo);
 
 	//pepper
@@ -175,8 +175,6 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	UiPeter->SetFollowParent(false);
 	dae::PlayerUiComponent* peterUiComp = UiPeter->AddComponent<dae::PlayerUiComponent>();
 	peterUiComp->Init(font, peterComp->GetHealth()->GetHealth());
-	//peterUiComp->SetFont(font);
-	//peterUiComp->SetLives(peterComp->GetHealth()->GetHealth());
 	peterUiComp->SetPositionUi(450, 10);
 
 	dae::Texture2DComponent* livesTexture = UiPeter->AddComponent<dae::Texture2DComponent>();
@@ -192,7 +190,7 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	//second player
 	auto sallySaltGo = std::make_shared<dae::GameObject>();
 	PeterPepper* sallyComp = sallySaltGo->AddComponent<PeterPepper>();
-	sallyComp->Init(glm::vec2(350, 540), 1, 5);
+	sallyComp->Init(glm::vec2(350, 540), 3, 5);
 	playerGOs.push_back(sallySaltGo);
 
 
@@ -217,7 +215,7 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	input.AddCommand(SDL_SCANCODE_DOWN, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveDown>(sallySaltGo)));
 	input.AddCommand(SDL_SCANCODE_LEFT, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveLeft>(sallySaltGo)));
 	input.AddCommand(SDL_SCANCODE_RIGHT, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveRight>(sallySaltGo)));
-	input.AddCommand(SDL_SCANCODE_0, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<PepperCommand>(sallySaltGo.get())));
+	input.AddCommand(SDL_SCANCODE_KP_0, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<PepperCommand>(sallySaltGo.get())));
 	input.AddCommand(SDL_SCANCODE_UP, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleUp>(sallySaltGo)));
 	input.AddCommand(SDL_SCANCODE_DOWN, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleForward>(sallySaltGo)));
 	input.AddCommand(SDL_SCANCODE_LEFT, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleForward>(sallySaltGo)));
@@ -229,8 +227,6 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	UiSally->SetFollowParent(false);
 	dae::PlayerUiComponent* sallyUiComp = UiSally->AddComponent<dae::PlayerUiComponent>();
 	sallyUiComp->Init(font, sallyComp->GetHealth()->GetHealth());
-	//sallyUiComp->SetFont(font);
-	//sallyUiComp->SetLives(sallyComp->GetHealth()->GetHealth());
 	sallyUiComp->SetPositionUi(450, 40);
 	sallyUiComp->SetScoreVisible(false);
 
@@ -241,19 +237,6 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	dae::Texture2DComponent* pepperTextureSally = UiSally->AddComponent<dae::Texture2DComponent>();
 	pepperTextureSally->SetTexture("PeterPepper/Peter_Pepper.png");
 	pepperTextureSally->SetPosition(380, 48);
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 	return playerGOs;
@@ -302,8 +285,8 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players, std::shared_
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto fpsGo = std::make_shared<dae::GameObject>();
 	dae::FpsComponent* fpsComponent = fpsGo->AddComponent<dae::FpsComponent>();
-	fpsComponent->SetPosition(10, 10);
-	fpsComponent->SetFont(font);
+	fpsComponent->Init(font);
+	fpsGo->SetPosition(10, 10);
 	scene.Add(fpsGo);
 
 
@@ -318,7 +301,7 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players, std::shared_
 	//add level
 	LevelReader levelReader;
 	auto level = std::make_shared<dae::GameObject>();
-	levelReader.AddLevel("../Data/Level/level1test.txt", level);
+	levelReader.AddLevel("../Data/Level/level1.txt", level);
 	level->SetPosition(-1000, -1000);
 	scene.Add(level);
 
@@ -349,29 +332,49 @@ void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players, std::shared_
 	}
 
 
+	std::vector<dae::Enemy*> enemyComps;
 
-	//enemy test
-	auto enemyGO = std::make_shared<dae::GameObject>();
-	dae::Enemy* enemy = enemyGO->AddComponent<dae::Enemy>();
-	enemy->Init(dae::EnemyType::bean, glm::vec2(0, 540), 2.f);
-	enemy->AddPlayer(players.at(0)->GetComponent<PeterPepper>());
-	enemy->AddPlayer(players.at(1)->GetComponent<PeterPepper>());
-	scene.Add(enemyGO);
+	//enemy inits
+	auto enemyGO0 = std::make_shared<dae::GameObject>();
+	enemyComps.push_back(enemyGO0->AddComponent<dae::Enemy>());
+	enemyComps.back()->Init(dae::EnemyType::bean, glm::vec2(0, 540), 1.5f);
+	scene.Add(enemyGO0);
+
+	auto enemyGO1 = std::make_shared<dae::GameObject>();
+	enemyComps.push_back(enemyGO1->AddComponent<dae::Enemy>());
+	enemyComps.back()->Init(dae::EnemyType::egg, glm::vec2(600, 540), 1.f);
+	scene.Add(enemyGO1);
+
+	auto enemyGO2 = std::make_shared<dae::GameObject>();
+	enemyComps.push_back(enemyGO2->AddComponent<dae::Enemy>());
+	enemyComps.back()->Init(dae::EnemyType::bean, glm::vec2(0, 109), 4.f);
+	scene.Add(enemyGO2);
+
+	auto enemyGO3 = std::make_shared<dae::GameObject>();
+	enemyComps.push_back(enemyGO3->AddComponent<dae::Enemy>());
+	enemyComps.back()->Init(dae::EnemyType::bean, glm::vec2(600, 109), 3.0f);
+	scene.Add(enemyGO3);
 
 
+	//adding enemies to gamemanager + adding players to enemies
+	for (dae::Enemy* enemy : enemyComps)
+	{
+		enemy->AddPlayer(players.at(0)->GetComponent<PeterPepper>());
+		enemy->AddPlayer(players.at(1)->GetComponent<PeterPepper>());
 
-
-	//adding enemies
-	gameManagerComp->AddEnemy(enemy);
+		gameManagerComp->AddEnemy(enemy);
+	}
+	
+	
 	//add enemy player
-	gameManagerComp->AddEnemyPlayer(enemyPlayer->GetComponent<EnemyPlayer>(), glm::vec2(300, 150));
+	gameManagerComp->AddEnemyPlayer(enemyPlayer->GetComponent<EnemyPlayer>(), glm::vec2(300, 109));
 	enemyPlayer->GetComponent<EnemyPlayer>()->addObserver(gameManagerComp);
 
 	//adding level
 	gameManagerComp->SetLevel(level);
 	//adding player
 	gameManagerComp->AddPlayer(players.at(0), glm::vec2(300, 540));
-	gameManagerComp->AddPlayer(players.at(1), glm::vec2(325, 540));
+	gameManagerComp->AddPlayer(players.at(1), glm::vec2(300, 109));
 
 	scene.Add(gameManagerGo);
 
@@ -392,8 +395,8 @@ void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players, std::shared_
 	auto fpsGo = std::make_shared<dae::GameObject>();
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	dae::FpsComponent* fpsComponent = fpsGo->AddComponent<dae::FpsComponent>();
-	fpsComponent->SetPosition(10, 10);
-	fpsComponent->SetFont(font);
+	fpsComponent->Init(font);
+	fpsGo->SetPosition(10, 10);
 	scene.Add(fpsGo);
 
 	//level
@@ -407,7 +410,7 @@ void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players, std::shared_
 
 	LevelReader levelReader;
 	auto level = std::make_shared<dae::GameObject>();
-	levelReader.AddLevel("../Data/Level/level2test.txt", level);
+	levelReader.AddLevel("../Data/Level/level2.txt", level);
 	level->SetPosition(-2000, -2000);
 	scene.Add(level);
 
@@ -443,16 +446,48 @@ void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players, std::shared_
 	}
 
 
-	//adding enemies
-	//gameManagerComp->AddEnemy(enemy);
+
+	std::vector<dae::Enemy*> enemyComps;
+	//enemy inits
+	auto enemyGO0 = std::make_shared<dae::GameObject>();
+	enemyComps.push_back(enemyGO0->AddComponent<dae::Enemy>());
+	enemyComps.back()->Init(dae::EnemyType::bean, glm::vec2(0, 305), 1.5f);
+	scene.Add(enemyGO0);
+
+	auto enemyGO1 = std::make_shared<dae::GameObject>();
+	enemyComps.push_back(enemyGO1->AddComponent<dae::Enemy>());
+	enemyComps.back()->Init(dae::EnemyType::egg, glm::vec2(600, 305), 1.f);
+	scene.Add(enemyGO1);
+
+	auto enemyGO2 = std::make_shared<dae::GameObject>();
+	enemyComps.push_back(enemyGO2->AddComponent<dae::Enemy>());
+	enemyComps.back()->Init(dae::EnemyType::bean, glm::vec2(0, 109), 4.f);
+	scene.Add(enemyGO2);
+
+	auto enemyGO3 = std::make_shared<dae::GameObject>();
+	enemyComps.push_back(enemyGO3->AddComponent<dae::Enemy>());
+	enemyComps.back()->Init(dae::EnemyType::bean, glm::vec2(600, 109), 3.0f);
+	scene.Add(enemyGO3);
+
+
+	//adding enemies to gamemanager + adding players to enemies
+	for (dae::Enemy* enemy : enemyComps)
+	{
+		enemy->AddPlayer(players.at(0)->GetComponent<PeterPepper>());
+		enemy->AddPlayer(players.at(1)->GetComponent<PeterPepper>());
+
+		gameManagerComp->AddEnemy(enemy);
+	}
+
+
 	//add enemy player
-	gameManagerComp->AddEnemyPlayer(enemyPlayer->GetComponent<EnemyPlayer>(), glm::vec2(298, 150));
+	gameManagerComp->AddEnemyPlayer(enemyPlayer->GetComponent<EnemyPlayer>(), glm::vec2(298, 109));
 	enemyPlayer->GetComponent<EnemyPlayer>()->addObserver(gameManagerComp);
 
 
 	//adding player
 	gameManagerComp->AddPlayer(players.at(0), glm::vec2(298, 493));
-	gameManagerComp->AddPlayer(players.at(1), glm::vec2(310, 493));
+	gameManagerComp->AddPlayer(players.at(1), glm::vec2(298, 109));
 
 	scene.Add(gameManagerGo);
 
@@ -473,8 +508,8 @@ void Level3(std::vector<std::shared_ptr<dae::GameObject>>& players, std::shared_
 	auto fpsGo = std::make_shared<dae::GameObject>();
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	dae::FpsComponent* fpsComponent = fpsGo->AddComponent<dae::FpsComponent>();
-	fpsComponent->SetPosition(10, 10);
-	fpsComponent->SetFont(font);
+	fpsComponent->Init(font);
+	fpsGo->SetPosition(10, 10);
 	scene.Add(fpsGo);
 
 	//LEVEL
@@ -486,7 +521,7 @@ void Level3(std::vector<std::shared_ptr<dae::GameObject>>& players, std::shared_
 
 	LevelReader levelReader;
 	auto level = std::make_shared<dae::GameObject>();
-	levelReader.AddLevel("../Data/Level/level3test.txt", level);
+	levelReader.AddLevel("../Data/Level/level3.txt", level);
 	level->SetPosition(-2000, -2000);
 	scene.Add(level);
 
@@ -522,13 +557,56 @@ void Level3(std::vector<std::shared_ptr<dae::GameObject>>& players, std::shared_
 	}
 
 
+	std::vector<dae::Enemy*> enemyComps;
+	//enemy inits
+	auto enemyGO0 = std::make_shared<dae::GameObject>();
+	enemyComps.push_back(enemyGO0->AddComponent<dae::Enemy>());
+	enemyComps.back()->Init(dae::EnemyType::Pickle, glm::vec2(600, 448), 1.0f);
+	scene.Add(enemyGO0);
+
+	auto enemyGO1 = std::make_shared<dae::GameObject>();
+	enemyComps.push_back(enemyGO1->AddComponent<dae::Enemy>());
+	enemyComps.back()->Init(dae::EnemyType::egg, glm::vec2(0, 496), 1.5f);
+	scene.Add(enemyGO1);
+
+	auto enemyGO2 = std::make_shared<dae::GameObject>();
+	enemyComps.push_back(enemyGO2->AddComponent<dae::Enemy>());
+	enemyComps.back()->Init(dae::EnemyType::bean, glm::vec2(600, 109), 3.f);
+	scene.Add(enemyGO2);
+
+	auto enemyGO3 = std::make_shared<dae::GameObject>();
+	enemyComps.push_back(enemyGO3->AddComponent<dae::Enemy>());
+	enemyComps.back()->Init(dae::EnemyType::Pickle, glm::vec2(0, 109), 3.5f);
+	scene.Add(enemyGO3);
+
+	auto enemyGO4 = std::make_shared<dae::GameObject>();
+	enemyComps.push_back(enemyGO4->AddComponent<dae::Enemy>());
+	enemyComps.back()->Init(dae::EnemyType::bean, glm::vec2(600, 448), 5.f);
+	scene.Add(enemyGO4);
+
+	auto enemyGO5 = std::make_shared<dae::GameObject>();
+	enemyComps.push_back(enemyGO5->AddComponent<dae::Enemy>());
+	enemyComps.back()->Init(dae::EnemyType::Pickle, glm::vec2(0, 496), 5.5f);
+	scene.Add(enemyGO5);
+
+
+	//adding enemies to gamemanager + adding players to enemies
+	for (dae::Enemy* enemy : enemyComps)
+	{
+		enemy->AddPlayer(players.at(0)->GetComponent<PeterPepper>());
+		enemy->AddPlayer(players.at(1)->GetComponent<PeterPepper>());
+
+		gameManagerComp->AddEnemy(enemy);
+	}
+
+
 	//add enemy player
-	gameManagerComp->AddEnemyPlayer(enemyPlayer->GetComponent<EnemyPlayer>(), glm::vec2(298, 350));
+	gameManagerComp->AddEnemyPlayer(enemyPlayer->GetComponent<EnemyPlayer>(), glm::vec2(298, 110));
 	enemyPlayer->GetComponent<EnemyPlayer>()->addObserver(gameManagerComp);
 
 	//adding player
-	gameManagerComp->AddPlayer(players.at(0), glm::vec2(298, 150));
-	gameManagerComp->AddPlayer(players.at(1), glm::vec2(310, 150));
+	gameManagerComp->AddPlayer(players.at(0), glm::vec2(298, 640));
+	gameManagerComp->AddPlayer(players.at(1), glm::vec2(298, 110));
 
 	scene.Add(gameManagerGo);
 

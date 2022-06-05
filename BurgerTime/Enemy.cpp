@@ -8,7 +8,8 @@
 #include "AnimationManager.h"
 
 dae::Enemy::Enemy()
-	:m_OnLadder(false)
+	: m_Speed(60)
+	, m_OnLadder(false)
 	, m_GoingUp(false)
 	, m_pMovementComp(nullptr)
 	, m_GoingRight(false)
@@ -43,7 +44,7 @@ void dae::Enemy::Init(EnemyType enemyType, glm::vec2 spawnPoint, float initialSp
 
 	m_pMovementComp = m_pGameObject->AddComponent<MovementComponent>();
 	m_pMovementComp->SetMovementBox(collider);
-	m_pMovementComp->SetSpeed(75.f);
+	m_pMovementComp->SetSpeed(m_Speed);
 
 
 	m_pGameObject->SetPosition(-1000, -1000);

@@ -19,7 +19,7 @@ namespace dae
 		bool ProcessInput();
 		bool IsPressed(const ControllerButton& button, const ButtonActivateState& activateState, int controllerNr) const;
 		void AddCommand(const ControllerButton& button, const ButtonActivateState& activateState, std::unique_ptr<Command> command, int controllerNr);
-		void AddCommand(const int& button, const KeyboardButtonActivateState& activateState, std::unique_ptr<Command> command);
+		void AddCommand(const SDL_Scancode& button, const KeyboardButtonActivateState& activateState, std::unique_ptr<Command> command);
 		void CheckInput();
 
 		bool IsDownThisFrame(int button, int controllerNr) const;
@@ -34,11 +34,14 @@ namespace dae
 		using	ControllerCommandMap = std::multimap<ButtonInfo, std::unique_ptr<Command>>;
 		ControllerCommandMap m_consoleCommands;
 
-		using KeyInfo = std::pair<int, KeyboardButtonActivateState>;
+		using KeyInfo = std::pair<SDL_Scancode, KeyboardButtonActivateState>;
 		using	KeyboardCommandMap = std::multimap<KeyInfo, std::unique_ptr<Command>>;
 		KeyboardCommandMap m_KeyboardCommands;
 
-		std::multimap<std::pair<int, KeyboardButtonActivateState>, std::unique_ptr<Command>> test;
+		const uint8_t* m_pCurrenState;
+		uint8_t* m_pPreviousState;
+		uint8_t* m_pPressedKeys;
+		uint8_t* m_pReleasedKeys;
 
 	};
 

@@ -232,7 +232,7 @@ void GameManager::onNotify(const dae::GameObject& go, const Event& event)
 			ResetPlayers();
 			m_PlayersDead -= m_PlayerAmount;
 			m_PlayerAmount = 0;
-			dae::SceneManager::GetInstance().SetActiveScene("mainMenu");
+			dae::SceneManager::GetInstance().SetActiveScene("highscore");
 		}
 		break;
 	}

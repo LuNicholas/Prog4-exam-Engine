@@ -27,12 +27,14 @@
 #include "GameManager.h"
 #include "ButtonManager.h"
 #include "LevelReader.h"
+#include "Highscores.h"
 
 
 std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters();
 void Level1(std::vector<std::shared_ptr<dae::GameObject>>& players);
 void Level2(std::vector<std::shared_ptr<dae::GameObject>>& players);
 void Level3(std::vector<std::shared_ptr<dae::GameObject>>& players);
+void Highscore(std::vector<std::shared_ptr<dae::GameObject>>& players);
 ButtonManager* MainMenu();
 
 int main(int, char* [])
@@ -45,6 +47,8 @@ int main(int, char* [])
 	dae::SceneManager::GetInstance().CreateScene("level1");
 	dae::SceneManager::GetInstance().CreateScene("level2");
 	dae::SceneManager::GetInstance().CreateScene("level3");
+	dae::SceneManager::GetInstance().CreateScene("highscore");
+
 
 
 	auto players = CreateCharacters();
@@ -57,7 +61,7 @@ int main(int, char* [])
 	Level1(players);
 	Level2(players);
 	Level3(players);
-
+	Highscore(players);
 
 	dae::SceneManager::GetInstance().SetActiveScene("mainMenu");
 
@@ -126,15 +130,15 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	input.AddCommand(dae::ControllerButton::DpadRight, dae::ButtonActivateState::OnButtonRelease, std::move(std::make_unique<IdleForward>(peterPepperGo)), 0);
 
 	//KEYBOARDCOMMANDS
-	input.AddCommand(SDLK_w, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveUp>(peterPepperGo)));
-	input.AddCommand(SDLK_s, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveDown>(peterPepperGo)));
-	input.AddCommand(SDLK_a, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveLeft>(peterPepperGo)));
-	input.AddCommand(SDLK_d, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveRight>(peterPepperGo)));
-	input.AddCommand(SDLK_r, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<PepperCommand>(peterPepperGo.get())));
-	input.AddCommand(SDLK_w, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleUp>(peterPepperGo)));
-	input.AddCommand(SDLK_s, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleForward>(peterPepperGo)));
-	input.AddCommand(SDLK_a, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleForward>(peterPepperGo)));
-	input.AddCommand(SDLK_d, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleForward>(peterPepperGo)));
+	input.AddCommand(SDL_SCANCODE_W, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveUp>(peterPepperGo)));
+	input.AddCommand(SDL_SCANCODE_S, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveDown>(peterPepperGo)));
+	input.AddCommand(SDL_SCANCODE_A, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveLeft>(peterPepperGo)));
+	input.AddCommand(SDL_SCANCODE_D, dae::InputManager::KeyboardButtonActivateState::pressed, std::move(std::make_unique<MoveRight>(peterPepperGo)));
+	input.AddCommand(SDL_SCANCODE_R, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<PepperCommand>(peterPepperGo.get())));
+	input.AddCommand(SDL_SCANCODE_W, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleUp>(peterPepperGo)));
+	input.AddCommand(SDL_SCANCODE_S, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleForward>(peterPepperGo)));
+	input.AddCommand(SDL_SCANCODE_A, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleForward>(peterPepperGo)));
+	input.AddCommand(SDL_SCANCODE_D, dae::InputManager::KeyboardButtonActivateState::release, std::move(std::make_unique<IdleForward>(peterPepperGo)));
 
 
 
@@ -451,4 +455,17 @@ void Level3(std::vector<std::shared_ptr<dae::GameObject>>& players)
 	{
 		scene.Add(player);
 	}
+}
+
+void Highscore(std::vector<std::shared_ptr<dae::GameObject>>& players)
+{
+	auto& scene = dae::SceneManager::GetInstance().GetScene("highscore");
+	auto& input = dae::InputManager::GetInstance();
+
+	//levelsprite
+	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
+	auto levelGO = std::make_shared<dae::GameObject>();
+	dae::Highscores* highScores= levelGO->AddComponent<dae::Highscores>();
+	highScores->Init(players.at(0), font);
+	scene.Add(levelGO);
 }

@@ -1,0 +1,122 @@
+#include "BurgerTimePCH.h"
+#include "Highscores.h"
+#include "GameObject.h"
+#include "PlayerUiComponent.h"
+
+dae::Highscores::Highscores()
+	:m_FileName("../Data/Highscores.txt")
+	, m_DoOnce(false)
+	, m_PlayerScore(-1)
+{
+
+	m_HighscoresText.push_back(new dae::TextComponent());
+	m_HighscoresText.push_back(new dae::TextComponent());
+	m_HighscoresText.push_back(new dae::TextComponent());
+	m_HighscoresText.push_back(new dae::TextComponent());
+	m_HighscoresText.push_back(new dae::TextComponent());
+
+	glm::vec2 pos(314, 100);
+	for (auto& text : m_HighscoresText)
+	{
+		SetPosition(pos.x, pos.y);
+		pos.y += 25;
+		text->SetText("0");
+	}
+
+	m_PlayerScoreText = new dae::TextComponent();
+	m_PlayerScoreText->SetPosition(pos.x, pos.y + 100);
+	m_PlayerScoreText->SetText("0");
+}
+dae::Highscores::~Highscores()
+{
+	for (auto& text : m_HighscoresText)
+		delete text;
+
+	delete m_PlayerScoreText;
+}
+
+void dae::Highscores::Init(std::shared_ptr<dae::GameObject>& player, std::shared_ptr<dae::Font> font)
+{
+	m_PlayerGo = player;
+
+	for (auto& text : m_HighscoresText)
+		text->SetFont(font);
+
+	m_PlayerScoreText->SetFont(font);
+
+	std::ifstream input;
+	input.open(m_FileName, std::ios::in | std::ios::binary);
+
+	std::string line;
+	if (input.is_open())
+	{
+		while (!input.eof())
+		{
+			std::getline(input, line);
+			if (!line.empty())
+				m_Highscores.push_back(std::stoi(line));
+		}
+	}
+}
+
+void dae::Highscores::Update(float deltaTime)
+{
+	for (const auto& text : m_HighscoresText)
+	{
+		text->Update(deltaTime);
+	}
+
+
+	//check if player score is different
+	int playerScore = m_PlayerGo->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>()->GetScore();
+
+	if (m_PlayerScore != playerScore)
+	{
+		m_PlayerScore = playerScore;
+		m_PlayerScoreText->SetText(std::to_string(playerScore));
+
+		for (int& score : m_Highscores)
+		{
+			if (playerScore > score)
+			{
+				score = playerScore;
+				break;
+			}
+		}
+
+		for (size_t i = 0; i < m_HighscoresText.size(); i++)
+		{
+			m_HighscoresText.at(i)->SetText(std::to_string(m_Highscores.at(i)));
+		}
+
+
+		std::ofstream output(m_FileName, std::ios::trunc);
+
+		for (int& score : m_Highscores)
+		{
+			output << score;
+			output << '\n';
+		}
+
+
+		m_PlayerGo->GetChildAt(1)->GetComponent<dae::PlayerUiComponent>()->SetScore(0);
+		m_PlayerScore = 0;
+	}
+}
+void dae::Highscores::FixedUpdate(float deltaTime)
+{
+}
+void dae::Highscores::Render() const
+{
+	glm::vec2 pos(314, 100);
+
+	for (const auto& text : m_HighscoresText)
+	{
+		text->SetPosition(pos.x, pos.y);
+		pos.y += 35;
+		text->Render();
+	}
+
+	m_PlayerScoreText->SetPosition(pos.x, pos.y + 100);
+	m_PlayerScoreText->Render();
+}

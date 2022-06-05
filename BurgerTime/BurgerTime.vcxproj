@@ -22,6 +22,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="ButtonManager.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="Highscores.h" />
     <ClInclude Include="Ingredient.h" />
     <ClInclude Include="BurgerTimePCH.h" />
     <ClInclude Include="Enemy.h" />
@@ -39,6 +40,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="ButtonManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="Highscores.cpp" />
     <ClCompile Include="Ingredient.cpp" />
     <ClCompile Include="BurgerTime.cpp" />
     <ClCompile Include="BurgerTimePCH.cpp">

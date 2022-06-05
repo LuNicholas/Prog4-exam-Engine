@@ -9,7 +9,7 @@ namespace dae
 }
 	class Plate;
 
-class GameManager : public dae::Component, public dae::Observer
+class GameManager final : public dae::Component, public dae::Observer
 {
 public:
 	friend class dae::GameObject;

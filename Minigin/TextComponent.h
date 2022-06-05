@@ -14,6 +14,7 @@ namespace dae
 		friend class GameObject;
 		friend class FpsComponent;
 		friend class PlayerUiComponent;
+		friend class Highscores;
 
 		void Update(float deltaTime);
 		void FixedUpdate(float deltaTime);

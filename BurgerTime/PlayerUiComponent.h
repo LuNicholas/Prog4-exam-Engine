@@ -24,6 +24,7 @@ namespace dae
 		void SetScoreVisible(bool visibility);
 
 		void AddScore(int score);
+		int GetScore() const;
 
 		~PlayerUiComponent();
 		PlayerUiComponent(const PlayerUiComponent& other) = delete;

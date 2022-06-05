@@ -143,6 +143,10 @@ void NextScene::Execute()
 		}
 		}
 	}
+	else if(dae::SceneManager::GetInstance().GetCurrentScene().GetSceneName() == dae::SceneManager::GetInstance().GetScene("highscore").GetSceneName())
+	{
+		dae::SceneManager::GetInstance().SetActiveScene("mainMenu");
+	}
 }
 
 

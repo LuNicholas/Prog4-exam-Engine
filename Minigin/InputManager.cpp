@@ -12,6 +12,11 @@ dae::InputManager::InputManager()
 	{
 		m_pControllers.push_back(new PcController(i));
 	}
+
+	m_pCurrenState = SDL_GetKeyboardState(nullptr);
+	m_pPreviousState = new Uint8[SDL_NUM_SCANCODES];
+	m_pPressedKeys = new Uint8[SDL_NUM_SCANCODES];
+	m_pReleasedKeys = new Uint8[SDL_NUM_SCANCODES];
 }
 dae::InputManager::~InputManager()
 {
@@ -19,6 +24,10 @@ dae::InputManager::~InputManager()
 	{
 		delete controller;
 	}
+
+	delete[] m_pPreviousState;
+	delete[] m_pPressedKeys;
+	delete[] m_pReleasedKeys;
 }
 
 bool dae::InputManager::ProcessInput()
@@ -27,6 +36,32 @@ bool dae::InputManager::ProcessInput()
 	{
 		controller->ProcessInput();
 	}
+
+	for (size_t i = 0; i < SDL_NUM_SCANCODES; i++)
+	{
+		char changedKeys = m_pCurrenState[i] ^ m_pPreviousState[i];
+		m_pPressedKeys[i] = changedKeys & m_pCurrenState[i];
+		m_pReleasedKeys[i] = changedKeys & (~m_pCurrenState[i]);
+		m_pPreviousState[i] = m_pCurrenState[i];
+	}
+
+	for (const auto& keyboardCommand : m_KeyboardCommands)
+	{
+
+		switch (keyboardCommand.first.second)
+		{
+		case KeyboardButtonActivateState::pressed:
+			if(m_pPressedKeys[keyboardCommand.first.first])
+				keyboardCommand.second->Execute();
+			break;
+		case KeyboardButtonActivateState::release:
+			if (m_pReleasedKeys[keyboardCommand.first.first])
+				keyboardCommand.second->Execute();
+			break;
+		}
+	}
+
+
 
 	SDL_Event e;
 	while (SDL_PollEvent(&e))
@@ -55,6 +90,7 @@ bool dae::InputManager::ProcessInput()
 						keyboardCommand.second->Execute();
 			}
 		}
+
 	}
 	return true;
 }
@@ -92,7 +128,7 @@ void dae::InputManager::AddCommand(const ControllerButton& button, const ButtonA
 	m_pControllers.at(controllerNr)->AddCommand(button, activateState, std::move(command));
 }
 
-void dae::InputManager::AddCommand(const int& key, const KeyboardButtonActivateState& activateState, std::unique_ptr<Command> command)
+void dae::InputManager::AddCommand(const SDL_Scancode& key, const KeyboardButtonActivateState& activateState, std::unique_ptr<Command> command)
 {
 	m_KeyboardCommands.insert(std::make_pair(std::make_pair(key, activateState), std::move(command)));
 }

@@ -111,3 +111,7 @@ void dae::PlayerUiComponent::SetScoreVisible(bool visibility)
 {
 	m_ScoreVisible = visibility;
 }
+int dae::PlayerUiComponent::GetScore() const
+{
+	return m_score;
+}

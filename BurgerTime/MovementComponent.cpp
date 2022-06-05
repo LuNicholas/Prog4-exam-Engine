@@ -8,6 +8,7 @@ dae::MovementComponent::MovementComponent()
 	, m_pCollisionBox(nullptr)
 	, m_Speed(1)
 	, m_CurrentMoveState(MovementState::idle)
+	, m_pLastLadder(nullptr)
 {
 }
 dae::MovementComponent::~MovementComponent()
@@ -64,7 +65,6 @@ void dae::MovementComponent::Update(float deltaTime)
 	default:
 		break;
 	}
-
 }
 void dae::MovementComponent::FixedUpdate(float deltaTime)
 {

@@ -60,6 +60,9 @@
     <ClInclude Include="LevelReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Highscores.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ingredient.cpp">
@@ -105,6 +108,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LevelReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Highscores.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

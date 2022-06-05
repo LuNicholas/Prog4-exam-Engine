@@ -137,7 +137,7 @@ std::vector<std::shared_ptr<dae::GameObject>> CreateCharacters()
 	auto peterPepperGo = std::make_shared<dae::GameObject>();
 
 	PeterPepper* peterComp = peterPepperGo->AddComponent<PeterPepper>();
-	peterComp->Init(glm::vec2(300, 540), 1, 50);
+	peterComp->Init(glm::vec2(300, 540), 1, 5);
 	playerGOs.push_back(peterPepperGo);
 
 	//pepper

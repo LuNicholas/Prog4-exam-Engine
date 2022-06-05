@@ -66,7 +66,6 @@ void GameManager::Update(float deltaTime)
 	{
 		m_DoOnce = true;
 		m_pLevel->SetPosition(0, 0);
-		m_PlayersDead = 0;
 
 		for (size_t i = 0; i < m_pPlayers.size(); i++)
 		{
@@ -157,8 +156,6 @@ void GameManager::Update(float deltaTime)
 		m_GamePaused = true;
 		Pause();
 	}
-
-
 }
 void GameManager::FixedUpdate(float deltaTime)
 {
